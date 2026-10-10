@@ -1,0 +1,5 @@
+@import url('../styles/global.css');
+
+h1 {
+    color: var(--color-primary);
+}
