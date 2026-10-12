@@ -20,7 +20,8 @@
     --color-black-3: #282828;
     --color-white: #FFFFFF;
     --color-white-2: #FFFFF1;
-    --color-gray-1: #C9CEB8;
+    --color-white-3: #FFFFF8;
+    --color-gray-1: #E0E1D3;
     --color-gray-2: #4F4F4F;
     --color-gray-3: #828282;
     --color-gray-4: #BDBDBD;
@@ -72,6 +73,10 @@
 
     --effect-background-link: rgba(255, 255, 255, 0.0824);
 
+}
+
+body {
+    background-color: var(--color-white-background);
 }
 
 p {
