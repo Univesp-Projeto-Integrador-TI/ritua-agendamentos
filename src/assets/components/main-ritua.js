@@ -30,8 +30,9 @@ class mainRitua extends HTMLElement {
                                 <span>Na sua base pessoal</span>
                             </div>
                         </div>
-
                     </div>
+                </section>
+                <section class="section-support-painel">
                 </section>
             </main>
         `;
