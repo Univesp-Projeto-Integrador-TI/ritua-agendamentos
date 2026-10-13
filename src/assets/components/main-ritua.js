@@ -31,6 +31,8 @@ class mainRitua extends HTMLElement {
                             </div>
                         </div>
                     </div>
+
+                    
                 </section>
                 <section class="section-support-painel">
                 </section>
