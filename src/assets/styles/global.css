@@ -51,7 +51,7 @@
     --font-headline-1-size: clamp(1.5rem, 1.75rem, 2rem);
     --font-headline-1-weight: 700;
 
-    --font-headline-2-size: clamp(2.5rem, 1.375rem, 1.75rem);
+    --font-headline-2-size: clamp(2.0rem, 1.375rem, 1.75rem);
     --font-headline-2-weight: 500;
 
     --font-headline-3-size: clamp(1.8rem, 1vw + 1rem, 2rem);
