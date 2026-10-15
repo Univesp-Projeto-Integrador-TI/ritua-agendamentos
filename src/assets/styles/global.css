@@ -31,6 +31,7 @@
 
     --color-primary: #3E4228;
     --color-green-detail: #303522;
+    --color-green-detail-2: #C9CEB8;
     --color-white-background: #F4F1E9;
     --color-swamp: #747767;
     --color-secondary: #9B684B;
@@ -62,7 +63,7 @@
     --font-body-size: clamp(0.80rem, 0.75rem, 1.2rem);
     --font-body-weight: 400;
 
-    --font-button-size: clamp(0.50rem, 0.75rem, 1.2rem);
+    --font-button-size: clamp(0.45rem, 0.75rem, 1.2rem);
     --font-button-weight: 400;
 
     --font-detail-size: clamp(0.25rem, 0.5rem, 0.75rem);
@@ -73,6 +74,7 @@
     --color-disabled-button: #E0E1D3;
 
     --effect-background-link: rgba(255, 255, 255, 0.0824);
+    --effect-line: rgba(255, 255, 255, 0.14);
 
 }
 
