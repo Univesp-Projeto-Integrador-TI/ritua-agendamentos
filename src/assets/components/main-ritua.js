@@ -38,6 +38,7 @@ class mainRitua extends HTMLElement {
                     
                 </section>
                 <section class="section-support-painel">
+                    <card-next-service></card-next-service>
                 </section>
             </main>
         `;
