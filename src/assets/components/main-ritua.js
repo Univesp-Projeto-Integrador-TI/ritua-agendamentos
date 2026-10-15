@@ -33,6 +33,8 @@ class mainRitua extends HTMLElement {
                     </div>
 
                     <calendar-main-ritua></calendar-main-ritua>
+
+                    <section-appointments-day></section-appointments-day>
                     
                 </section>
                 <section class="section-support-painel">
