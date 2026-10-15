@@ -99,8 +99,7 @@
 
                 p{
                     border-radius: 100px;
-                    max-width: 40%;
-                    min-width: 100px;
+                    min-width: 80px;
                     text-align: center;
                     color: var(--color-green-detail);
                     background-color: var(--color-green-background);
