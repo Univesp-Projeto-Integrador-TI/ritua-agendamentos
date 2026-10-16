@@ -1,3 +1,27 @@
+const reservations = [
+    {
+        nameSala: "Bambu",
+        dataReserva: "05/10/2026",
+        reservation: "09:45-11:15",
+        statusReserva: "Confirmada",
+        nameClient: ""
+    },
+    {
+        nameSala: "Ipê",
+        dataReserva: "06/10/2026",
+        reservation: "12:15-13:00",
+        statusReserva: "Reservada",
+        nameClient: "Ana Souza"
+    },
+    {
+        nameSala: "Jabuticaba",
+        dataReserva: "11/10/2026",
+        reservation: "14:35-15:30",
+        statusReserva: "Confirmada",
+        nameClient: ""
+    }
+]
+
 class createCardMyResevations extends HTMLElement {
     connectedCallback(){
         this.innerHTML = `
@@ -7,17 +31,6 @@ class createCardMyResevations extends HTMLElement {
                 </header>
 
                 <section class="group-items-my-resevations">
-                    <div class="item-my-resevations">
-                        <img src="src/assets/images/img-exe-ambiente-sala.svg" alt="Imagem do espaço">
-                        <div class="content-item-my-resevation">
-                            <span class="title-item-my-resevation">
-                                <p class="title-item">Bambu</p>
-                                <span class="status-item">Confirmada</span>
-                            </span>
-                            <p class="info-room-item">05 out · 09:45–11:15</p>
-                            <p class="detail-room-item">Vinculada a Ana Souza</p>
-                        </div>
-                    </div>
                 </section>
 
                 <footer class="footer-card-my-resevations">
@@ -31,7 +44,46 @@ class createCardMyResevations extends HTMLElement {
                     </a>
                 </footer>
             </section>
-        `
+        `;
+
+        reservations.forEach( reservas => {
+            const groupReservations = this.querySelector(".group-items-my-resevations")
+
+            // Validação do status da sala
+            let statusReservation;
+            let infoStatusReservation;
+            
+            if(reservas.statusReserva === "Confirmada"){
+                statusReservation = "";
+                infoStatusReservation = `Sem agendamento vinculado`;
+            } else {
+                statusReservation = "reserved";
+                infoStatusReservation = `Vinculado a ${reservas.nameClient}`;
+            }
+            
+            //Formatando data da reserva
+            const [dia, mes, ano] = reservas.dataReserva.split("/");
+            const data = new Date(ano, mes - 1, dia);
+            const formatDate = data.toLocaleDateString("pt-BR", {
+                day: "numeric",
+                month: "short"
+            }).replace(".", "").replace("de", "");
+
+            // Iserção no item
+            groupReservations.innerHTML += `
+                <div class="item-my-resevations">
+                    <img src="src/assets/images/img-exe-ambiente-sala.svg" alt="Imagem do espaço">
+                    <div class="content-item-my-resevation">
+                        <span class="title-item-my-resevation">
+                            <p class="title-item">${reservas.nameSala}</p>
+                            <span class="status-item ${statusReservation}">${reservas.statusReserva}</span>
+                        </span>
+                        <p class="info-room-item">${formatDate} · ${reservas.reservation}</p>
+                        <p class="detail-room-item">${infoStatusReservation}</p>
+                    </div>
+                </div>
+            `
+        })
     };
 };
 

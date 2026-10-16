@@ -61,6 +61,16 @@
                         background-color: var(--color-green-background);
                         padding: 7px 10px;
                     }
+
+                    .reserved {
+                        color: var(--color-secondary);
+                        background-color: var(--effect-color-brown);
+                    }
+
+                    .excluse {
+                        color: var(--color-secondary);
+                        background-color: var(--effect-color-brown);
+                    }
                 }
 
                 .info-room-item{
