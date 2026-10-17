@@ -40,6 +40,7 @@ class mainRitua extends HTMLElement {
                 <section class="section-support-painel">
                     <card-next-service></card-next-service>
                     <card-my-reservations></card-my-reservations>
+                    <card-week-rhythm></card-week-rhythm>
                 </section>
             </main>
         `;
