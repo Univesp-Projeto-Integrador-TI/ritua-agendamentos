@@ -21,7 +21,7 @@
 .card-person-summary-header h2 {
     color: var(--color-primary);
     font-size: var(--font-headline-2-size);
-    font-weight: var(--font-headline-2-weight);
+    font-weight: var(--font-weight-medium);
 }
 
 .card-person-summary-body {
@@ -33,11 +33,10 @@
 .card-person-summary-body p {
     color: var(--color-green-detail);
     font-size: var(--font-subtitle-size);
-    font-weight: var(--font-subtitle-weight);
+    font-weight: var(--font-weight-medium);
 }
 
 .card-person-summary-body span {
     color: var(--color-swamp);
     font-size: var(--font-body-size);
-    font-weight: var(--font-body-weight);
 }
