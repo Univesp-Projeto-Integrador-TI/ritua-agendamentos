@@ -22,10 +22,15 @@
             gap: 9px;
             border-radius: 12px;
             padding: 13px 18px;
+
+            transition: ease-out 0.2s;
+            transform: translateY(0);
         }
 
         .header-ritua-nav-link:hover {
             background-color: var(--effect-background-link);
+            transition: 0.5s ease;
+            transform: translateY(-1px);
         }
 
     }
@@ -48,13 +53,17 @@
             flex-direction: column;
             gap: 1px;
 
-            span {
-                font-family: var(--font-family);
+            .header-ritua-user-info-name {
                 font-size: var(--font-subtitle-size);
                 color: var(--color-white-2);
             }
 
-            span:nth-child(2) {
+            .header-ritua-user-info-role{
+                font-size: var(--font-body-size);
+                color: var(--color-white-2);
+            }
+
+            .header-ritua-user-info-role:nth-child(2) {
                 color: var(--color-gray-1);
             }
         }
@@ -62,6 +71,16 @@
         .btn-user-settings {
             background: none;
             cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transform: translateY(0);
+            transition: ease-out 0.2s;
+        }
+
+        .btn-user-settings:hover{
+            background-color: var(--effect-background-link);
+            transition: ease-out 0.5s;
+            transform: translateY(-1px);
         }
     }
 }
