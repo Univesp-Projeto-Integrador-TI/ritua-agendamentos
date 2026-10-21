@@ -15,13 +15,12 @@
         .title-week-rhythm {
             color: var(--color-primary);
             font-size: var(--font-subtitle-size);
-            font-weight: var(--font-subtitle-weight);
+            font-weight: var(--font-weight-medium);
         }
 
         .info-week-rhythm {
             color: var(--color-swamp);
             font-size: var(--font-body-size);
-            font-weight: var(--font-body-weight);
         }
     }
 
@@ -74,7 +73,7 @@
                 .chart-label {
                     color: var(--color-swamp);
                     font-size: var(--font-body-size);
-                    font-weight: var(--font-body-weight);
+                    font-weight: var(--font-weight-regular);
                 }
 
                 .chart-label::first-letter {
@@ -88,7 +87,5 @@
 
     .analysis-chart-week-rhyth {
         color: var(--color-swamp);
-        font-size: var(--font-body-size);
-        font-weight: var(--font-body-weight);
     }
 }
