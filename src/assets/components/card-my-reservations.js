@@ -27,7 +27,7 @@ class createCardMyResevations extends HTMLElement {
         this.innerHTML = `
             <section class="section-card-my-resevations">
                 <header class="header-my-resevations">
-                    <h2 class="title-my-resevations">Minhas reservas</h2>
+                    <h3 class="title-my-resevations">Minhas reservas</h3>
                 </header>
 
                 <section class="group-items-my-resevations">
