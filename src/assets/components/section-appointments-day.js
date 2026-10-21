@@ -37,7 +37,7 @@ class createAppointmentsDay extends HTMLElement {
             <section class="container-appointments-day">
                 <header class="header-appointments-day">
                     <div class="info-header-appointments-day">
-                        <h2 class="current-date-appointments"></h2>
+                        <h3 class="current-date-appointments"></h3>
                         <span>Hoje · 3 atendimentos · 3h30 de cuidado</span>
                     </div>
                 </header>

@@ -19,17 +19,16 @@
             flex-direction: column;
             gap: 4px;
 
-            h2 {
+            h3 {
                 color: var(--color-primary);
             }
 
-            h2::first-letter{
+            h3::first-letter{
                 text-transform: uppercase;
             }
 
             span {
                 font-size: var(--font-body-size);
-                font-weight: var(--font-body-weight);
                 color: var(--color-swamp);
             }
         }
@@ -38,7 +37,7 @@
     .group-cards-appointments-day{
         .card-appointments-day{
             display: grid;
-            grid-template-columns: 0.5fr 0.14fr 3fr 1fr;
+            grid-template-columns: 0.4fr 0.14fr 3fr 1fr;
 
             padding-top: 14px;
             margin-bottom: 18px;
@@ -52,13 +51,13 @@
 
                 .initial-hour-card{
                     font-size: var(--font-subtitle-size);
-                    font-weight: var(--font-subtitle-weight);
+                    font-weight: var(--font-weight-semibold);
                     color: var(--color-green-detail);
                 }
 
                 .final-hour-card{
                     font-size: var(--font-body-size);
-                    font-weight: var(--font-body-weight);
+                    font-weight: var(--font-weight-medium);
                     color: var(--color-swamp);
                 }
             }
@@ -79,7 +78,7 @@
 
                 p {
                     font-size: var(--font-subtitle-size);
-                    font-weight: var(--font-subtitle-weight);
+                    font-weight: var(--font-weight-semibold);
                     color: var(--color-green-detail);
                 }
 
@@ -101,6 +100,7 @@
                     border-radius: 100px;
                     min-width: 80px;
                     text-align: center;
+                    font-weight: var(--font-weight-medium);
                     color: var(--color-green-detail);
                     background-color: var(--color-green-background);
                     padding: 5px 10px;
