@@ -1,0 +1,102 @@
+.container-card-next-service {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+    border-radius: 20px;
+    background-color: var(--color-primary);
+
+    .header-card-next-service {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+
+        .info-header-card-next-service  {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            span {
+                font-size: var(--font-body-size);
+                color: var(--color-green-detail-2);
+            }
+
+            svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        .detail-header-card-next-service{
+            display: flex; 
+            flex-direction: column;
+            gap: 5px;
+
+            h2{
+                font-family: var(--font-cormorant);
+                color: var(--color-green-detail-2);
+            }
+            
+            .info-service {
+                font-size: var(--font-body-size);
+                color: var(--color-green-detail-2);
+            }
+        }
+    }
+
+    .detail-card-next-service {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+
+        .info-card-next-service {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            svg path{
+                stroke: var(--color-green-detail-2);
+            }
+
+            p {
+                font-size: var(--font-body-size);
+                color: var(--color-green-detail-2);
+            }
+
+            .status-card-next-service{
+                font-size: var(--font-body-size);
+                font-weight: var(--font-weight-medium);
+
+                border-radius: 100px;
+                padding: 5px 10px;
+                color: var(--color-white-2);
+                background-color: var(--effect-background-link);
+            }
+        }
+    }
+
+    .link-card-next-service{
+        border-top: 2px solid var(--effect-line);
+        padding-top: 14px;
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            color: var(--color-white-2);
+            font-size: var(--font-body-size);
+
+            svg {
+                width: 10px;
+                height: 10px;
+            }
+        }
+
+        a:hover{
+            text-decoration:underline;
+            text-decoration-color: var(--color-white-2);
+            
+        }
+    }
+}

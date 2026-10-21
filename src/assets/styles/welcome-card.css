@@ -2,19 +2,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 28px 48px;
 
     .description-welcome-card {
         display: flex;
         flex-direction: column;
         gap: 8px;
-
+        
         h1{
             color: var(--color-primary);
-        }
-
-        p{
-            font-size: var(--font-body-size);
-            font-weight: var(--font-body-weight);
         }
 
         #data-atual{
@@ -37,11 +33,19 @@
             gap: 8px;
             padding: 13px 18px;
 
-            border-radius: 12px;
             font-size: var(--font-button-size);
-            font-weight: var(--font-button-weight);
+            border-radius: 12px;
             background-color: var(--color-secondary);
-            color: var(--color-white-2);
+            color: var(--color-white-3);
+            transition: 0.2s ease;
+            transform: translateY(0);
+        }
+
+        a:hover {
+            color: var(--color-white-3);
+            background-color: var(--effect-hover-color-secondary);
+            transition: 0.2s ease;
+            transform: translateY(-1px);
         }
 
         a:nth-child(1) {
@@ -51,6 +55,20 @@
 
             svg path{
                 stroke: var(--color-secondary);
+                transition: 0.2s ease;
+            }
+        }
+
+        a:nth-child(1):hover {
+            color: var(--color-white-3);
+            background-color: var(--color-secondary);
+            box-shadow: none;
+            transition: 0.2s ease;
+            transform: translateY(-1px);
+
+            svg path{
+                stroke: var(--color-white-3);
+                transition: 0.2s ease;
             }
         }
     }

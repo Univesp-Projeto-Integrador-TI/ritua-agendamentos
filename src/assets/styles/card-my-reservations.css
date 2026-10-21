@@ -1,0 +1,139 @@
+.section-card-my-resevations{
+    display:flex;
+    flex-direction: column;
+    gap: 18px;
+
+    background-color: var(--color-white-3);
+    border: 1px solid var(--color-gray-1);
+    border-radius: 20px;
+
+    width: 100%;
+    padding: 24px;
+
+    .header-my-resevations {
+        h3 {
+            color: var(--color-primary);
+        }
+    }
+
+    .group-items-my-resevations{
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+
+        .item-my-resevations {
+            display: flex;
+            gap: 12px;
+
+            img {
+                height: 50%;
+                min-height: 100px;
+                max-height: 200px;
+
+                max-width: 100px;
+            }
+
+            .content-item-my-resevation{
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+
+                .title-item-my-resevation{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .title-item{
+                        color: var(--color-primary);
+                        font-size: var(--font-subtitle-size);
+                        font-weight: var(--font-weight-semibold);
+                    }
+
+                    .status-item{
+                        font-size: var(--font-body-size);
+                        font-weight: var(--font-weight-medium);
+                        border-radius: 100px;
+                        min-width: 80px;
+                        text-align: center;
+                        color: var(--color-green-detail);
+                        background-color: var(--color-green-background);
+                        padding: 7px 10px;
+                    }
+
+                    .reserved {
+                        color: var(--color-secondary);
+                        background-color: var(--effect-color-brown);
+                    }
+
+                    .excluse {
+                        color: var(--color-secondary);
+                        background-color: var(--effect-color-brown);
+                    }
+                }
+
+                .info-room-item{
+                    font-size: var(--font-body-size);
+                    font-weight: var(--font-weight-medium);
+                    color: var(--color-primary);
+                }
+
+                .detail-room-item{
+                    color: var(--color-swamp);
+                }
+            }
+        }
+    }
+
+    .footer-card-my-resevations {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        padding-top: 14px;
+        border-top: 1px solid var(--color-gray-1);
+
+        p{
+            color: var(--color-swamp);
+        }
+
+        .btn-reservas-salas{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 18px;
+
+            border-radius: 12px;
+            border: 1px solid var(--color-gray-1);
+
+            transition: 0.2s ease;
+            transform: translateY(0);
+
+            svg path {
+                stroke: var(--color-secondary)
+            }
+
+            p{
+                color: var(--color-secondary);
+            }
+        }
+
+        .btn-reservas-salas:hover{
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-secondary);
+
+            transition: 0.2s ease;
+            transform: translateY(0);
+
+            svg path {
+                stroke: var(--color-white-3)
+            }
+
+            p{
+                color: var(--color-white-3);
+            }
+        }
+    }
+
+}

@@ -1,0 +1,47 @@
+.main-ritua {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: flex-start;
+
+    margin: 28px 48px;
+}
+
+.section-summary-painel {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 20px;
+}
+
+.section-support-painel {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    gap: 20px;
+}
+
+.group-card-person-summary {
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.info-main-ritua {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    svg {
+        height: 16px;
+        width: 16px;
+    }
+
+    p {
+        color: var(--color-swamp);
+        font-size: var(--font-body-size);
+        font-weight: var(--font-body-weight);
+    }
+}
