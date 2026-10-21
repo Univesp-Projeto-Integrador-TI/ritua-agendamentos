@@ -17,8 +17,7 @@
             justify-content: space-between;
 
             span {
-                font-size: var(--font-button-size);
-                font-weight: var(--font-button-weight);
+                font-size: var(--font-body-size);
                 color: var(--color-green-detail-2);
             }
 
@@ -34,14 +33,12 @@
             gap: 5px;
 
             h2{
-                font-size: var(--font-headline-2-size);
-                font-weight: var(--font-headline-2-weight);
+                font-family: var(--font-cormorant);
                 color: var(--color-green-detail-2);
             }
             
             .info-service {
                 font-size: var(--font-body-size);
-                font-weight: var(--font-body-weight);
                 color: var(--color-green-detail-2);
             }
         }
@@ -63,13 +60,12 @@
 
             p {
                 font-size: var(--font-body-size);
-                font-weight: var(--font-body-weight);
                 color: var(--color-green-detail-2);
             }
 
             .status-card-next-service{
-                font-size: var(--font-button-size);
-                font-weight: var(--font-button-weight);
+                font-size: var(--font-body-size);
+                font-weight: var(--font-weight-medium);
 
                 border-radius: 100px;
                 padding: 5px 10px;
