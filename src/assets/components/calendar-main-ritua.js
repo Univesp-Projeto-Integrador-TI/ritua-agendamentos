@@ -5,7 +5,7 @@ class createCalendar extends HTMLElement {
 
                 <header class="calendar-header">
                     <div class="label-calendar-header">
-                        <h2 class="calendar-title">Minha agenda</h2>
+                        <h3 class="calendar-title">Minha agenda</h3>
                         <button class="btn-current-date">Hoje</button>
                     </div>
 
