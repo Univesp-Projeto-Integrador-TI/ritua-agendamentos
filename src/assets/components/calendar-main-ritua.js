@@ -45,6 +45,7 @@ class createCalendar extends HTMLElement {
         `;
         //Incia a variável da data atual
         this.currentDate = new Date();
+        this.selectedDate = new Date();
 
         // Botões para avançar o mês e retornar o mês atual
         this.querySelector(".calendar-prev").addEventListener("click", () => {
@@ -120,11 +121,44 @@ class createCalendar extends HTMLElement {
         const today = new Date();
         
         for (let day = 1; day <= totalDays; day++) {
+            
+            const calendarDay = document.createElement("span");
+
             if(day === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear()){
-                calendarDays.innerHTML += `<span class="today calendar-day">${day}</span>`
+                calendarDay.classList.add("calendar-day");
+                calendarDay.classList.add("today");
             } else {
-                calendarDays.innerHTML += `<span class="calendar-day">${day}</span>`
+                calendarDay.classList.add("calendar-day");
             };
+
+            calendarDay.textContent = day;
+            calendarDay.addEventListener("click", () => {
+
+                const selectedDay = calendarDays.querySelector(".day-selected");
+
+                if(selectedDay){ 
+                    selectedDay.classList.remove("day-selected"); 
+                }
+
+                calendarDay.classList.add("day-selected");
+
+                this.selectedDate = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    day
+                );
+
+                this.dispatchEvent(
+                    new CustomEvent("date-selected", {
+                        detail: {
+                            date: this.selectedDate
+                        },
+                        bubbles: true
+                    })
+                );
+            });
+
+            calendarDays.appendChild(calendarDay);
         }
 
         //Dias do mês que vem
