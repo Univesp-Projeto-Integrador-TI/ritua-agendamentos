@@ -121,6 +121,37 @@
         }
     }
 
+    .section-empty-appointments {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        padding: 96px 120px;
+
+        .icon-calendar {
+            background-color: var(--color-green-background);
+            padding: 16px;
+            border-radius: 50px;
+
+            svg{
+                height: 30px;
+                width: 30px;
+            }
+        }
+
+        .text-empty-appointments{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+
+            p:nth-child(1) {
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-medium);
+            }
+        }
+    }
+
     .info-section-appointments-day{
         display: flex;
         gap: 8px;
