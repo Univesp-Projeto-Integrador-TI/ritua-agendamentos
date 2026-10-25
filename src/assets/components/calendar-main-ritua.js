@@ -74,6 +74,29 @@ class createCalendar extends HTMLElement {
         this.renderCalendar()
     }
 
+    // Método centralizador para seleção de datas
+    selectDay(year, month, day, calendarDay) {
+        const calendarDays = this.querySelector(".calendar-days");
+        const selectedDay = calendarDays.querySelector(".day-selected");
+
+        if (selectedDay) {
+            selectedDay.classList.remove("day-selected");
+        }
+
+        calendarDay.classList.add("day-selected");
+
+        this.selectedDate = new Date(year, month, day);
+
+        this.dispatchEvent(
+            new CustomEvent("date-selected", {
+                detail: {
+                    date: this.selectedDate
+                },
+                bubbles: true
+            })
+        );
+    }
+
     renderCalendar(){
         // Atualizando o subtitulo do calendário
         const date = this.currentDate;
@@ -112,10 +135,70 @@ class createCalendar extends HTMLElement {
         ).getDate();
 
         
-        for (let i = startDay - 1; i >= 0; i--){
-            const day = previousMonthLastDay -i
-            calendarDays.innerHTML += `<span class="days-datail-final calendar-day">${day}</span>`
+        // for (let i = startDay - 1; i >= 0; i--){
+        //     const day = previousMonthLastDay -i
+        //     calendarDays.innerHTML += `<span class="days-datail-final calendar-day">${day}</span>`
+        // }
+
+        function previousMonth(){
+            for (let i = startDay - 1; i >= 0; i--) {
+                const day = previousMonthLastDay - i;
+
+                const calendarDay = document.createElement("span");
+
+                calendarDay.classList.add("days-datail-final", "calendar-day");
+                calendarDay.textContent = day;
+
+                calendarDay.addEventListener("click", () => {
+                    const previousMonth = new Date(
+                        date.getFullYear(),
+                        date.getMonth() - 1,
+                        day
+                    );
+
+                    this.selectDay(
+                        previousMonth.getFullYear(),
+                        previousMonth.getMonth(),
+                        previousMonth.getDate(),
+                        calendarDay
+                    );
+                });
+
+                calendarDays.appendChild(calendarDay);
+            }
         }
+
+        function nextMonth(){ 
+            //Dias do mês que vem             
+            const remainingDays = (7 - ((startDay + totalDays) % 7)) % 7;
+
+            for (let day = 1; day <= remainingDays; day++) {
+                const calendarDay = document.createElement("span");
+
+                calendarDay.classList.add("days-datail-final", "calendar-day");
+                calendarDay.textContent = day;
+
+                calendarDay.addEventListener("click", () => {
+                    const nextMonth = new Date(
+                        date.getFullYear(),
+                        date.getMonth() + 1,
+                        day
+                    );
+
+                    this.selectDay(
+                        nextMonth.getFullYear(),
+                        nextMonth.getMonth(),
+                        nextMonth.getDate(),
+                        calendarDay
+                    );
+                });
+
+                calendarDays.appendChild(calendarDay);
+            }
+        }
+
+        previousMonth();
+        nextMonth();
 
         // Dias do mês atual
         const today = new Date();
@@ -160,17 +243,7 @@ class createCalendar extends HTMLElement {
 
             calendarDays.appendChild(calendarDay);
         }
-
-        //Dias do mês que vem
-        const remainingDays = (7 - ((startDay + totalDays) % 7)) % 7;
-
-        for (let day = 1; day <= remainingDays; day++) {
-            calendarDays.innerHTML +=
-                `<span class="days-datail-final calendar-day">${day}</span>`;
-        }
     }
 }
 
 customElements.define('calendar-main-ritua', createCalendar);
-
-
