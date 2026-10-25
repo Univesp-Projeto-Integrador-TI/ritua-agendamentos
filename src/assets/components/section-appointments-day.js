@@ -90,9 +90,16 @@ class createAppointmentsDay extends HTMLElement {
                 </section>
             </section>
         `;
+
+        // Escuta as informações recebidas e filtradas de calendar-main-ritua.js
+        document.addEventListener("date-selected", event => {
+            this.renderAppointments(event.detail.date);
+        });
+
         //Criando a data atual
         const date = new Date();
 
+        //Atualiza o cabeçalho da seção
         this.querySelector(".current-date-appointments").textContent =
             date.toLocaleDateString("pt-BR", {
                 weekday: "long",
@@ -100,33 +107,57 @@ class createAppointmentsDay extends HTMLElement {
                 day: "numeric"
             }).replace("-feira", "");
 
-        // Criando os cards
-        appointments.forEach(agendamento => {
-            const listCards = this.querySelector(".group-cards-appointments-day");
-            listCards.innerHTML += `
-                <div class="card-appointments-day">
-                        <div class="service-time-card">
-                            <p class="initial-hour-card">${agendamento.initialHour}</p>
-                            <p class="final-hour-card">${agendamento.finalHour}</p>
-                        </div>
+        //Mostra os agendamentos de hoje
+        this.renderAppointments(date);
+    };
 
-                        <span class="line-card-appointments"></span>
+    // Recebe as informações seleciondas de calendar-main-ritua.js
+    renderAppointments(selectedDate) {
+        const formattedDate = [
+            String(selectedDate.getDate()).padStart(2, "0"),
+            String(selectedDate.getMonth() + 1).padStart(2, "0"),
+            selectedDate.getFullYear()
+        ].join("/");
 
-                        <div class="detail-appointments-card">
-                            <p class="name-client-card">${agendamento.client}</p>
-                            <span>${agendamento.service} · ${agendamento.duration} min</span>
-                            <span>${agendamento.room} · reserva ${agendamento.reservation}</span>
-                        </div>
-
-                        <div class="info-appointments-card">
-                            <p class="status-appointments-card">${agendamento.status}</p>
-                            <a href="more-detail.html">Ver detalhes</a>
-                        </div>
-                </div>
-            `
+        const filteredAppointments = appointments.filter(appointment => {
+            return appointment.data === formattedDate;
         });
 
-    };
+        //Mostra os agendamentos da data selecionada
+        this.renderCards(filteredAppointments);
+    }
+
+    renderCards(appointmentsToShow) {
+        const listCards = this.querySelector(
+            ".group-cards-appointments-day"
+        );
+
+        listCards.innerHTML = "";
+
+        appointmentsToShow.forEach(agendamento => {
+            listCards.innerHTML += `
+                <div class="card-appointments-day">
+                    <div class="service-time-card">
+                        <p class="initial-hour-card">${agendamento.initialHour}</p>
+                        <p class="final-hour-card">${agendamento.finalHour}</p>
+                    </div>
+
+                    <span class="line-card-appointments"></span>
+
+                    <div class="detail-appointments-card">
+                        <p class="name-client-card">${agendamento.client}</p>
+                        <span>${agendamento.service} · ${agendamento.duration} min</span>
+                        <span>${agendamento.room} · reserva ${agendamento.reservation}</span>
+                    </div>
+
+                    <div class="info-appointments-card">
+                        <p class="status-appointments-card">${agendamento.status}</p>
+                        <a href="more-detail.html">Ver detalhes</a>
+                    </div>
+                </div>
+            `;
+        });
+    }
 }
 
 customElements.define('section-appointments-day', createAppointmentsDay);
