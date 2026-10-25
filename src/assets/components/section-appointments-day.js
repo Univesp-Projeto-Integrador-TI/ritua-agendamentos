@@ -2,6 +2,7 @@ const appointments = [
     {
         initialHour: "10:00",
         finalHour: "11:00",
+        data: "22/10/2026",
         client: "Ana Souza",
         service: "Massagem relaxante",
         duration: 60,
@@ -12,6 +13,7 @@ const appointments = [
     {
         initialHour: "11:30",
         finalHour: "12:30",
+        data: "20/10/2026",
         client: "Maria Oliveira",
         service: "Drenagem linfática",
         duration: 60,
@@ -22,11 +24,45 @@ const appointments = [
     {
         initialHour: "14:00",
         finalHour: "15:00",
+        data: "19/10/2026",
         client: "Julia Santos",
         service: "Massagem terapêutica",
         duration: 60,
         room: "Sala Bambu",
         reservation: "13:45-15:15",
+        status: "Confirmado"
+    },
+    {
+        initialHour: "09:00",
+        finalHour: "10:00",
+        data: "19/10/2026",
+        client: "Guilherme Manso",
+        service: "Massagem terapêutica",
+        duration: 60,
+        room: "Sala Ipê",
+        reservation: "08:30-11:00",
+        status: "Agendado"
+    },
+    {
+        initialHour: "09:00",
+        finalHour: "10:00",
+        data: "18/10/2026",
+        client: "Ruan Carlos",
+        service: "Massagem terapêutica",
+        duration: 45,
+        room: "Sala Ipê",
+        reservation: "10:00-11:00",
+        status: "Confirmado"
+    },
+    {
+        initialHour: "09:00",
+        finalHour: "10:00",
+        data: "18/10/2026",
+        client: "Julia Claudia",
+        service: "Massagem relaxante",
+        duration: 50,
+        room: "Sala Ipê",
+        reservation: "15:00-16:00",
         status: "Confirmado"
     }
 ];
