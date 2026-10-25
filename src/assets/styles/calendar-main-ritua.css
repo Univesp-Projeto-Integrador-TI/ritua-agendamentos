@@ -130,13 +130,18 @@
             background-color: var(--color-green-background);
         }
 
-        .today {
+        .day-selected {
             background-color: var(--color-primary);
             color: var(--color-white-2);
             font-weight: var(--font-weight-medium);
         }
 
-        .today:hover{
+        .today {
+            color: var(--color-secondary);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .today:hover, .day-selected:hover{
             background-color: var(--color-primary);
             color: var(--color-white-2);
         }
