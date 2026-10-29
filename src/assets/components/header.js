@@ -28,7 +28,9 @@ class createHeader extends HTMLElement {
                     <span class="header-ritua-user-info-role">Desenvolvedor Rituá</span>
                 </div>
                 <button class="btn-user-settings">
-                    <img src="./src/assets/images/icon-settings.svg" alt="Ícone de configurações" class="header-ritua-user-settings-icon">
+                    <a href="./src/assets/pages/user-page.html" class="header-ritua-user-settings-icon">
+                        <img src="./src/assets/images/icon-settings.svg" alt="Ícone de configuração">
+                    </a>
                 </button>
             </div>
         </div>`;
