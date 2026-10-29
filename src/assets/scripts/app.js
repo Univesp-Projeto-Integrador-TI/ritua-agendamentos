@@ -6,3 +6,4 @@ import "../components/section-appointments-day.js";
 import "../components/card-next-service.js";
 import "../components/card-my-reservations.js";
 import "../components/card-week-rhythm.js";
+import "../components/subheader.js"
