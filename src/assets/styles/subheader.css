@@ -1,0 +1,25 @@
+.container-subheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 28px 48px;
+
+    .description-subheader {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        
+        h1{
+            color: var(--color-primary);
+        }
+
+        .description-page{
+            text-transform: uppercase;
+            color: var(--color-secondary);
+        }
+
+        .information-page {
+            color: var(--color-swamp);
+        }
+    }
+}
