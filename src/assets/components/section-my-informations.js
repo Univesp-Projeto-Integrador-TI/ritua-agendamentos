@@ -43,13 +43,105 @@ class createSectionMyInformation extends HTMLElement {
                         </div>
 
                         <div class="content-services-offered">
-                            <p class="message-services-offered" aria-live="polite">Massoterapia</p>
                         </div>
-                    </section>
 
+                        <p class="message-services-offered" aria-live="polite"></p>
+
+                        </section>
                 </section>
             </section>
         `
+
+        const inputService = this.querySelector(".input-service");
+        const btnInsertService = this.querySelector(".btn-insert-service");
+        const contentServices = this.querySelector(".content-services-offered");
+        const messageServices = this.querySelector(".message-services-offered");
+
+        const services = [];
+        const maxServices = 3;
+
+        const renderServices = () => {
+            contentServices.innerHTML = "";
+
+            services.forEach((service, index) => {
+                const tag = document.createElement("span");
+                tag.classList.add("service-tag");
+
+                const serviceName = document.createElement("span");
+                serviceName.textContent = service;
+
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.textContent = "×";
+                removeButton.setAttribute(
+                    "aria-label",
+                    `Remover serviço ${service}`
+                );
+
+                removeButton.addEventListener("click", () => {
+                    services.splice(index, 1);
+                    renderServices();
+                });
+
+                tag.append(serviceName, removeButton);
+                contentServices.appendChild(tag);
+            });
+
+            const limitReached = services.length >= maxServices;
+
+            inputService.disabled = limitReached;
+            btnInsertService.disabled = limitReached;
+
+            messageServices.textContent = limitReached
+                ? "Limite atingido: 3 serviços inseridos."
+                : `Você pode adicionar mais ${maxServices - services.length} serviço(s).`;
+        };
+
+        const insertService = () => {
+            const service = inputService.value.trim();
+
+            if (service === "") {
+                messageServices.textContent = "Digite o nome de um serviço.";
+                inputService.focus();
+                return;
+            }
+
+            if (services.length >= maxServices) {
+                messageServices.textContent = "Você já atingiu o limite de 3 serviços.";
+                return;
+            }
+
+            const alreadyExists = services.some(
+                item => item.toLowerCase() === service.toLowerCase()
+            );
+
+            if (alreadyExists) {
+                messageServices.textContent = "Esse serviço já foi adicionado.";
+                inputService.focus();
+                return;
+            }
+
+            services.push(service);
+
+            inputService.value = "";
+
+            renderServices();
+
+            if (services.length < maxServices) {
+                inputService.focus();
+            }
+        };
+
+        btnInsertService.addEventListener("click", insertService);
+
+        inputService.addEventListener("keydown", event => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                insertService();
+            }
+        });
+
+        renderServices();
     }
 }
 
