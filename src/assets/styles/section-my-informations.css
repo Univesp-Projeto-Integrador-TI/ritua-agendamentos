@@ -194,4 +194,90 @@
 
         }
     }
+
+    .card-my-security {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        border-radius: 16px;
+        padding: 28px; 
+
+        .header-my-security{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            img {
+                width: 22px;
+                height: 22px;
+            }
+
+            .title-my-security {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+
+                h4 {
+                color: var(--color-primary);
+                }
+                
+                p {
+                    color: var(--color-swamp);
+                }
+            }
+        }
+
+        .forms-my-security {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .container-forms {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                label {
+                    font-size: var(--font-body-size);
+                    font-weight: var(--font-weight-medium);
+                    color: var(--color-primary);
+                }
+
+                input {
+                    background-color: var(--color-white);
+                    padding: 16px 14px;
+                    border-radius: 10px;
+                    color: var(--color-primary);
+                    border: 1px solid var(--color-gray-1);
+                    transition: 0.5s ease;
+                }
+
+                input::placeholder{
+                    color: var(--color-swamp);
+                }
+
+                input:focus{
+                    outline: 2px solid var(--color-swamp);
+                }
+            }
+
+            .container-news-password {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+
+            
+            
+        }
+
+        .info-my-security {
+            color: var(--color-swamp);
+        }
+    }
+
+    
 }
