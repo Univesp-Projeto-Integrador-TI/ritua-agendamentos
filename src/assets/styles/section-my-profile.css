@@ -1,3 +1,10 @@
+main {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    gap: 24px; 
+    margin: 0px 48px 48px 48px;
+}
+
 .section-my-profile {
     display: flex;
     flex-direction: column;
