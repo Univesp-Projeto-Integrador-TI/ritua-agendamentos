@@ -79,6 +79,14 @@ class createSectionMyInformation extends HTMLElement {
                     <p class="info-my-security">Use pelo menos 8 caracteres, com letras e números. Deixe os campos em branco para manter sua senha atual.</p>
                 </section>
 
+                <section class="section-btn-save-my-config">
+                    <p class="info-group-btn-save">Revise seus dados antes de salvar.</p>
+                    <div class="container-btn">
+                        <button class="btn-cancel">Cancelar</button>
+                        <button class="btn-save">Salvar alterações</button>
+                    </div>
+                </section>
+
             </section>
         `
 
