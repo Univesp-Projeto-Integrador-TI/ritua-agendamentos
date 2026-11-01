@@ -1,0 +1,75 @@
+main {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    gap: 24px; 
+    margin: 0px 48px 48px 48px;
+}
+
+.section-my-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    .card-my-profile {
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        gap: 18px;
+        
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        border-radius: 16px;
+
+        .title-card-my-profile {
+            color: var(--color-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .img-user-profile {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--color-green-background);
+            padding: 18px;
+                
+        }
+
+        .info-card-my-profile{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .card-name-user {
+                color: var(--color-primary);
+            }
+            
+            .profission-primary {
+                color: var(--color-swamp);
+            }
+        }
+    }
+
+    .iformation-my-profile {
+        display: flex;
+        flex-direction: column;
+        padding: 28px;
+        gap: 12px;
+
+        background-color: var(--color-green-background);
+        border-radius: 16px;
+
+        .icon-lock-keyhole-profile {
+            width: 20px;
+            height: 20px;
+        }
+
+        .title-card-information-profile {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-primary);
+        }
+
+        .info-card-information-profile {
+            color: var(--color-swamp);
+        }
+    }
+}

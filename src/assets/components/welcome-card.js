@@ -20,27 +20,27 @@ class createWelcomeCard extends HTMLElement {
                     <a href="agendamentos.html" class="button-welcome">+ Novo agendamento</a>
                 </div>
             </section>
-        `
+        `;
+
+        const data = new Date();
+
+        document.getElementById("data-atual").textContent = 
+            data.toLocaleDateString("pt-BR", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+        });
+
+        document.getElementById("saudacao").textContent =
+            data.getHours() < 12 ? `Bom dia, ${name}!` :
+            data.getHours() < 18 ? `Boa tarde, ${name}!` :
+            `Boa noite, ${name}!`;
+
+        document.getElementById("descricao").textContent =
+            qtdAtendimentos >= 1 ? `Seu dia começa aqui! Você tem ${qtdAtendimentos} atendimentos agendados para hoje.` :
+            `Seu dia começa aqui! Você não tem atendimentos agendados para hoje.`;
     }
 }
 
 customElements.define('container-welcome-card', createWelcomeCard);
-
-const data = new Date();
-
-document.getElementById("data-atual").textContent = 
-    data.toLocaleDateString("pt-BR", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-});
-
-document.getElementById("saudacao").textContent =
-    data.getHours() < 12 ? `Bom dia, ${name}!` :
-    data.getHours() < 18 ? `Boa tarde, ${name}!` :
-    `Boa noite, ${name}!`;
-
-document.getElementById("descricao").textContent =
-    qtdAtendimentos >= 1 ? `Seu dia começa aqui! Você tem ${qtdAtendimentos} atendimentos agendados para hoje.` :
-    `Seu dia começa aqui! Você não tem atendimentos agendados para hoje.`;
