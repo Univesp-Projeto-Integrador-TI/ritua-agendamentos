@@ -47,8 +47,38 @@ class createSectionMyInformation extends HTMLElement {
 
                         <p class="message-services-offered" aria-live="polite"></p>
 
-                        </section>
+                    </section>
                 </section>
+
+                <section class="card-my-security">
+                    <header class="header-my-security">
+                        <img class="img-keyhole" src="/src/assets/images/icon-lock-keyhole.svg">
+                        <div class="title-my-security">
+                            <h4>Minha seguraça</h4>
+                            <p>Para alterar sua senha, preencha os campos abaixo.</p>
+                        </div>
+                    </header>
+
+                    <form class="forms-my-security" action="" method="">
+                        <div class="container-current password container-forms">
+                            <label for="current-password">Senha atual</label>
+                            <input class="input-current-password input" type="password" placeholder="Digite sua senha atual" name="input-current-password">
+                        </div>
+                        <div class="container-news-password">
+                            <div class="container-new-password container-forms">
+                                <label for="new-password">Nova senha</label>
+                                <input type="password" class="input-new-password input" placeholder="Crie uma nova senha" name="input-new-password">
+                            </div>
+                            <div class="container-confirm-password container-forms">
+                                <label for="confirm-password">Confirmar nova senha</label>
+                                <input type="password" class="input-confirm-password input" placeholder="Repita a nova senha" name="input-confirm-password">
+                            </div>
+                        </div>
+                    </form>
+
+                    <p class="info-my-security">Use pelo menos 8 caracteres, com letras e números. Deixe os campos em branco para manter sua senha atual.</p>
+                </section>
+
             </section>
         `
 
