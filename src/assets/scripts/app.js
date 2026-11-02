@@ -10,3 +10,4 @@ import "../components/subheader.js";
 import "../components/section-my-profile.js";
 import "../components/section-my-informations.js";
 import "../components/main-initial-clients.js";
+import "../components/modal-new-client.js";
