@@ -17,7 +17,16 @@ class createSubHeader extends HTMLElement {
         this.querySelector(".title-page").textContent = title_page;
         this.querySelector(".information-page").textContent = information_page;
 
+
         
+        if (this.hasAttribute("button-back")) {
+            const button_back = document.createElement("button");
+
+            button_back.classList.add("button-back");
+            button_back.innerHTML = "&#10094 Voltar";
+
+            this.querySelector(".description-page").replaceWith(button_back);
+        }
     }
 }
 
