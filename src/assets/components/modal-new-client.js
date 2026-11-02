@@ -27,13 +27,13 @@ class ModalNewClient extends HTMLElement {
 
                         <div class="group-fields-client">
                             <div class="field-client">
-                                <label for="nascimento-cliente"> Data de nascimento</label>
-                                <input type="date" id="nascimento-cliente" name="nascimento">
+                                <label for="nascimento-cliente"> Data de nascimento *</label>
+                                <input type="date" id="nascimento-cliente" name="nascimento" required>
                             </div>
 
                             <div class="field-client">
-                                <label for="genero-cliente">Gênero</label>
-                                <select id="genero-cliente" name="genero">
+                                <label for="genero-cliente">Gênero *</label>
+                                <select id="genero-cliente" name="genero" required>
                                     <option value="">Selecione, se desejar</option>
                                     <option value="feminino">Feminino</option>
                                     <option value="masculino">Masculino</option>
@@ -52,8 +52,8 @@ class ModalNewClient extends HTMLElement {
                             </div>
 
                             <div class="field-client">
-                                <label for="telefone-cliente">Telefone</label>
-                                <input type="tel" id="telefone-cliente" name="telefone" placeholder="(00) 00000-0000">
+                                <label for="telefone-cliente">Telefone *</label>
+                                <input type="tel" id="telefone-cliente" name="telefone" placeholder="(00) 00000-0000" required>
                             </div>
                         </div>
 
