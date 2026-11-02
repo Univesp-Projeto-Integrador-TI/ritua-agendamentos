@@ -1,0 +1,324 @@
+.main-inicial-clientes {
+    width: 100%;
+    min-width: 0;
+    padding: 0px 48px 48px 48px;
+
+    .section-tabela-clientes {
+        width: 100%;
+        min-width: 0;
+        padding: 24px;
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        border-radius: 20px;
+
+        .header-tabela-clientes {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+
+            h4{
+                color: var(--color-primary)
+            }
+
+            span {
+                color: var(--color-swamp);
+                font-size: var(--font-body-size);
+                font-weight: var(--font-weight-regular);
+            }
+        }
+
+        .content-busca-clientes {
+            display: flex;
+            width: 100%;
+            margin-bottom: 20px;
+
+            .input-busca-clientes {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .icon-busca-clientes {
+                svg {
+                    width: 20px;
+                    height: 20px;
+                    margin-left: -40px;
+                    margin-top: 14px;
+                    cursor: pointer;
+                }
+                transition: 0.2s ease;
+            }
+
+            .icon-busca-clientes:hover {
+                transition: 0.2s ease;
+                svg path{
+                    stroke: var(--color-secondary);
+                }
+            }
+        }
+
+        .container-tabela-clientes {
+            width: 100%;
+            min-width: 0;
+
+            .tabela-clientes {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+                color: var(--color-primary);
+                font-family: inherit;
+
+                thead {
+                    tr {
+                        text-align: left;
+
+                        th {
+                            background-color: var(--color-green-background);
+                            color: var(--color-primary);
+                            font-size: var(--font-body-size);
+                            font-weight: var(--font-weight-semibold);
+                            padding: 12px 8px;
+                        }
+
+                        th:first-child {
+                            border-radius: 8px 0 0 8px;
+                        }
+
+                        th:last-child {
+                            border-radius: 0 8px 8px 0;
+                        }
+                    }
+                }
+
+                tbody {
+                    tr {
+                        border-bottom: 1px solid #E9E7DE;
+
+                        td {
+                            padding: 16px 8px;
+                            vertical-align: middle;
+                            font-size: var(--font-body-size);
+                            color: var(--color-primary);
+                        }
+
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                    }
+                }
+            }
+
+            .tabela-clientes {
+                th:nth-child(1),
+                td:nth-child(1) {
+                    width: 25%;
+                }
+
+                th:nth-child(2),
+                td:nth-child(2) {
+                    font-size: var(--font-body-size);
+                    width: 30%;
+                }
+
+                th:nth-child(3),
+                td:nth-child(3) {
+                    font-size: var(--font-body-size);
+                    width: 30%;
+                }
+
+                th:nth-child(4),
+                td:nth-child(4) {
+                    font-size: var(--font-body-size);
+                    width: 15%;
+                }
+
+    
+                td:nth-child(4):hover {
+                    width: 15%;
+                }
+
+                .info-cliente {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    min-width: 0;
+
+                    .foto-cliente {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        background-color: var(--color-green-background);
+                        padding: 10px;
+                    }
+
+                    .nome-cliente {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        color: var(--color-primary);
+                        font-weight: var(--font-weight-medium);
+                    }
+                }
+
+                .info-contato {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    min-width: 0;
+
+                    .email-cliente {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        font-size: var(--font-body-size);
+                        font-weight: var(--font-weight-medium);
+                        color: var(--color-primary);
+                    }
+
+                    .telefone-cliente {
+                        font-size: var(--font-body-size);
+                        color: var(--color-swamp);
+                    }
+                }
+
+                .info-proximo-atendimento {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                    min-width: 0;
+
+                    .descricao-proximo-atendimento {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        font-size: var(--font-body-size);
+                        font-weight: var(--font-weight-medium);
+                        color: var(--color-primary);
+                    }
+
+                    .duracao-atendimento {
+                        font-size: var(--font-body-size);
+                        color: var(--color-swamp);
+                    }
+
+                    .sem-proximo-atendimento {
+                        color: var(--color-swamp);
+                    }
+                }
+
+                .link-detalhes-cliente {
+                    display: inline-block;
+
+                    color: var(--color-primary);
+                    font-size: var(--font-body-size);
+                    font-weight: var(--font-weight-semibold);
+
+                    text-decoration: none;
+                    white-space: nowrap;
+
+                    transition: color 0.1s ease;
+                }
+
+                .link-detalhes-cliente:hover {
+                    color: var(--color-secondary);
+                    transition: color 0.2s ease-out;
+                    text-decoration: underline;
+                }
+
+                .mensagem-sem-clientes {
+                    height: 300px;
+                    text-align: center;
+                    vertical-align: middle;
+                    color: var(--color-swamp);
+                    font-size: var(--font-body-size);
+
+                    .content-sem-clientes {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 20px;
+                        width: 100%;
+                        box-sizing: border-box;
+                        padding: 24px 12px;
+
+                        .icon-sem-clientes {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            width: 60px;
+                            height: 60px;
+
+                            border-radius: 50%;
+                            background-color: var(--color-green-background);
+                            
+                            svg {
+                                width: 26px;
+                                height: 26px;
+                            }
+
+                            path {
+                                stroke: var(--color-primary);
+                            }
+                        }
+
+                        p {
+                            color: var(--color-primary);
+                        }
+                    }
+                }              
+            }
+
+            border-bottom: 1px solid var(--color-gray-1);
+        }
+
+        
+        .footer-tabela-clientes {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding-top: 20px;
+        }
+
+        .paginacao-clientes {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 36px;
+                height: 36px;
+                padding: 0 10px;
+                border-radius: 8px;
+                background-color: transparent;
+                color: var(--color-swamp);
+                cursor: pointer;
+            }
+
+            button.pagina-atual {
+                background-color: var(--color-primary);
+                border-color: var(--color-primary);
+                color: #FFFFF1;
+            }
+
+            button:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+        }
+
+        .informacao-paginacao{
+            font-size: var(--font-body-size);
+            color: var(--color-swamp);
+        }
+    }
+}
+

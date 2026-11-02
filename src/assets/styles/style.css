@@ -1,0 +1,28 @@
+.subheader-my-clients {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 48px;
+    align-items: center;
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 18px;
+
+        font-size: var(--font-button-size);
+        border-radius: 12px;
+        background-color: var(--color-secondary);
+        color: var(--color-white-3);
+        transition: 0.2s ease;
+        transform: translateY(0);
+        cursor: pointer;
+    }
+
+    button:hover {
+        color: var(--color-white-3);
+        background-color: var(--effect-hover-color-secondary);
+        transition: 0.2s ease;
+        transform: translateY(-1px);
+    }
+}

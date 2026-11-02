@@ -8,7 +8,7 @@ class createHeader extends HTMLElement {
                     <img src="/src/assets/images/icon-home.svg" alt="Ícone de casa" class="header-ritua-nav-link-icon">
                     Início
                 </a>
-                <a href="/src/assets/pages/clientes.html" class="header-ritua-nav-link"> 
+                <a href="/src/assets/pages/clients-page.html" class="header-ritua-nav-link"> 
                     <img src="/src/assets/images/icon-people.svg" alt="Ícone de pessoa" class="header-ritua-nav-link-icon">
                     Clientes
                 </a>
