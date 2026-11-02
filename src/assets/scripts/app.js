@@ -11,3 +11,4 @@ import "../components/section-my-profile.js";
 import "../components/section-my-informations.js";
 import "../components/main-initial-clients.js";
 import "../components/modal-new-client.js";
+import "../components/modal-edit-client.js";
