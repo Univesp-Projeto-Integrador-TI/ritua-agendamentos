@@ -417,7 +417,7 @@ class MainInicialClientes extends HTMLElement {
                     </td>
 
                     <td>
-                        <ahref="./user-page.html?id=${encodeURIComponent(cliente.id)}" class="link-detalhes-cliente">
+                        <a href="./client-detail-page.html?id=${encodeURIComponent(cliente.id)}" class="link-detalhes-cliente">
                             Ver detalhes
                         </a>
                     </td>
