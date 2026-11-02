@@ -196,6 +196,27 @@ class MainInicialClientes extends HTMLElement {
             this.filtrarClientes(event.target.value);
         });
 
+        
+        const modal = document.querySelector("modal-new-client");
+        const botaoNovoCliente = document.querySelector(".btn-novo-cliente");
+
+        if (modal && botaoNovoCliente) {
+            botaoNovoCliente.addEventListener("click", () => {
+                modal.classList.add("modal-open");
+                console.log("Modal aberto");
+            });
+
+            modal.addEventListener("click", event => {
+                if (
+                    event.target.classList.contains("overlay-modal-client") ||
+                    event.target.closest(".btn-close-modal-client") ||
+                    event.target.closest(".btn-cancel-modal-client")
+                ) {
+                    modal.classList.remove("modal-open");
+                }
+            });
+        }
+
         this.renderizarClientes();
     }
 
@@ -404,7 +425,6 @@ class MainInicialClientes extends HTMLElement {
             `;
         }).join("");
     }
-    
 }
 
 
