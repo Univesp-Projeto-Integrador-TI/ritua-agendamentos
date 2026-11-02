@@ -160,3 +160,20 @@ a {
     font-size: var(--font-detail-size);
     font-weight: var(--font-weight-regular);
 }
+
+input {
+    background-color: var(--color-white);
+    padding: 16px 14px;
+    border-radius: 10px;
+    color: var(--color-primary);
+    border: 1px solid var(--color-gray-1);
+    transition: 0.5s ease;
+}
+
+input::placeholder{
+    color: var(--color-swamp);
+}
+
+input:focus{
+    outline: 2px solid var(--color-swamp);
+}
