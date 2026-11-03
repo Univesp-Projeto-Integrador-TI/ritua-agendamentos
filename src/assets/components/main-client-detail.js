@@ -37,8 +37,15 @@ class MainClientDetail extends HTMLElement {
                             </div>
                         </section>
                     </section>
-
                     <card-next-service></card-next-service>
+                </section>
+
+                <section class="section-registration-observations">
+                    <header class="header-registration-observations">
+                        <h4 class="title-registration-observations">Observações</h4>
+                    </header>
+
+                    <p class="info-registration-observations">Prefere receber confirmações por WhatsApp. Avisar com antecedência em caso de alteração de horário.</p>
                 </section>
             </main>
         `;
