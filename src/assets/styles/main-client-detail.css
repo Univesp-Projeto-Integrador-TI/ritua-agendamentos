@@ -46,3 +46,30 @@
         }
     }
 }
+
+.section-registration-observations {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: var(--color-white-3);
+    border: 1px solid var(--color-gray-1);
+    padding: 28px;
+    border-radius: 20px;
+
+    .header-registration-observations {
+        h4 {
+            color: var(--color-primary);
+        }
+    }
+
+    .info-registration-observations {
+        font-size: var(--font-body-size);
+        color: var(--color-gray-2);
+
+        p {
+            color: var(--color-primary);
+            font-size: var(--font-subtitle-size);
+            font-weight: var(--font-weight-medium);
+        }
+    }
+}
