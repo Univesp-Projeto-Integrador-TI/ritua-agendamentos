@@ -1,0 +1,48 @@
+.section-registration-initial {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+
+    .card-registration-fingers{
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        padding: 28px;
+        border-radius: 20px;
+
+        h4 {
+            color: var(--color-primary);
+            border-bottom: 1px solid var(--color-gray-1);
+            padding-bottom: 20px;
+        }
+
+        .detail-registration-fingers {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+
+            .info-registration-fingers {
+                font-size: var(--font-body-size);
+                color: var(--color-gray-2);
+                margin-top: 6px;
+
+                p {
+                    color: var(--color-primary);
+                    font-size: var(--font-subtitle-size);
+                    font-weight: var(--font-weight-medium);
+                }
+            }
+
+            .group-info-registration-fingers {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+
+            
+            }
+        }
+    }
+}
