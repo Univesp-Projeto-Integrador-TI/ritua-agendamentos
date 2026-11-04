@@ -8,6 +8,8 @@ const clientes = [
             data: "05/11/2026",
             horario: "10:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -27,6 +29,8 @@ const clientes = [
             data: "06/11/2026",
             horario: "11:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -39,6 +43,8 @@ const clientes = [
             data: "05/11/2026",
             horario: "10:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -58,6 +64,8 @@ const clientes = [
             data: "06/11/2026",
             horario: "11:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     }, 
@@ -70,6 +78,8 @@ const clientes = [
             data: "05/11/2026",
             horario: "10:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -89,6 +99,8 @@ const clientes = [
             data: "06/11/2026",
             horario: "11:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -101,6 +113,8 @@ const clientes = [
             data: "05/11/2026",
             horario: "10:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -120,6 +134,8 @@ const clientes = [
             data: "06/11/2026",
             horario: "11:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     },
@@ -132,6 +148,8 @@ const clientes = [
             data: "06/11/2026",
             horario: "11:00",
             servico: "Massagem relaxante",
+            sala: "Sala Ipê",
+            status: "Confirmado",
             duracao: 60
         }
     }
@@ -312,7 +330,15 @@ class MainClientDetail extends HTMLElement {
                             </div>
                         </section>
                     </section>
-                    <card-next-service></card-next-service>
+                    <card-next-service
+                        nome="${clienteSelecionado.nome}"
+                        data="${clienteSelecionado.proximoAtendimento?.data || ''}"
+                        horario="${clienteSelecionado.proximoAtendimento?.horario || ''}"
+                        servico="${clienteSelecionado.proximoAtendimento?.servico || ''}"
+                        room="${clienteSelecionado.proximoAtendimento?.sala || ''}"
+                        status="${clienteSelecionado.proximoAtendimento?.status || ''}"
+                        duracao="${clienteSelecionado.proximoAtendimento?.duracao || ''} min">
+                    </card-next-service>
                 </section>
 
                 <section class="section-registration-observations">
