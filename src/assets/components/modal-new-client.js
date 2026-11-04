@@ -1,4 +1,13 @@
 class ModalNewClient extends HTMLElement {
+
+    abrir() {
+        this.classList.add("modal-open");
+    }
+
+    fechar() {
+        this.classList.remove("modal-open");
+    }
+
     connectedCallback() {
         this.innerHTML = `
             <div class="overlay-modal-client">
@@ -73,6 +82,24 @@ class ModalNewClient extends HTMLElement {
                 </section>
             </div>
         `
+
+        const overlay = this.querySelector(".overlay-modal-client");
+        const botaoFechar = this.querySelector(".btn-close-modal-client");
+        const botaoCancelar = this.querySelector(".btn-cancel-modal-client");
+
+        botaoFechar.addEventListener("click", () => {
+            this.fechar();
+        });
+
+        botaoCancelar.addEventListener("click", () => {
+            this.fechar();
+        });
+
+        overlay.addEventListener("click", event => {
+            if (event.target === overlay) {
+                this.fechar();
+            }
+        });
     }
 }
 

@@ -1,4 +1,23 @@
 class ModalEditClient extends HTMLElement {
+    abrirComCliente(cliente) {
+
+        const partesData = cliente.dataNascimento.split("/");
+
+        const dataFormatada = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
+
+        this.querySelector("#genero-cliente").value =cliente.genero.toLowerCase();
+        this.querySelector("#nascimento-cliente").value = dataFormatada;
+        this.querySelector("#nome-cliente").value = cliente.nome;
+        this.querySelector("#email-cliente").value = cliente.email;
+        this.querySelector("#telefone-cliente").value = cliente.telefone;
+
+        this.querySelector("#observacoes-cliente").value =
+            cliente.observacoes || "";
+
+        
+        this.classList.add("modal-open");
+    };
+
     connectedCallback() {
         this.innerHTML = `
             <div class="overlay-modal-client">
@@ -72,7 +91,25 @@ class ModalEditClient extends HTMLElement {
                     </form>
                 </section>
             </div>
-        `
+        `;
+
+        const overlay = this.querySelector(".overlay-modal-client");
+        const botaoFechar = this.querySelector(".btn-close-modal-client");
+        const botaoCancelar = this.querySelector(".btn-cancel-modal-client");
+
+        botaoFechar.addEventListener("click", () => {
+            this.classList.remove("modal-open");
+        });
+
+        botaoCancelar.addEventListener("click", () => {
+            this.classList.remove("modal-open");
+        });
+
+        overlay.addEventListener("click", event => {
+            if (event.target === overlay) {
+                this.classList.remove("modal-open");
+            }
+        });
     }
 }
 
