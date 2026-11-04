@@ -4,6 +4,8 @@ const clientes = [
         nome: "Ana Souza",
         email: "ana.souza@email.com",
         telefone: "(11) 98765-4321",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         proximoAtendimento: {
             data: "05/11/2026",
             horario: "10:00",
@@ -17,6 +19,8 @@ const clientes = [
         id: 2,
         nome: "Maria Oliveira",
         email: "maria.oliveira@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 97654-3210",
         proximoAtendimento: null
     },
@@ -24,6 +28,8 @@ const clientes = [
         id: 3,
         nome: "João Silva",
         email: "joao.silva@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 96543-2109",
         proximoAtendimento: {
             data: "06/11/2026",
@@ -38,6 +44,8 @@ const clientes = [
         id: 4,
         nome: "Ana Souza",
         email: "ana.souza@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 98765-4321",
         proximoAtendimento: {
             data: "05/11/2026",
@@ -52,6 +60,8 @@ const clientes = [
         id: 5,
         nome: "Maria Oliveira",
         email: "maria.oliveira@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 97654-3210",
         proximoAtendimento: null
     },
@@ -59,6 +69,8 @@ const clientes = [
         id: 6,
         nome: "João Silva",
         email: "joao.silva@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 96543-2109",
         proximoAtendimento: {
             data: "06/11/2026",
@@ -74,6 +86,8 @@ const clientes = [
         nome: "Ana Souza",
         email: "ana.souza@email.com",
         telefone: "(11) 98765-4321",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         proximoAtendimento: {
             data: "05/11/2026",
             horario: "10:00",
@@ -87,6 +101,8 @@ const clientes = [
         id: 8,
         nome: "Maria Oliveira",
         email: "maria.oliveira@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 97654-3210",
         proximoAtendimento: null
     },
@@ -94,6 +110,8 @@ const clientes = [
         id: 9,
         nome: "João Silva",
         email: "joao.silva@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 96543-2109",
         proximoAtendimento: {
             data: "06/11/2026",
@@ -108,6 +126,8 @@ const clientes = [
         id: 10,
         nome: "Ana Souza",
         email: "ana.souza@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 98765-4321",
         proximoAtendimento: {
             data: "05/11/2026",
@@ -122,6 +142,8 @@ const clientes = [
         id: 11,
         nome: "Maria Oliveira",
         email: "maria.oliveira@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 97654-3210",
         proximoAtendimento: null
     },
@@ -129,6 +151,8 @@ const clientes = [
         id: 12,
         nome: "Rhuan Carlos",
         email: "rhuan.carlos@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 96543-2109",
         proximoAtendimento: {
             data: "06/11/2026",
@@ -143,6 +167,8 @@ const clientes = [
         id: 13,
         nome: "Guilherme Santos",
         email: "guilherme.santos@email.com",
+        dataNascimento: "19/02/1982",
+        genero: "Feminino",
         telefone: "(11) 96543-2109",
         proximoAtendimento: {
             data: "06/11/2026",
@@ -248,6 +274,14 @@ class MainClientDetail extends HTMLElement {
             `;
             return;
         }
+
+        const botaoEditar = document.querySelector(".button-edit-client");
+        const modalEditar = document.querySelector("modal-edit-client");
+        
+
+        botaoEditar.addEventListener("click", () => {
+            modalEditar.abrirComCliente(clienteSelecionado);
+        });
 
         const historicoCliente = appointments.filter(
             agendamento => agendamento.clientId === idCliente
