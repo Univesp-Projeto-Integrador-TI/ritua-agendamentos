@@ -196,6 +196,16 @@ class MainInicialClientes extends HTMLElement {
             this.filtrarClientes(event.target.value);
         });
 
+        
+        const modal = document.querySelector("modal-new-client");
+        const botaoNovoCliente = document.querySelector(".btn-novo-cliente");
+
+        if (modal && botaoNovoCliente) {
+            botaoNovoCliente.addEventListener("click", () => {
+                modal.abrir();
+            });
+        }
+
         this.renderizarClientes();
     }
 
@@ -396,7 +406,7 @@ class MainInicialClientes extends HTMLElement {
                     </td>
 
                     <td>
-                        <ahref="./user-page.html?id=${encodeURIComponent(cliente.id)}" class="link-detalhes-cliente">
+                        <a href="./client-detail-page.html?id=${encodeURIComponent(cliente.id)}" class="link-detalhes-cliente">
                             Ver detalhes
                         </a>
                     </td>
@@ -404,7 +414,6 @@ class MainInicialClientes extends HTMLElement {
             `;
         }).join("");
     }
-    
 }
 
 

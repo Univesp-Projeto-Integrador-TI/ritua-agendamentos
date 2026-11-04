@@ -1,6 +1,7 @@
-.subheader-my-clients {
+.subheader-my-clients, .subheader-client-detail {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding-right: 48px;
     align-items: center;
 

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../styles/header.css">
     <link rel="stylesheet" href="../styles/subheader.css">
     <link rel="stylesheet" href="../styles/main-initial-clients.css">
+    <link rel="stylesheet" href="../styles/modal-new-client.css">
+    <link rel="stylesheet" href="../styles/modal-edit-client.css">
     <script type="module" src="../scripts/app.js" defer></script>
     <title>Rituá Terapias | Meus clientes</title>
 </head>
@@ -21,10 +23,13 @@
             title-page="Meus clientes"
             information-page="Encontre contatos e acompanhe os atendimentos da sua base pessoal.">
         ></subheader-ritua>
-        <button>
+        <button class="btn-novo-cliente">
             + Novo cliente
         </button>
     </div>
     <main-initial-clients></main-initial-clients>
+
+    <modal-new-client></modal-new-client>
+    <modal-edit-client></modal-edit-client>
 </body>
 </html>

@@ -7,6 +7,7 @@
     .description-subheader {
         display: flex;
         flex-direction: column;
+        align-items: start;
         gap: 8px;
         
         h1{
@@ -20,6 +21,19 @@
 
         .information-page {
             color: var(--color-swamp);
+        }
+
+        .button-back {
+            text-transform: uppercase;
+            color: var(--color-secondary);
+            background-color: transparent;
+            border: none;
+            transition: 0.2s ease;
+        }
+
+        .button-back:hover {
+            transition: 0.2s ease;
+            font-weight: var(--font-weight-semibold);
         }
     }
 }

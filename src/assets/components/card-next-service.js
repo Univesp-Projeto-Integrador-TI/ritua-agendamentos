@@ -1,5 +1,13 @@
 class createCardNextService extends HTMLElement {
     connectedCallback(){
+        const nome = this.getAttribute("nome");
+        const data = this.getAttribute("data");
+        const hour = this.getAttribute("horario");
+        const service = this.getAttribute("servico");
+        const room = this.getAttribute("room");
+        const duration = this.getAttribute("duracao");
+        const status = this.getAttribute("status");
+
         this.innerHTML = `
             <section class="container-card-next-service">
                 <header class="header-card-next-service">
@@ -10,8 +18,8 @@ class createCardNextService extends HTMLElement {
                         </svg>
                     </div>
                     <div class="detail-header-card-next-service">
-                        <h2 class="txt-name-client">Ana Souza</h2>
-                        <span class="info-service">Massagem relaxante · 60 min</span>
+                        <h2 class="txt-name-client">${nome}</h2>
+                        <span class="info-service">${service} · ${duration}</span>
                     </div>
                 </header>
 
@@ -20,15 +28,16 @@ class createCardNextService extends HTMLElement {
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M6 1.49939V4.49963M12 1.49939V4.49963M2.25 7.49987H15.75M6 10.5001H6.0075M9 10.5001H9.0075M12 10.5001H12.0075M6 13.5003H6.0075M9 13.5003H9.0075M12 13.5003H12.0075M3.75 2.99951H14.25C15.0784 2.99951 15.75 3.67114 15.75 4.49963V15.0005C15.75 15.829 15.0784 16.5006 14.25 16.5006H3.75C2.92157 16.5006 2.25 15.829 2.25 15.0005V4.49963C2.25 3.67114 2.92157 2.99951 3.75 2.99951Z" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
                         </svg>
-                        <p>Hoje, 05 out · 10:00–11:00</p>
+
+                        <p>${data}</p>
                     </span>
 
                     <span class="info-card-next-service">
                         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M8.25005 15.0007H1.49951M14.2505 15.0009L9.18163 16.2677C9.07108 16.2952 8.95571 16.2973 8.84426 16.2736C8.73281 16.2499 8.62823 16.2012 8.53843 16.131C8.44864 16.0609 8.376 15.9713 8.32604 15.8689C8.27607 15.7665 8.25008 15.6541 8.25005 15.5402V3.42217C8.2502 3.1943 8.30226 2.96871 8.40229 2.76396C8.50232 2.55922 8.64768 2.37996 8.82734 2.23978C9.007 2.0996 9.21624 2.00219 9.43917 1.95495C9.6621 1.90771 9.89287 1.91188 10.114 1.96714L13.1142 2.71715C13.4387 2.79827 13.7268 2.98553 13.9327 3.24916C14.1386 3.5128 14.2505 3.83768 14.2505 4.17218V15.0009ZM14.2505 15.0009L16.5007 15.0007M8.25005 3.00051H5.99987C5.60201 3.00051 5.22045 3.15855 4.93913 3.43986C4.6578 3.72117 4.49975 4.10271 4.49975 4.50054V15.0007M10.5002 9.00063H10.5077" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
                         </svg>
-                        <p>Sala Bambu</p>
-                        <span class="status-card-next-service">Confirmado</span>
+                        <p>${room}</p>
+                        <span class="status-card-next-service">${status}</span>
                     </span>
                 </div>
 
