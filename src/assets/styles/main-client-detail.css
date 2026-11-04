@@ -1,8 +1,86 @@
-.section-registration-initial {
-    display: grid;
-    grid-template-columns: 1fr 0.5fr;
+.main-detalhe-cliente{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 48px 48px 48px;
 
-    .card-registration-fingers{
+    .section-registration-initial {
+        display: grid;
+        grid-template-columns: 1fr 0.5fr;
+        gap: 20px;
+
+        .card-registration-fingers{
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            background-color: var(--color-white-3);
+            border: 1px solid var(--color-gray-1);
+            padding: 28px;
+            border-radius: 20px;
+
+            h4 {
+                color: var(--color-primary);
+                border-bottom: 1px solid var(--color-gray-1);
+                padding-bottom: 20px;
+            }
+
+            .detail-registration-fingers {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .info-registration-fingers {
+                    font-size: var(--font-body-size);
+                    color: var(--color-gray-2);
+                    margin-top: 6px;
+
+                    p {
+                        color: var(--color-primary);
+                        font-weight: var(--font-weight-medium);
+                    }
+                }
+
+                .group-info-registration-fingers {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 12px;
+
+                    
+                }
+            }
+        }
+    }
+
+    .section-registration-observations {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        padding: 28px;
+        border-radius: 20px;
+
+        .header-registration-observations {
+            h4 {
+                color: var(--color-primary);
+            }
+        }
+
+        .info-registration-observations {
+            font-size: var(--font-body-size);
+            color: var(--color-gray-2);
+
+            p {
+                color: var(--color-primary);
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-medium);
+            }
+        }
+    }
+
+    .section-history-appointments {
         display: flex;
         flex-direction: column;
         gap: 24px;
@@ -11,65 +89,66 @@
         padding: 28px;
         border-radius: 20px;
 
-        h4 {
-            color: var(--color-primary);
-            border-bottom: 1px solid var(--color-gray-1);
-            padding-bottom: 20px;
-        }
-
-        .detail-registration-fingers {
+        .header-history-appointments{
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 6px;
+            
+            .title-history-appointments {
+                color: var(--color-primary);
+            }
 
-            .info-registration-fingers {
-                font-size: var(--font-body-size);
-                color: var(--color-gray-2);
-                margin-top: 6px;
+            p {
+                color: var(--color-swamp);
+            }
+        }
+        
+        .card-history-appointments {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
 
-                p {
+            border-top: 1px solid var(--color-gray-1) ;
+            padding-top: 14px;
+            padding-bottom: 24px;
+
+            .main-card-history-appointmens {
+                display: flex;
+                gap: 24px; 
+
+                .img-history-appointments svg{
+                    path{
+                        stroke: var(--color-secondary);
+                    }
+                }
+
+                .info-history-appointments {
                     color: var(--color-primary);
-                    font-size: var(--font-subtitle-size);
+                }
+
+                .info-history-appointments:nth-child(1){
                     font-weight: var(--font-weight-medium);
+                }
+
+                .info-history-appointments:nth-child(3){
+                    color: var(--color-swamp);
                 }
             }
 
-            .group-info-registration-fingers {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                justify-content: space-between;
-                align-items: center;
-                gap: 12px;
-
-            
+            .status-history-appointments p{
+                color: var(--color-primary);
+                background-color: var(--color-green-background);
+                padding: 5px 10px;
+                border-radius: 100px;
             }
         }
     }
 }
 
-.section-registration-observations {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background-color: var(--color-white-3);
-    border: 1px solid var(--color-gray-1);
-    padding: 28px;
-    border-radius: 20px;
-
-    .header-registration-observations {
-        h4 {
-            color: var(--color-primary);
-        }
-    }
-
-    .info-registration-observations {
-        font-size: var(--font-body-size);
-        color: var(--color-gray-2);
-
-        p {
-            color: var(--color-primary);
-            font-size: var(--font-subtitle-size);
-            font-weight: var(--font-weight-medium);
-        }
-    }
+.empty-history{
+    color: var(--color-primary);
+    text-align: center;
+    font-weight: var(--font-weight-medium);
 }
+
+
