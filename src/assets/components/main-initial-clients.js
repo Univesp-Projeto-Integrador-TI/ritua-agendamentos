@@ -202,18 +202,7 @@ class MainInicialClientes extends HTMLElement {
 
         if (modal && botaoNovoCliente) {
             botaoNovoCliente.addEventListener("click", () => {
-                modal.classList.add("modal-open");
-                console.log("Modal aberto");
-            });
-
-            modal.addEventListener("click", event => {
-                if (
-                    event.target.classList.contains("overlay-modal-client") ||
-                    event.target.closest(".btn-close-modal-client") ||
-                    event.target.closest(".btn-cancel-modal-client")
-                ) {
-                    modal.classList.remove("modal-open");
-                }
+                modal.abrir();
             });
         }
 
