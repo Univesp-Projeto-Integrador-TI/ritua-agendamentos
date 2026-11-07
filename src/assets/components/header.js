@@ -41,7 +41,9 @@ class createHeader extends HTMLElement {
         this.querySelectorAll(".header-ritua-nav-link").forEach(link => {
             const linkPath = link.getAttribute("href");
 
-            if (currentPath === linkPath || (currentPath === "/" && linkPath === "/index.html")) {
+            const isAppointmentsPage = currentPath.endsWith("/novo-agendamento.html") && linkPath.endsWith("/agendamentos.html");
+
+            if (currentPath === linkPath || isAppointmentsPage || (currentPath === "/" && linkPath === "/index.html")) {
                 link.classList.add("active");
             }
         });

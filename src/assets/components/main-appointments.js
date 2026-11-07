@@ -13,11 +13,6 @@ class mainAppointments extends HTMLElement {
                     <img src="/src/assets/images/icon-lock-keyhole.svg" alt="">
                     <p>Apenas os seus agendamentos são exibidos aqui.</p>
                 </div>
-
-                <footer class="footer-main-appointments">
-                    <p>Rituá Terapias · Cuidado que se organiza.</p>
-                    <a href="#">Precisa de ajuda? →</a>
-                </footer>
             </main>
         `;
     }
