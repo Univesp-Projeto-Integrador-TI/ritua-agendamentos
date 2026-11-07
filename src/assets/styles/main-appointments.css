@@ -1,0 +1,64 @@
+.main-appointments {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 0 48px 28px 48px;
+
+    .section-appointments-painel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+        gap: 14px;
+        align-items: stretch;
+
+        .column-appointments-painel {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+    }
+
+    card-available-reservation:empty {
+        display: none;
+    }
+
+    .info-main-appointments {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        img {
+            height: 16px;
+            width: 16px;
+        }
+
+        p {
+            color: var(--color-swamp);
+            font-size: var(--font-body-size);
+        }
+    }
+
+    .footer-main-appointments {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-top: 20px;
+        border-top: 1px solid var(--color-gray-1);
+
+        p {
+            color: var(--color-swamp);
+        }
+
+        a {
+            color: var(--color-primary);
+            font-size: var(--font-body-size);
+            font-weight: var(--font-weight-medium);
+            width: fit-content;
+        }
+
+        a:hover {
+            color: var(--color-secondary);
+            text-decoration: underline;
+        }
+    }
+}
