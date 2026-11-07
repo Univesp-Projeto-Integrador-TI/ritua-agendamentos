@@ -42,7 +42,7 @@ class createCardNextService extends HTMLElement {
                 </div>
 
                 <div class="link-card-next-service">
-                    <a href="agendamento.html">
+                    <a href="/src/assets/pages/detalhes-agendamento.html" class="open-appointment-details">
                         Ver agendamento
                         <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.88225 7.88225V0.800049H0.800049M7.88225 0.800049L0.800049 7.88225" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
@@ -51,6 +51,25 @@ class createCardNextService extends HTMLElement {
                 </div>
             </section>
         `;
+
+        this.querySelector(".open-appointment-details").addEventListener("click", () => {
+            const [day, month, year] = (data || "08/11/2026").split("/");
+            const durationMinutes = Number.parseInt(duration, 10) || 60;
+            const [hours, minutes] = (hour || "10:00").split(":").map(Number);
+            const endTotal = hours * 60 + minutes + durationMinutes;
+
+            sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                client: nome,
+                date: `${year}-${month}-${day}`,
+                initialHour: hour || "10:00",
+                finalHour: `${String(Math.floor(endTotal / 60)).padStart(2, "0")}:${String(endTotal % 60).padStart(2, "0")}`,
+                service,
+                duration: durationMinutes,
+                room,
+                status,
+                professional: "Marina Oliveira"
+            }));
+        });
     };
 }
 
