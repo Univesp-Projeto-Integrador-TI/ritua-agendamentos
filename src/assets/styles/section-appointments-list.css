@@ -1,0 +1,146 @@
+.container-appointments-list {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+
+    background-color: var(--color-white-3);
+    border: 1px solid var(--color-gray-1);
+    border-radius: 16px;
+
+    .header-appointments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 18px;
+
+        h3 {
+            color: var(--color-primary);
+        }
+
+        span {
+            font-size: var(--font-detail-size);
+            color: var(--color-swamp);
+        }
+    }
+
+    .card-appointments-list {
+        display: grid;
+        grid-template-columns: 70px 3px 1fr auto;
+        column-gap: 16px;
+        align-items: start;
+
+        padding: 18px 0;
+        border-top: 1px solid var(--color-gray-1);
+
+        .service-time-card {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            .initial-hour-card {
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-semibold);
+                color: var(--color-green-detail);
+            }
+
+            .final-hour-card {
+                font-size: var(--font-body-size);
+                font-weight: var(--font-weight-medium);
+                color: var(--color-swamp);
+            }
+        }
+
+        .line-card-appointments {
+            display: block;
+            width: 3px;
+            align-self: stretch;
+            min-height: 60px;
+            background-color: var(--color-primary);
+            border-radius: 3px;
+        }
+
+        .line-card-appointments.is-scheduled {
+            background-color: var(--color-green-background-2);
+        }
+
+        .detail-appointments-card {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            .name-client-card {
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-semibold);
+                color: var(--color-green-detail);
+            }
+
+            span {
+                font-size: var(--font-body-size);
+                color: var(--color-swamp);
+            }
+
+            .link-detail-appointment {
+                width: fit-content;
+                font-size: var(--font-body-size);
+                font-weight: var(--font-weight-medium);
+                color: var(--color-secondary);
+            }
+
+            .link-detail-appointment:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .status-appointments-card {
+            min-width: 80px;
+            padding: 5px 10px;
+
+            text-align: center;
+            font-size: var(--font-detail-size);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-green-detail);
+            background-color: var(--color-green-background);
+            border-radius: 100px;
+        }
+    }
+
+    .card-appointments-list:last-child {
+        padding-bottom: 0;
+    }
+
+    .section-empty-appointments {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        padding: 64px 24px;
+        border-top: 1px solid var(--color-gray-1);
+
+        .icon-calendar {
+            background-color: var(--color-green-background);
+            padding: 16px;
+            border-radius: 50px;
+
+            img {
+                height: 26px;
+                width: 26px;
+            }
+        }
+
+        .text-empty-appointments {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+
+            p {
+                color: var(--color-primary);
+            }
+
+            p:nth-child(1) {
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-medium);
+            }
+        }
+    }
+}
