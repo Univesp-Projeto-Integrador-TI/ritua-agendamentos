@@ -17,4 +17,3 @@ import "../components/main-appointments.js";
 import "../components/card-week-agenda.js";
 import "../components/card-day-schedule.js";
 import "../components/section-appointments-list.js";
-import "../components/card-available-reservation.js";

@@ -62,7 +62,7 @@ class createAppointmentsList extends HTMLElement {
                 <div class="detail-appointments-card">
                     <p class="name-client-card">${appointment.client}</p>
                     <span>${appointment.service} · ${appointment.duration} min</span>
-                    <span>${appointment.room} · reserva ${appointment.reservation}</span>
+                    <span>${appointment.room}</span>
                     <a href="#" class="link-detail-appointment">Ver detalhes →</a>
                 </div>
 

@@ -72,28 +72,23 @@ export const rooms = ["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê"
 export const statuses = ["Agendado", "Confirmado", "Concluído", "Cancelado"];
 
 export const appointments = [
-    { dayOffset: 0, initialHour: "10:00", finalHour: "11:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", reservation: "09:45–11:15", status: "Confirmado" },
-    { dayOffset: 0, initialHour: "13:00", finalHour: "14:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", reservation: "12:45–14:15", status: "Agendado" },
-    { dayOffset: 0, initialHour: "16:00", finalHour: "17:30", client: "Rafael Santos", service: "Massoterapia", duration: 90, room: "Sala Bambu", reservation: "15:45–17:45", status: "Confirmado" },
+    { dayOffset: 0, initialHour: "10:00", finalHour: "11:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
+    { dayOffset: 0, initialHour: "13:00", finalHour: "14:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", status: "Agendado" },
+    { dayOffset: 0, initialHour: "16:00", finalHour: "17:30", client: "Rafael Santos", service: "Massoterapia", duration: 90, room: "Sala Bambu", status: "Confirmado" },
 
-    { dayOffset: 1, initialHour: "09:00", finalHour: "10:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", reservation: "08:45–10:15", status: "Confirmado" },
-    { dayOffset: 1, initialHour: "14:00", finalHour: "15:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", reservation: "13:45–15:15", status: "Agendado" },
+    { dayOffset: 1, initialHour: "09:00", finalHour: "10:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Confirmado" },
+    { dayOffset: 1, initialHour: "14:00", finalHour: "15:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Agendado" },
 
-    { dayOffset: 2, initialHour: "09:30", finalHour: "10:30", client: "Carlos Mendes", service: "Reiki", duration: 60, room: "Sala Ipê", reservation: "09:15–10:45", status: "Agendado" },
-    { dayOffset: 2, initialHour: "11:00", finalHour: "12:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", reservation: "10:45–12:15", status: "Confirmado" },
-    { dayOffset: 2, initialHour: "15:00", finalHour: "16:00", client: "Paula Ribeiro", service: "Aromaterapia", duration: 60, room: "Sala Ipê", reservation: "14:45–16:15", status: "Confirmado" },
+    { dayOffset: 2, initialHour: "09:30", finalHour: "10:30", client: "Carlos Mendes", service: "Reiki", duration: 60, room: "Sala Ipê", status: "Agendado" },
+    { dayOffset: 2, initialHour: "11:00", finalHour: "12:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
+    { dayOffset: 2, initialHour: "15:00", finalHour: "16:00", client: "Paula Ribeiro", service: "Aromaterapia", duration: 60, room: "Sala Ipê", status: "Confirmado" },
 
-    { dayOffset: 3, initialHour: "10:00", finalHour: "11:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", reservation: "09:45–11:15", status: "Confirmado" },
-    { dayOffset: 3, initialHour: "17:00", finalHour: "18:00", client: "Rafael Santos", service: "Massoterapia", duration: 60, room: "Sala Bambu", reservation: "16:45–18:15", status: "Agendado" },
+    { dayOffset: 3, initialHour: "10:00", finalHour: "11:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", status: "Confirmado" },
+    { dayOffset: 3, initialHour: "17:00", finalHour: "18:00", client: "Rafael Santos", service: "Massoterapia", duration: 60, room: "Sala Bambu", status: "Agendado" },
 
-    { dayOffset: 4, initialHour: "10:00", finalHour: "11:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", reservation: "09:45–11:15", status: "Agendado" },
-    { dayOffset: 4, initialHour: "13:00", finalHour: "14:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", reservation: "12:45–14:15", status: "Confirmado" }
+    { dayOffset: 4, initialHour: "10:00", finalHour: "11:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Agendado" },
+    { dayOffset: 4, initialHour: "13:00", finalHour: "14:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Confirmado" }
 ].map(appointment => ({ ...appointment, data: dateByOffset(appointment.dayOffset) }));
-
-// Reservas sem atendimento vinculado (não entram no total de atendimentos)
-export const reservations = [
-    { dayOffset: 2, initialHour: "09:00", finalHour: "10:00", room: "Sala Lótus", status: "Reservada", linkedAppointment: null }
-].map(reservation => ({ ...reservation, data: dateByOffset(reservation.dayOffset) }));
 
 /* ---------- Estado e filtros ---------- */
 
@@ -133,18 +128,6 @@ export function getFilteredAppointments(date = null) {
 
 export function getWeekDays() {
     return Array.from({ length: 7 }, (_, index) => addDays(agendaState.weekStart, index));
-}
-
-export function getAvailableReservations() {
-    const weekKeys = getWeekDays().map(toDateKey);
-
-    return reservations
-        .filter(reservation => {
-            if (reservation.linkedAppointment) return false;
-            if (!weekKeys.includes(reservation.data)) return false;
-            return !agendaState.room || reservation.room === agendaState.room;
-        })
-        .sort((a, b) => a.data.localeCompare(b.data) || timeToMinutes(a.initialHour) - timeToMinutes(b.initialHour));
 }
 
 // "2026-11-04" -> Date local

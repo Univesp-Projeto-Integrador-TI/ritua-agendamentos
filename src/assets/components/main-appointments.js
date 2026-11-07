@@ -6,16 +6,12 @@ class mainAppointments extends HTMLElement {
 
                 <section class="section-appointments-painel">
                     <card-day-schedule></card-day-schedule>
-
-                    <div class="column-appointments-painel">
-                        <section-appointments-list></section-appointments-list>
-                        <card-available-reservation></card-available-reservation>
-                    </div>
+                    <section-appointments-list></section-appointments-list>
                 </section>
 
                 <div class="info-main-appointments">
                     <img src="/src/assets/images/icon-lock-keyhole.svg" alt="">
-                    <p>Apenas seus agendamentos e suas reservas são exibidos aqui.</p>
+                    <p>Apenas os seus agendamentos são exibidos aqui.</p>
                 </div>
 
                 <footer class="footer-main-appointments">
