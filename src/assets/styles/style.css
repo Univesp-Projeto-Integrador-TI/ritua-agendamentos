@@ -1,11 +1,11 @@
-.subheader-my-clients, .subheader-client-detail {
+.subheader-my-clients, .subheader-client-detail, .subheader-my-appointments {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-right: 48px;
     align-items: center;
 
-    button {
+    button, .btn-novo-agendamento {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -18,9 +18,10 @@
         transition: 0.2s ease;
         transform: translateY(0);
         cursor: pointer;
+        text-decoration: none;
     }
 
-    button:hover {
+    button:hover, .btn-novo-agendamento:hover {
         color: var(--color-white-3);
         background-color: var(--effect-hover-color-secondary);
         transition: 0.2s ease;

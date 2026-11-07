@@ -27,6 +27,10 @@
             transform: translateY(0);
         }
 
+        .header-ritua-nav-link.active {
+            background-color: var(--effect-background-link);
+        }
+
         .header-ritua-nav-link:hover {
             background-color: var(--effect-background-link);
             transition: 0.5s ease;

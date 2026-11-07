@@ -29,7 +29,7 @@ class createCardNextService extends HTMLElement {
                             <path d="M6 1.49939V4.49963M12 1.49939V4.49963M2.25 7.49987H15.75M6 10.5001H6.0075M9 10.5001H9.0075M12 10.5001H12.0075M6 13.5003H6.0075M9 13.5003H9.0075M12 13.5003H12.0075M3.75 2.99951H14.25C15.0784 2.99951 15.75 3.67114 15.75 4.49963V15.0005C15.75 15.829 15.0784 16.5006 14.25 16.5006H3.75C2.92157 16.5006 2.25 15.829 2.25 15.0005V4.49963C2.25 3.67114 2.92157 2.99951 3.75 2.99951Z" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
                         </svg>
 
-                        <p>${data}</p>
+                        <p>${data} · ${hour}</p>
                     </span>
 
                     <span class="info-card-next-service">
@@ -42,7 +42,7 @@ class createCardNextService extends HTMLElement {
                 </div>
 
                 <div class="link-card-next-service">
-                    <a href="agendamento.html">
+                    <a href="/src/assets/pages/detalhes-agendamento.html" class="open-appointment-details">
                         Ver agendamento
                         <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.88225 7.88225V0.800049H0.800049M7.88225 0.800049L0.800049 7.88225" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
@@ -51,6 +51,25 @@ class createCardNextService extends HTMLElement {
                 </div>
             </section>
         `;
+
+        this.querySelector(".open-appointment-details").addEventListener("click", () => {
+            const [day, month, year] = (data || "08/11/2026").split("/");
+            const durationMinutes = Number.parseInt(duration, 10) || 60;
+            const [hours, minutes] = (hour || "10:00").split(":").map(Number);
+            const endTotal = hours * 60 + minutes + durationMinutes;
+
+            sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                client: nome,
+                date: `${year}-${month}-${day}`,
+                initialHour: hour || "10:00",
+                finalHour: `${String(Math.floor(endTotal / 60)).padStart(2, "0")}:${String(endTotal % 60).padStart(2, "0")}`,
+                service,
+                duration: durationMinutes,
+                room,
+                status,
+                professional: "Marina Oliveira"
+            }));
+        });
     };
 }
 

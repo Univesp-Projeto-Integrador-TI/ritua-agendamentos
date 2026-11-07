@@ -39,7 +39,15 @@ class mainRitua extends HTMLElement {
                 </section>
                 
                 <section class="section-support-painel">
-                    <card-next-service></card-next-service>
+                    <card-next-service
+                        nome="Ana Souza"
+                        data="08/11/2026"
+                        horario="10:00"
+                        servico="Massagem relaxante"
+                        room="Sala Bambu"
+                        duracao="60 min"
+                        status="Confirmado">
+                    </card-next-service>
                     <card-my-reservations></card-my-reservations>
                     <card-week-rhythm></card-week-rhythm>
 

@@ -34,6 +34,19 @@ class createHeader extends HTMLElement {
                 </button>
             </div>
         </div>`;
+
+        // Destaca o link da página atual
+        const currentPath = window.location.pathname;
+
+        this.querySelectorAll(".header-ritua-nav-link").forEach(link => {
+            const linkPath = link.getAttribute("href");
+
+            const isAppointmentsPage = (currentPath.endsWith("/novo-agendamento.html") || currentPath.endsWith("/detalhes-agendamento.html")) && linkPath.endsWith("/agendamentos.html");
+
+            if (currentPath === linkPath || isAppointmentsPage || (currentPath === "/" && linkPath === "/index.html")) {
+                link.classList.add("active");
+            }
+        });
     }
 }
 

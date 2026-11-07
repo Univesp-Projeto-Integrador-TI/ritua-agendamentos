@@ -211,3 +211,28 @@ select {
     border: 1px solid var(--color-gray-1);
     transition: 0.5s ease;
 }
+
+.footer-ritua {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 24px 48px 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-gray-1);
+
+    p {
+        color: var(--color-swamp);
+    }
+
+    a {
+        width: fit-content;
+        color: var(--color-primary);
+        font-size: var(--font-body-size);
+        font-weight: var(--font-weight-medium);
+    }
+
+    a:hover {
+        color: var(--color-secondary);
+        text-decoration: underline;
+    }
+}
