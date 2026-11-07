@@ -34,6 +34,17 @@ class createHeader extends HTMLElement {
                 </button>
             </div>
         </div>`;
+
+        // Destaca o link da página atual
+        const currentPath = window.location.pathname;
+
+        this.querySelectorAll(".header-ritua-nav-link").forEach(link => {
+            const linkPath = link.getAttribute("href");
+
+            if (currentPath === linkPath || (currentPath === "/" && linkPath === "/index.html")) {
+                link.classList.add("active");
+            }
+        });
     }
 }
 
