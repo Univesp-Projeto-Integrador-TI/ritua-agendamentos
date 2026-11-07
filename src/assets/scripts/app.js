@@ -13,3 +13,8 @@ import "../components/main-initial-clients.js";
 import "../components/modal-new-client.js";
 import "../components/modal-edit-client.js";
 import "../components/main-client-detail.js";
+import "../components/main-appointments.js";
+import "../components/card-week-agenda.js";
+import "../components/card-day-schedule.js";
+import "../components/section-appointments-list.js";
+import "../components/card-available-reservation.js";

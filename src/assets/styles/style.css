@@ -1,4 +1,4 @@
-.subheader-my-clients, .subheader-client-detail {
+.subheader-my-clients, .subheader-client-detail, .subheader-my-appointments {
     display: flex;
     justify-content: space-between;
     align-items: center;
