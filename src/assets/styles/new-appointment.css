@@ -1,0 +1,471 @@
+.new-appointment-page {
+    margin: 18px 48px 0;
+
+    .new-appointment-back {
+        color: var(--color-secondary);
+        font-size: var(--font-detail-size);
+    }
+
+    .new-appointment-back:hover {
+        text-decoration: underline;
+    }
+
+    .new-appointment-heading {
+        margin: 10px 0 22px;
+
+        h1 {
+            color: var(--color-primary);
+        }
+
+        p {
+            color: var(--color-swamp);
+        }
+    }
+
+    .new-appointment-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2fr) minmax(280px, 0.92fr);
+        align-items: start;
+        gap: 24px;
+    }
+
+    .new-appointment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-width: 0;
+    }
+
+    .booking-panel,
+    .booking-summary-card,
+    .availability-check-card {
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        border-radius: 16px;
+    }
+
+    .booking-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+
+        h2 {
+            color: var(--color-primary);
+            font-size: var(--font-subtitle-size);
+            font-weight: var(--font-weight-medium);
+        }
+    }
+
+    .booking-panel-description {
+        margin-top: -9px;
+        color: var(--color-swamp);
+        font-size: var(--font-detail-size);
+    }
+
+    .booking-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        min-width: 0;
+
+        label {
+            color: var(--color-primary);
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px 12px;
+            font-size: var(--font-body-size);
+        }
+
+        small {
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+    }
+
+    .booking-time-fields,
+    .booking-service-fields {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .booking-duration-banner {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 14px;
+        background-color: var(--color-green-background);
+        border-radius: 8px;
+
+        .duration-clock {
+            color: var(--color-primary);
+            font-size: 20px;
+        }
+
+        small {
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+
+        p {
+            color: var(--color-primary);
+            font-size: var(--font-subtitle-size);
+            font-weight: var(--font-weight-medium);
+        }
+    }
+
+    .recommended-label {
+        margin-top: -7px;
+        color: var(--color-primary);
+        font-size: var(--font-detail-size);
+        font-weight: var(--font-weight-medium);
+    }
+
+    .recommended-room {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px;
+        color: var(--color-primary);
+        background-color: var(--color-green-background);
+        border-radius: 8px;
+
+        .room-door {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        strong,
+        small {
+            display: block;
+        }
+
+        strong {
+            font-size: var(--font-body-size);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        small {
+            margin-top: 3px;
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+
+        .no-recommended-room {
+            color: var(--color-secondary);
+            font-size: var(--font-body-size);
+        }
+    }
+
+    .room-availability-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .room-availability-card {
+        padding: 11px 12px;
+        background-color: var(--color-white-3);
+        border: 1px solid var(--color-gray-1);
+        border-radius: 9px;
+
+        .room-availability-heading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-primary);
+            font-size: var(--font-body-size);
+
+            img {
+                width: 16px;
+                height: 16px;
+                object-fit: contain;
+            }
+        }
+
+        > small {
+            display: block;
+            margin: 5px 0 6px 20px;
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+
+        .room-time-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-left: 20px;
+        }
+
+        .room-time-chip {
+            padding: 4px 7px;
+            border-radius: 20px;
+            color: var(--color-primary);
+            background-color: var(--color-green-background);
+            font-size: var(--font-detail-size);
+        }
+
+        .room-time-chip:hover,
+        .room-time-chip.selected {
+            color: var(--color-white-2);
+            background-color: var(--color-primary);
+        }
+
+        .no-room-times {
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+    }
+
+    .room-availability-card.room-active {
+        border-color: var(--color-green-background-2);
+    }
+
+    .new-client-link {
+        width: fit-content;
+        padding: 0;
+        color: var(--color-secondary);
+        background: transparent;
+        font-size: var(--font-detail-size);
+        text-align: left;
+    }
+
+    .new-client-link:hover {
+        text-decoration: underline;
+    }
+
+    .locked-professional {
+        position: relative;
+
+        input {
+            padding-right: 36px;
+            color: var(--color-swamp);
+            background-color: var(--color-green-background);
+        }
+
+        span {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            color: var(--color-swamp);
+            transform: translateY(-50%);
+        }
+    }
+
+    .booking-summary-column {
+        position: sticky;
+        top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .booking-summary-card {
+        overflow: hidden;
+
+        > img {
+            display: block;
+            width: 100%;
+            height: 124px;
+            object-fit: cover;
+            object-position: center;
+            background-color: var(--color-green-background);
+        }
+
+        .booking-summary-content {
+            padding: 16px;
+        }
+
+        .booking-summary-eyebrow {
+            margin-bottom: 8px;
+            color: var(--color-secondary);
+            font-size: var(--font-detail-size);
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin-bottom: 12px;
+            color: var(--color-primary);
+            font-family: var(--font-cormorant);
+            font-size: var(--font-headline-4-size);
+            font-weight: var(--font-weight-medium);
+        }
+
+        dl {
+            display: grid;
+            gap: 6px;
+        }
+
+        dt {
+            margin-top: 3px;
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+
+        dd {
+            color: var(--color-primary);
+            font-size: var(--font-body-size);
+        }
+    }
+
+    .availability-check-card {
+        padding: 16px;
+
+        h2 {
+            margin-bottom: 12px;
+            color: var(--color-primary);
+            font-size: var(--font-subtitle-size);
+            font-weight: var(--font-weight-medium);
+        }
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+
+            span {
+                color: var(--color-primary);
+                font-weight: var(--font-weight-semibold);
+            }
+        }
+
+        li.check-invalid,
+        li.check-invalid span {
+            color: var(--color-secondary);
+        }
+    }
+
+    .booking-whatsapp {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        min-height: 42px;
+        padding: 10px 14px;
+        color: var(--color-primary);
+        border: 1px solid var(--color-green-background-2);
+        border-radius: 24px;
+        font-size: var(--font-detail-size);
+    }
+
+    .booking-whatsapp:hover:not([aria-disabled="true"]) {
+        background-color: var(--color-green-background);
+    }
+
+    .booking-whatsapp[aria-disabled="true"] {
+        opacity: 0.55;
+        pointer-events: none;
+    }
+
+    .booking-message {
+        display: none;
+        color: var(--color-primary);
+        font-size: var(--font-body-size);
+    }
+
+    .booking-message.booking-success {
+        display: block;
+    }
+
+    .booking-form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 0 18px;
+        border-bottom: 1px solid var(--color-gray-1);
+
+        p {
+            color: var(--color-swamp);
+            font-size: var(--font-detail-size);
+        }
+
+        > div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booking-cancel,
+        .booking-create {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 9px 14px;
+            border-radius: 9px;
+            font-size: var(--font-detail-size);
+        }
+
+        .booking-cancel {
+            color: var(--color-secondary);
+            background-color: var(--color-white-3);
+            border: 1px solid var(--color-gray-1);
+        }
+
+        .booking-create {
+            color: var(--color-white-3);
+            background-color: var(--color-secondary);
+        }
+
+        .booking-create:hover:not(:disabled) {
+            background-color: var(--effect-hover-color-secondary);
+        }
+
+        .booking-create:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+    }
+}
+
+@media (max-width: 850px) {
+    .new-appointment-page {
+        margin-right: 24px;
+        margin-left: 24px;
+
+        .new-appointment-layout {
+            grid-template-columns: minmax(0, 1.5fr) minmax(240px, 1fr);
+            gap: 16px;
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    .new-appointment-page {
+        margin: 16px 16px 0;
+
+        .new-appointment-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-summary-column {
+            position: static;
+            grid-row: 1;
+        }
+
+        .booking-time-fields,
+        .booking-service-fields {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-form-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+}

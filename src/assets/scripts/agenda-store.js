@@ -71,7 +71,7 @@ const dateByOffset = offset => toDateKey(addDays(mondayOfCurrentWeek, offset));
 export const rooms = ["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê"];
 export const statuses = ["Agendado", "Confirmado", "Concluído", "Cancelado"];
 
-export const appointments = [
+const mockAppointments = [
     { dayOffset: 0, initialHour: "10:00", finalHour: "11:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
     { dayOffset: 0, initialHour: "13:00", finalHour: "14:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", status: "Agendado" },
     { dayOffset: 0, initialHour: "16:00", finalHour: "17:30", client: "Rafael Santos", service: "Massoterapia", duration: 90, room: "Sala Bambu", status: "Confirmado" },
@@ -89,6 +89,15 @@ export const appointments = [
     { dayOffset: 4, initialHour: "10:00", finalHour: "11:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Agendado" },
     { dayOffset: 4, initialHour: "13:00", finalHour: "14:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Confirmado" }
 ].map(appointment => ({ ...appointment, data: dateByOffset(appointment.dayOffset) }));
+
+const savedAppointments = typeof localStorage === "undefined"
+    ? []
+    : JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
+
+export const appointments = [
+    ...mockAppointments,
+    ...savedAppointments.map(appointment => ({ ...appointment, data: appointment.date }))
+];
 
 /* ---------- Estado e filtros ---------- */
 
