@@ -1,0 +1,175 @@
+.card-week-agenda {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+
+    background-color: var(--color-white-3);
+    border: 1px solid var(--color-gray-1);
+    border-radius: 16px;
+
+    .week-agenda-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .week-agenda-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .week-agenda-title {
+                font-size: var(--font-subtitle-size);
+                font-weight: var(--font-weight-medium);
+                color: var(--color-primary);
+            }
+
+            .btn-calendar {
+                cursor: pointer;
+                padding: 8px;
+                background: none;
+                border-radius: 8px;
+                transition: 0.2s ease;
+
+                svg {
+                    width: 10px;
+                    height: 20px;
+                }
+            }
+
+            .btn-calendar:hover {
+                background-color: var(--color-green-background);
+            }
+        }
+
+        .btn-current-date {
+            font-size: var(--font-button-size);
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: none;
+            border: 1px solid var(--color-gray-1);
+            color: var(--color-secondary);
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-current-date:hover {
+            background-color: var(--color-green-background);
+            color: var(--color-primary);
+            border: 1px solid var(--color-green-detail-2);
+        }
+    }
+
+    .week-agenda-days {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 6px;
+
+        .week-day {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            padding: 12px 14px;
+
+            text-align: left;
+            border-radius: 10px;
+            background-color: var(--color-green-background);
+            color: var(--color-green-detail);
+            transition: 0.2s ease;
+
+            .week-day-name,
+            .week-day-total {
+                font-size: var(--font-detail-size);
+                font-weight: var(--font-weight-regular);
+                color: var(--color-swamp);
+            }
+
+            .week-day-number {
+                font-size: var(--font-headline-4-size);
+                font-weight: var(--font-weight-medium);
+                color: var(--color-green-detail);
+            }
+        }
+
+        .week-day.weekend {
+            background-color: var(--color-white-background);
+        }
+
+        .week-day:hover {
+            background-color: var(--color-green-detail-2);
+        }
+
+        .week-day.today .week-day-number {
+            color: var(--color-secondary);
+        }
+
+        .week-day.day-selected,
+        .week-day.day-selected:hover {
+            background-color: var(--color-primary);
+
+            .week-day-name,
+            .week-day-total,
+            .week-day-number {
+                color: var(--color-white-2);
+            }
+        }
+    }
+
+    .week-agenda-summary {
+        font-size: var(--font-detail-size);
+        color: var(--color-swamp);
+    }
+
+    .week-agenda-filters {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 0;
+
+            label {
+                color: var(--color-primary);
+            }
+
+            input,
+            select {
+                width: 100%;
+                padding: 13px 14px;
+                font-size: var(--font-body-size);
+                background-color: var(--color-white);
+            }
+
+            select {
+                appearance: none;
+                cursor: pointer;
+                padding-right: 40px;
+                background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23747767' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 14px center;
+            }
+
+            .filter-search {
+                position: relative;
+
+                input {
+                    padding-right: 40px;
+                }
+
+                .filter-search-icon {
+                    position: absolute;
+                    top: 50%;
+                    right: 14px;
+                    width: 16px;
+                    height: 16px;
+                    transform: translateY(-50%);
+                    pointer-events: none;
+                }
+            }
+        }
+    }
+}
