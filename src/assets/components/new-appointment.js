@@ -1,4 +1,5 @@
 import { appointments, timeToMinutes, formatDuration } from "../scripts/agenda-store.js";
+import { getRooms, getRoomHours } from "../scripts/rooms-store.js";
 
 const clients = [
     { name: "Beatriz Lima", phone: "(11) 97654-3210" },
@@ -17,13 +18,6 @@ const services = [
     { name: "Drenagem linfática", duration: 60 },
     { name: "Massagem terapêutica", duration: 60 },
     { name: "Aromaterapia", duration: 60 }
-];
-
-const rooms = [
-    { name: "Sala Tulipa", hours: [7, 10, 11, 12, 17] },
-    { name: "Sala Orquídea", hours: [10, 12] },
-    { name: "Sala Rosas", hours: [8, 9, 11, 17] },
-    { name: "Sala Lótus", hours: [7, 8, 9, 10, 11, 12] }
 ];
 
 function dateKey(value) {
@@ -215,6 +209,26 @@ class NewAppointment extends HTMLElement {
         this.renderAvailability();
     }
 
+    get roomChoices() {
+        const [year, month, day] = this.dateInput.value.split("-").map(Number);
+        const selectedDate = this.dateInput.value ? new Date(year, month - 1, day) : new Date();
+        return getRooms().filter(room => room.active !== false).map(room => {
+            const schedule = getRoomHours(room, selectedDate.getDay());
+            if (!schedule.enabled) return null;
+            const startMinutes = timeToMinutes(schedule.start);
+            const endMinutes = timeToMinutes(schedule.end);
+            return {
+                ...room,
+                opening: startMinutes,
+                closing: endMinutes,
+                intervalMinutes: Number(room.interval) || 0,
+                hours: Array.from({ length: Math.max(0, Math.ceil((endMinutes - startMinutes) / 60)) }, (_, index) => startMinutes + index * 60)
+                    .filter(minutes => minutes < endMinutes)
+                    .map(minutes => `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`)
+            };
+        }).filter(Boolean);
+    }
+
     get selectedService() {
         return services.find(service => service.name === this.serviceInput.value) || null;
     }
@@ -255,8 +269,9 @@ class NewAppointment extends HTMLElement {
 
     isRoomAvailable(room, start, end) {
         if (!start || !end || durationBetween(start, end) <= 0) return false;
-        const startHour = Number(start.split(":")[0]);
-        if (!room.hours.includes(startHour)) return false;
+        const startMinutes = timeToMinutes(start);
+        const endMinutes = timeToMinutes(end);
+        if (startMinutes < room.opening || endMinutes + room.intervalMinutes > room.closing) return false;
         if (this.hasConflict("staff", start, end)) return false;
         if (this.clientInput.value && this.hasConflict("client", start, end)) return false;
         return !this.hasConflict("room", start, end, room.name);
@@ -276,6 +291,7 @@ class NewAppointment extends HTMLElement {
         this.setCheck("staff", staffAvailable);
         this.setCheck("client", clientAvailable);
 
+        const rooms = this.roomChoices;
         const availableRooms = rooms.filter(room => this.isRoomAvailable(room, start, end));
         const currentRoom = availableRooms.find(room => room.name === this.roomInput.value);
         const recommendedRoom = currentRoom || availableRooms.find(room => room.name === "Sala Lótus") || availableRooms[0];
@@ -291,10 +307,9 @@ class NewAppointment extends HTMLElement {
             : `<div class="no-recommended-room">Sem sala disponível para este horário.</div>`;
 
         this.querySelector(".room-availability-list").innerHTML = rooms.map(room => {
-            const availableHours = room.hours.filter(hour => {
-                const slotStart = `${String(hour).padStart(2, "0")}:00`;
-                return this.isRoomAvailable(room, slotStart, addMinutes(slotStart, this.selectedDuration));
-            });
+            const availableHours = room.hours.filter(slotStart =>
+                this.isRoomAvailable(room, slotStart, addMinutes(slotStart, this.selectedDuration))
+            );
             const active = this.roomInput.value === room.name;
 
             return `
@@ -303,7 +318,7 @@ class NewAppointment extends HTMLElement {
                     <small>Horários disponíveis:</small>
                     <div class="room-time-chips">
                         ${availableHours.length
-                            ? availableHours.map(hour => `<button type="button" class="room-time-chip ${hour === Number(start.split(":")[0]) ? "selected" : ""}" data-room="${room.name}" data-hour="${hour}">${hour}:00</button>`).join("")
+                            ? availableHours.map(slotStart => `<button type="button" class="room-time-chip ${slotStart === start ? "selected" : ""}" data-room="${room.name}" data-time="${slotStart}">${slotStart}</button>`).join("")
                             : `<span class="no-room-times">Sem horários livres</span>`}
                     </div>
                 </article>
@@ -327,7 +342,7 @@ class NewAppointment extends HTMLElement {
     selectRoomSlot(event) {
         const button = event.target.closest(".room-time-chip");
         if (!button) return;
-        this.startInput.value = `${String(button.dataset.hour).padStart(2, "0")}:00`;
+        this.startInput.value = button.dataset.time;
         this.roomInput.value = button.dataset.room;
         this.renderAvailability();
     }
@@ -349,7 +364,7 @@ class NewAppointment extends HTMLElement {
         const room = this.roomInput.value;
         const service = this.selectedService;
         const link = this.querySelector(".booking-whatsapp");
-        const roomData = rooms.find(item => item.name === room);
+        const roomData = this.roomChoices.find(item => item.name === room);
         const isAvailable = client && service && roomData && this.validTimeRange &&
             !this.hasConflict("staff", this.startInput.value, this.endTime) &&
             !this.hasConflict("client", this.startInput.value, this.endTime) &&
@@ -372,7 +387,7 @@ class NewAppointment extends HTMLElement {
         const client = this.selectedClient;
         const service = this.selectedService;
         const room = this.roomInput.value;
-        const roomData = rooms.find(item => item.name === room);
+        const roomData = this.roomChoices.find(item => item.name === room);
         const isAvailable = client && service && roomData && this.validTimeRange &&
             !this.hasConflict("staff", this.startInput.value, this.endTime) &&
             !this.hasConflict("client", this.startInput.value, this.endTime) &&

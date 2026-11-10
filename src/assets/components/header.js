@@ -16,9 +16,9 @@ class createHeader extends HTMLElement {
                     <img src="/src/assets/images/icon-calendar.svg" alt="Ícone de calendário" class="header-ritua-nav-link-icon">
                     Agendamentos
                 </a>
-                <a href="/src/assets/pages/reservas.html" class="header-ritua-nav-link"> 
+                <a href="/src/assets/pages/salas.html" class="header-ritua-nav-link">
                     <img src="/src/assets/images/icon-door.svg" alt="Ícone de porta" class="header-ritua-nav-link-icon">
-                    Reservas
+                    Salas
                 </a>
             </nav>
             <div class="header-ritua-user">
@@ -42,8 +42,9 @@ class createHeader extends HTMLElement {
             const linkPath = link.getAttribute("href");
 
             const isAppointmentsPage = (currentPath.endsWith("/novo-agendamento.html") || currentPath.endsWith("/detalhes-agendamento.html")) && linkPath.endsWith("/agendamentos.html");
+            const isRoomsPage = ["/salas.html", "/nova-sala.html", "/editar-sala.html"].some(page => currentPath.endsWith(page)) && linkPath.endsWith("/salas.html");
 
-            if (currentPath === linkPath || isAppointmentsPage || (currentPath === "/" && linkPath === "/index.html")) {
+            if (currentPath === linkPath || isAppointmentsPage || isRoomsPage || (currentPath === "/" && linkPath === "/index.html")) {
                 link.classList.add("active");
             }
         });
