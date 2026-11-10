@@ -1,4 +1,5 @@
-const name = "Guilherme";
+import { getSessionUser } from "/src/assets/scripts/session.js";
+const name = getSessionUser().firstName;
 const qtdAtendimentos = 5;
 
 class createWelcomeCard extends HTMLElement {

@@ -1,3 +1,4 @@
+import { getSessionUser } from "/src/assets/scripts/session.js";
 class createHeader extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -24,8 +25,8 @@ class createHeader extends HTMLElement {
             <div class="header-ritua-user">
                 <img class="user-icon" src="/src/assets/images/icon-user.svg" alt="Ícone de usuário" class="header-ritua-user-icon">
                 <div class="header-ritua-user-info">
-                    <span class="header-ritua-user-info-name">Guilherme Manso</span>
-                    <span class="header-ritua-user-info-role">Desenvolvedor Rituá</span>
+                    <span class="header-ritua-user-info-name">${getSessionUser().name}</span>
+                    <span class="header-ritua-user-info-role">${getSessionUser().role}</span>
                 </div>
                 <button class="btn-user-settings">
                     <a href="/src/assets/pages/user-page.html" class="header-ritua-user-settings-icon">
