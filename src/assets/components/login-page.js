@@ -28,7 +28,7 @@ class LoginPage extends HTMLElement {
         const isLogin = this.mode === "login";
         this.innerHTML = `
             <main class="login-page">
-                <section class="login-visual" aria-hidden="true"><img src="../images/img-login-ritua.jpg" alt=""></section>
+                <section class="login-visual" aria-hidden="true"><img src="../images/img-login-ritua.svg" alt=""></section>
                 <section class="login-panel">
                     <div class="login-card">
                         <img class="login-logo" src="../images/logotipo-ritua.svg" alt="Rituá Terapias">
