@@ -63,12 +63,35 @@ class createAppointmentsList extends HTMLElement {
                     <p class="name-client-card">${appointment.client}</p>
                     <span>${appointment.service} · ${appointment.duration} min</span>
                     <span>${appointment.room}</span>
-                    <a href="#" class="link-detail-appointment">Ver detalhes →</a>
+                    <a href="/src/assets/pages/detalhes-agendamento.html" class="link-detail-appointment">Ver detalhes →</a>
                 </div>
 
                 <p class="status-appointments-card">${appointment.status}</p>
             </div>
         `).join("");
+
+        this.bindDetailLinks(dayAppointments, ".link-detail-appointment");
+    }
+
+    // Guarda o atendimento escolhido para a tela de detalhes
+    bindDetailLinks(items, selector) {
+        this.querySelectorAll(selector).forEach((link, index) => {
+            link.addEventListener("click", () => {
+                const item = items[index];
+
+                sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                    client: item.client,
+                    date: item.data,
+                    initialHour: item.initialHour,
+                    finalHour: item.finalHour,
+                    service: item.service,
+                    duration: item.duration,
+                    room: item.room,
+                    status: item.status,
+                    professional: "Marina Oliveira"
+                }));
+            });
+        });
     }
 }
 
