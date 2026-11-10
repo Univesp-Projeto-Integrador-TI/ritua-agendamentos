@@ -1,3 +1,4 @@
+import { getSessionUser } from "/src/assets/scripts/session.js";
 class createSectionMyProfile extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -6,9 +7,10 @@ class createSectionMyProfile extends HTMLElement {
                     <p class="title-card-my-profile">MEU PERFIL</p>
                     <img class="img-user-profile" src="/src/assets/images/icon-profile-user.svg">
                     <div class="info-card-my-profile">
-                        <h4 class="card-name-user">Guilherme Manso</h4>
-                        <p class="profission-primary">Desenvolvedor Rituá</p>
+                        <h4 class="card-name-user">${getSessionUser().name}</h4>
+                        <p class="profission-primary">${getSessionUser().role}</p>
                     </div>
+                    <button class="profile-logout-button" type="button">Sair</button>
                 </div>
 
                 <div class="iformation-my-profile">
@@ -18,6 +20,10 @@ class createSectionMyProfile extends HTMLElement {
                 </div>
             </section>
         `;
+        this.querySelector(".profile-logout-button").addEventListener("click", () => {
+            sessionStorage.removeItem("ritua-session");
+            location.href = "./login.html";
+        });
     }
 }
 

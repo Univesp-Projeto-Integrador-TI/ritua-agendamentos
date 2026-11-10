@@ -49,6 +49,8 @@ class createCalendar extends HTMLElement {
 
         // Botões para avançar o mês e retornar o mês atual
         this.querySelector(".calendar-prev").addEventListener("click", () => {
+            this.currentDate.setDate(1);
+
             this.currentDate.setMonth(
                 this.currentDate.getMonth() -1
             );
@@ -140,7 +142,7 @@ class createCalendar extends HTMLElement {
         //     calendarDays.innerHTML += `<span class="days-datail-final calendar-day">${day}</span>`
         // }
 
-        function previousMonth(){
+        const previousMonth = () => {
             for (let i = startDay - 1; i >= 0; i--) {
                 const day = previousMonthLastDay - i;
 
@@ -168,7 +170,7 @@ class createCalendar extends HTMLElement {
             }
         }
 
-        function nextMonth(){ 
+        const nextMonth = () => {
             //Dias do mês que vem             
             const remainingDays = (7 - ((startDay + totalDays) % 7)) % 7;
 
@@ -198,7 +200,6 @@ class createCalendar extends HTMLElement {
         }
 
         previousMonth();
-        nextMonth();
 
         // Dias do mês atual
         const today = new Date();
@@ -207,7 +208,7 @@ class createCalendar extends HTMLElement {
             
             const calendarDay = document.createElement("span");
 
-            if(day === date.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear()){
+            if(day === today.getDate() && today.getMonth() === date.getMonth() && today.getFullYear() === date.getFullYear()){
                 calendarDay.classList.add("calendar-day");
                 calendarDay.classList.add("today");
             } else {
@@ -243,6 +244,8 @@ class createCalendar extends HTMLElement {
 
             calendarDays.appendChild(calendarDay);
         }
+
+        nextMonth();
     }
 }
 

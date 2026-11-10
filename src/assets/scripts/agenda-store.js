@@ -1,3 +1,5 @@
+import { getRooms } from "./rooms-store.js";
+
 // Estado compartilhado da tela "Meus agendamentos".
 // Os componentes leem este estado ao renderizar e escutam o evento "agenda-changed" no document.
 // Quando o backend estiver pronto, basta trocar os arrays abaixo por dados vindos da API.
@@ -68,7 +70,7 @@ export function formatDuration(totalMinutes) {
 const mondayOfCurrentWeek = startOfWeek(new Date());
 const dateByOffset = offset => toDateKey(addDays(mondayOfCurrentWeek, offset));
 
-export const rooms = ["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê"];
+export const rooms = [...new Set(["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê", ...getRooms().map(room => room.name)])];
 export const statuses = ["Agendado", "Confirmado", "Concluído", "Cancelado"];
 
 const mockAppointments = [
