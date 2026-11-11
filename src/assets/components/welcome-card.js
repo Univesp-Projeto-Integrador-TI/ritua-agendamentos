@@ -41,7 +41,7 @@ class createWelcomeCard extends HTMLElement {
         document.getElementById("descricao").textContent =
             qtdAtendimentos >= 1 ? `Seu dia começa aqui! Você tem ${qtdAtendimentos} atendimentos agendados para hoje.` :
             `Seu dia começa aqui! Você não tem atendimentos agendados para hoje.`;
-    }
+    };
 }
 
 customElements.define('container-welcome-card', createWelcomeCard);
