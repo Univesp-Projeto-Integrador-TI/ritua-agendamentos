@@ -144,3 +144,21 @@
         }
     }
 }
+
+@media (max-width: 600px) {
+    .container-appointments-list {
+        padding: 14px;
+
+        .card-appointments-list {
+            grid-template-columns: auto 3px minmax(0, 1fr);
+            column-gap: 12px;
+            row-gap: 10px;
+
+            .line-card-appointments { min-height: 0; }
+
+            .status-appointments-card { grid-column: 1 / -1; justify-self: start; }
+        }
+
+        .section-empty-appointments { padding: 40px 12px; }
+    }
+}
