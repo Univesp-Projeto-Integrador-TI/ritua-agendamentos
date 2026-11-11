@@ -90,3 +90,20 @@ main {
         }
     }
 }
+
+@media (max-width: 900px) {
+    main {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 0 20px 32px;
+    }
+}
+
+@media (max-width: 540px) {
+    main { margin: 0 14px 24px; gap: 16px; }
+
+    .section-my-profile {
+        gap: 16px;
+
+        .card-my-profile, .iformation-my-profile { padding: 18px; }
+    }
+}
