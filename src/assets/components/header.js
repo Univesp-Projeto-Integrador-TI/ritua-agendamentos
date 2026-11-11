@@ -1,4 +1,4 @@
-import { getSessionUser } from "/src/assets/scripts/session.js";
+import { getSessionUser } from "../scripts/session.js";
 class createHeader extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `

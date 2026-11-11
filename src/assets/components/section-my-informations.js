@@ -1,4 +1,4 @@
-import { getCurrentAccount, saveAccountSettings } from "/src/assets/scripts/session.js";
+import { getCurrentAccount, saveAccountSettings } from "../scripts/session.js";
 
 const escapeValue = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 
