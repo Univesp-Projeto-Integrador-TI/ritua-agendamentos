@@ -1,4 +1,4 @@
-import { appointments } from "/src/assets/scripts/agenda-store.js";
+import { appointments } from "../scripts/agenda-store.js";
 
 class createCardNextService extends HTMLElement {
     connectedCallback(){

@@ -1,4 +1,4 @@
-import { getRelatedStatuses, statusTransitions, updateAppointmentStatus } from "/src/assets/scripts/agenda-store.js";
+import { getRelatedStatuses, statusTransitions, updateAppointmentStatus } from "../scripts/agenda-store.js";
 
 class AppointmentDetails extends HTMLElement {
     connectedCallback() {
