@@ -44,13 +44,13 @@ class RoomsPage extends HTMLElement {
     render() {
         const rooms = getRooms();
         const today = todayKey();
-        const todayAppointments = appointments.filter(item => item.data === today && item.status !== "Cancelado");
+        const todayAppointments = appointments.filter(item => item.data === today && !["Cancelado", "Desmarcado"].includes(item.status));
         const weekStart = new Date();
         weekStart.setHours(0, 0, 0, 0);
         weekStart.setDate(weekStart.getDate() - 6);
         const weekAppointments = appointments.filter(item => {
             const date = new Date(`${item.data}T00:00:00`);
-            return date >= weekStart && date <= new Date() && item.status !== "Cancelado";
+            return date >= weekStart && date <= new Date() && !["Cancelado", "Desmarcado"].includes(item.status);
         });
         const active = rooms.filter(room => room.active !== false).length;
         const occupancy = active ? Math.min(100, Math.round(weekAppointments.length / (active * 4) * 100)) : 0;

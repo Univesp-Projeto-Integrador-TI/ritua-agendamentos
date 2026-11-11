@@ -28,3 +28,15 @@
     }
 
 }
+
+@media (max-width: 1000px) {
+    .main-appointments {
+        margin: 0 20px 28px;
+
+        .section-appointments-painel { grid-template-columns: minmax(0, 1fr); }
+    }
+}
+
+@media (max-width: 540px) {
+    .main-appointments { margin: 0 14px 24px; gap: 16px; }
+}

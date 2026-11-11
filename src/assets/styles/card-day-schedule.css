@@ -83,3 +83,7 @@
         color: var(--color-swamp);
     }
 }
+
+@media (max-width: 540px) {
+    .card-day-schedule { padding: 14px; }
+}

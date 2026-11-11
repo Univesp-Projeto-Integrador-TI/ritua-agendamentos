@@ -151,3 +151,8 @@
         }
     }
 }
+
+@media (max-width: 540px) {
+    .section-calendar { padding: 14px; }
+    .calendar { .calendar-days { grid-template-rows: repeat(6, 40px); gap: 4px; } }
+}

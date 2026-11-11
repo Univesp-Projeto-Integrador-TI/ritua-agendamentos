@@ -28,3 +28,20 @@
         transform: translateY(-1px);
     }
 }
+
+@media (max-width: 900px) {
+    .subheader-my-clients, .subheader-client-detail, .subheader-my-appointments {
+        padding-right: 20px;
+        gap: 12px;
+
+        button, .btn-novo-agendamento { text-align: center; justify-content: center; flex-shrink: 0; }
+    }
+}
+
+@media (max-width: 540px) {
+    .subheader-my-clients, .subheader-client-detail, .subheader-my-appointments {
+        padding-right: 14px;
+
+        button, .btn-novo-agendamento { padding: 10px 14px; max-width: 110px; }
+    }
+}

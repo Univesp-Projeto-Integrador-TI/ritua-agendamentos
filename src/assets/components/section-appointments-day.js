@@ -127,6 +127,7 @@ class createAppointmentsDay extends HTMLElement {
                 const item = items[index];
 
                 sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                    id: item.id,
                     client: item.client,
                     date: item.data,
                     initialHour: item.initialHour,

@@ -100,3 +100,7 @@
         }
     }
 }
+
+@media (max-width: 540px) {
+    .container-card-next-service { padding: 18px; }
+}

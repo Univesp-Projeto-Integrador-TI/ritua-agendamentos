@@ -1,12 +1,15 @@
+import { appointments } from "/src/assets/scripts/agenda-store.js";
+
 class createCardNextService extends HTMLElement {
     connectedCallback(){
         const nome = this.getAttribute("nome");
-        const data = this.getAttribute("data");
         const hour = this.getAttribute("horario");
         const service = this.getAttribute("servico");
         const room = this.getAttribute("room");
+        const nextAppointment = appointments.find(item => item.client === nome && item.service === service && item.room === room && item.initialHour === hour);
+        const data = nextAppointment?.data ? nextAppointment.data.split("-").reverse().join("/") : this.getAttribute("data");
         const duration = this.getAttribute("duracao");
-        const status = this.getAttribute("status");
+        const status = nextAppointment?.status || this.getAttribute("status");
 
         this.innerHTML = `
             <section class="container-card-next-service">
@@ -59,6 +62,7 @@ class createCardNextService extends HTMLElement {
             const endTotal = hours * 60 + minutes + durationMinutes;
 
             sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                id: nextAppointment?.id || "",
                 client: nome,
                 date: `${year}-${month}-${day}`,
                 initialHour: hour || "10:00",

@@ -45,3 +45,16 @@
         font-weight: var(--font-body-weight);
     }
 }
+
+@media (max-width: 900px) {
+    .main-ritua {
+        grid-template-columns: 1fr;
+        margin: 20px 20px 28px;
+    }
+}
+
+@media (max-width: 540px) {
+    .main-ritua { margin: 16px 14px 24px; gap: 16px; }
+    .section-summary-painel, .section-support-painel { gap: 16px; }
+    .group-card-person-summary { gap: 12px; }
+}

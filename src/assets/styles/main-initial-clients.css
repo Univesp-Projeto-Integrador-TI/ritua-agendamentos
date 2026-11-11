@@ -322,3 +322,48 @@
     }
 }
 
+@media (max-width: 900px) {
+    .main-inicial-clientes { padding: 0 20px 32px; }
+}
+
+@media (max-width: 700px) {
+    .main-inicial-clientes {
+        padding: 0 14px 24px;
+
+        .section-tabela-clientes {
+            padding: 16px;
+
+            .container-tabela-clientes .tabela-clientes {
+                display: block;
+                table-layout: auto;
+
+                thead { display: none; }
+                tbody { display: block; }
+
+                tbody tr {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    align-items: center;
+                    column-gap: 12px;
+                    row-gap: 10px;
+                    padding: 14px 0;
+                    border-bottom: 1px solid #E9E7DE;
+
+                    td { display: block; width: auto; padding: 0; min-width: 0; }
+                    td:nth-child(1) { grid-column: 1; grid-row: 1; width: auto; }
+                    td:nth-child(4) { grid-column: 2; grid-row: 1; width: auto; }
+                    td:nth-child(2) { grid-column: 1 / -1; grid-row: 2; width: auto; }
+                    td:nth-child(3) { grid-column: 1 / -1; grid-row: 3; width: auto; }
+
+                    td.mensagem-sem-clientes { grid-column: 1 / -1; grid-row: auto; height: auto; padding: 32px 0; }
+                }
+
+                .info-cliente .nome-cliente { white-space: normal; }
+                .info-contato .email-cliente { white-space: normal; overflow-wrap: anywhere; }
+                .info-proximo-atendimento .descricao-proximo-atendimento { white-space: normal; }
+            }
+
+            .footer-tabela-clientes { flex-direction: column; gap: 12px; }
+        }
+    }
+}

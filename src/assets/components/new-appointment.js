@@ -1,4 +1,4 @@
-import { appointments, timeToMinutes, formatDuration } from "../scripts/agenda-store.js";
+import { appointments, timeToMinutes, formatDuration, isBlockingStatus } from "../scripts/agenda-store.js";
 import { getRooms, getRoomHours } from "../scripts/rooms-store.js";
 
 const clients = [
@@ -256,10 +256,8 @@ class NewAppointment extends HTMLElement {
     hasConflict(kind, start, end, roomName = this.roomInput.value) {
         const key = dateKey(this.dateInput.value);
         const clientName = this.clientInput.value;
-        const savedAppointments = JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
-
-        return [...appointments, ...savedAppointments].some(appointment => {
-            if ((appointment.data || appointment.date) !== key || appointment.status === "Cancelado") return false;
+        return appointments.some(appointment => {
+            if ((appointment.data || appointment.date) !== key || !isBlockingStatus(appointment.status)) return false;
             if (kind === "client" && appointment.client !== clientName) return false;
             if (kind === "room" && appointment.room !== roomName) return false;
             return timeToMinutes(start) < timeToMinutes(appointment.finalHour) &&
@@ -401,6 +399,7 @@ class NewAppointment extends HTMLElement {
         }
 
         const newAppointment = {
+            id: crypto.randomUUID(),
             client: client.name,
             service: service.name,
             room,
