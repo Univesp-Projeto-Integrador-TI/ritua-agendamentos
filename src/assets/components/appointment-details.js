@@ -1,3 +1,5 @@
+import { getRelatedStatuses, statusTransitions, updateAppointmentStatus } from "/src/assets/scripts/agenda-store.js";
+
 class AppointmentDetails extends HTMLElement {
     connectedCallback() {
         const appointment = this.getAppointment();
@@ -52,9 +54,19 @@ class AppointmentDetails extends HTMLElement {
                         </section>
 
                         <section class="appointment-manage-card">
-                            <h2>Gerenciar agendamento</h2>
-                            <p>Ao remarcar, escolha outro horário válido. O novo intervalo deve estar livre na agenda do profissional, do cliente e da sala.</p>
-                            <button type="button" class="appointment-cancel-button">Cancelar agendamento</button>
+                            <h2>Etapa do atendimento</h2>
+                            <p>Atualize o andamento aqui. Agendamentos desmarcados ou cancelados liberam o horário, a sala e a agenda do profissional.</p>
+                            <label class="appointment-status-control">Alterar status
+                                <select class="appointment-status-select" ${statusTransitions[appointment.status]?.length ? "" : "disabled"}>
+                                    <option value="">${statusTransitions[appointment.status]?.length ? "Selecione a próxima etapa" : "Etapa final"}</option>
+                                    ${(statusTransitions[appointment.status] || []).map(status => `<option value="${status}">${status === "Desmarcado" ? "Desmarcado (a pedido do cliente)" : status === "Cancelado" ? "Cancelado (pela equipe)" : status}</option>`).join("")}
+                                </select>
+                            </label>
+                            <div class="appointment-related-statuses">
+                                <p>Cliente <strong>${getRelatedStatuses(appointment.status).client}</strong></p>
+                                <p>Sala <strong>${getRelatedStatuses(appointment.status).room}</strong></p>
+                                <p>Profissional <strong>${getRelatedStatuses(appointment.status).professional}</strong></p>
+                            </div>
                             <p class="appointment-cancel-message" role="status" aria-live="polite"></p>
                         </section>
                     </div>
@@ -63,7 +75,7 @@ class AppointmentDetails extends HTMLElement {
                         <img src="/src/assets/images/img-exe-ambiente-sala.svg" alt="Ambiente de atendimento">
                         <div class="appointment-room-content">
                             <h2>Sala do atendimento</h2>
-                            <div class="appointment-room-title"><strong>${appointment.room}</strong><span class="appointment-room-status">${appointment.status}</span></div>
+                            <div class="appointment-room-title"><strong>${appointment.room}</strong><span class="appointment-room-status">${getRelatedStatuses(appointment.status).room}</span></div>
                             <dl>
                                 <dt>Data</dt><dd>${appointment.fullDate}</dd>
                                 <dt>Tempo de atendimento</dt><dd>${appointment.duration} minutos</dd>
@@ -81,9 +93,18 @@ class AppointmentDetails extends HTMLElement {
             </main>
         `;
 
-        this.querySelector(".appointment-cancel-button").addEventListener("click", () => {
+        this.querySelector(".appointment-status-select").addEventListener("change", event => {
+            const nextStatus = event.target.value;
+            if (!nextStatus) return;
             const message = this.querySelector(".appointment-cancel-message");
-            message.textContent = "O cancelamento ainda não está conectado ao sistema de agendamentos.";
+            if (!appointment.id || !updateAppointmentStatus(appointment.id, nextStatus)) {
+                message.textContent = "Não foi possível salvar a alteração deste agendamento.";
+                event.target.value = "";
+                return;
+            }
+            const updatedAppointment = { ...appointment, status: nextStatus };
+            sessionStorage.setItem("ritua-appointment-detail", JSON.stringify(updatedAppointment));
+            this.connectedCallback();
         });
     }
 
@@ -96,6 +117,8 @@ class AppointmentDetails extends HTMLElement {
         const format = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
 
         return {
+            id: appointment.id || "",
+            date: dateValue,
             client: appointment.client || "Ana Souza",
             service: appointment.service || "Massagem relaxante",
             room: appointment.room || "Sala Bambu",

@@ -71,7 +71,24 @@ const mondayOfCurrentWeek = startOfWeek(new Date());
 const dateByOffset = offset => toDateKey(addDays(mondayOfCurrentWeek, offset));
 
 export const rooms = [...new Set(["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê", ...getRooms().map(room => room.name)])];
-export const statuses = ["Agendado", "Confirmado", "Concluído", "Cancelado"];
+export const statuses = ["Agendado", "Confirmado", "Em andamento", "Concluído", "Desmarcado", "Cancelado"];
+
+export const statusTransitions = {
+    "Agendado": ["Confirmado", "Desmarcado", "Cancelado"],
+    "Confirmado": ["Em andamento", "Desmarcado", "Cancelado"],
+    "Em andamento": ["Concluído"]
+};
+
+export function getRelatedStatuses(status) {
+    if (["Agendado", "Confirmado"].includes(status)) return { client: "Confirmado", room: "Reservada", professional: "Ocupado" };
+    if (status === "Em andamento") return { client: "Em atendimento", room: "Ocupada", professional: "Em atendimento" };
+    if (["Desmarcado", "Cancelado"].includes(status)) return { client: "Desmarcado", room: "Desocupada", professional: "Sem agendamento" };
+    return { client: "Atendido", room: "Desocupada", professional: "Disponível" };
+}
+
+export function isBlockingStatus(status) {
+    return !["Desmarcado", "Cancelado", "Concluído"].includes(status);
+}
 
 const mockAppointments = [
     { dayOffset: 0, initialHour: "10:00", finalHour: "11:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
@@ -90,16 +107,44 @@ const mockAppointments = [
 
     { dayOffset: 4, initialHour: "10:00", finalHour: "11:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Agendado" },
     { dayOffset: 4, initialHour: "13:00", finalHour: "14:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Confirmado" }
-].map(appointment => ({ ...appointment, data: dateByOffset(appointment.dayOffset) }));
+].map(appointment => {
+    const data = dateByOffset(appointment.dayOffset);
+    return { ...appointment, id: `mock-${data}-${appointment.initialHour}-${appointment.client}`, data };
+});
 
 const savedAppointments = typeof localStorage === "undefined"
     ? []
     : JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
+const statusOverrides = typeof localStorage === "undefined"
+    ? {}
+    : JSON.parse(localStorage.getItem("ritua-appointment-statuses") || "{}");
+const savedId = appointment => appointment.id || `saved-${appointment.date || appointment.data}-${appointment.initialHour}-${appointment.client}`;
 
 export const appointments = [
-    ...mockAppointments,
-    ...savedAppointments.map(appointment => ({ ...appointment, data: appointment.date }))
+    ...mockAppointments.map(appointment => ({ ...appointment, status: statusOverrides[appointment.id] || appointment.status })),
+    ...savedAppointments.map(appointment => {
+        const id = savedId(appointment);
+        return { ...appointment, id, data: appointment.date || appointment.data, status: statusOverrides[id] || appointment.status };
+    })
 ];
+
+export function updateAppointmentStatus(id, status) {
+    if (!id || !statuses.includes(status)) return false;
+    const saved = typeof localStorage === "undefined" ? [] : JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
+    const savedIndex = saved.findIndex(appointment => savedId(appointment) === id);
+    if (savedIndex >= 0) {
+        saved[savedIndex] = { ...saved[savedIndex], id, status };
+        localStorage.setItem("ritua-appointments", JSON.stringify(saved));
+    } else if (mockAppointments.some(appointment => appointment.id === id)) {
+        const overrides = JSON.parse(localStorage.getItem("ritua-appointment-statuses") || "{}");
+        overrides[id] = status;
+        localStorage.setItem("ritua-appointment-statuses", JSON.stringify(overrides));
+    } else {
+        return false;
+    }
+    document.dispatchEvent(new CustomEvent("agenda-changed"));
+    return true;
+}
 
 /* ---------- Estado e filtros ---------- */
 
