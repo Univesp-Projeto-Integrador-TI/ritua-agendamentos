@@ -1,3 +1,4 @@
+import { page } from "../scripts/paths.js";
 import { appointments } from "../scripts/agenda-store.js";
 
 class createCardNextService extends HTMLElement {
@@ -45,7 +46,7 @@ class createCardNextService extends HTMLElement {
                 </div>
 
                 <div class="link-card-next-service">
-                    <a href="/src/assets/pages/detalhes-agendamento.html" class="open-appointment-details">
+                    <a href="${page('detalhes-agendamento.html')}" class="open-appointment-details">
                         Ver agendamento
                         <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.88225 7.88225V0.800049H0.800049M7.88225 0.800049L0.800049 7.88225" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>

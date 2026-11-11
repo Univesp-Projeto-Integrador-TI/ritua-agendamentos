@@ -1,3 +1,4 @@
+import { asset, page } from "../scripts/paths.js";
 import { appointments } from "../scripts/agenda-store.js";
 import { getRooms, removeRoom } from "../scripts/rooms-store.js";
 
@@ -70,7 +71,7 @@ class RoomsPage extends HTMLElement {
         this.querySelector(".rooms-grid").innerHTML = `${visibleRooms.map(room => this.renderRoom(room, todayAppointments)).join("")}${visibleRooms.length ? "" : `<p class="rooms-empty">Nenhuma sala encontrada.</p>`}<a class="room-add-card" href="./nova-sala.html"><span>＋</span><strong>Cadastrar nova sala</strong><small>Adicione nome e horários de funcionamento para liberar agendamentos.</small><b>Começar cadastro →</b></a>`;
         this.querySelector(".today-rooms-appointments h2").textContent = `${todayAppointments.length} ${todayAppointments.length === 1 ? "agendamento" : "agendamentos"}`;
         this.querySelector(".today-rooms-list").innerHTML = todayAppointments.slice(0, 4).map(item => `
-            <a class="today-room-item" href="/src/assets/pages/detalhes-agendamento.html" data-appointment='${escapeHtml(JSON.stringify(item))}'><strong>${escapeHtml(item.initialHour)}</strong><span><b>${escapeHtml(item.room)}</b><small>${escapeHtml(item.client)} · ${escapeHtml(item.service)}</small></span><i>↗</i></a>`).join("") || `<p class="rooms-no-today">Nenhum atendimento previsto para hoje.</p>`;
+            <a class="today-room-item" href="${page('detalhes-agendamento.html')}" data-appointment='${escapeHtml(JSON.stringify(item))}'><strong>${escapeHtml(item.initialHour)}</strong><span><b>${escapeHtml(item.room)}</b><small>${escapeHtml(item.client)} · ${escapeHtml(item.service)}</small></span><i>↗</i></a>`).join("") || `<p class="rooms-no-today">Nenhum atendimento previsto para hoje.</p>`;
         this.querySelectorAll("[data-appointment]").forEach(link => link.addEventListener("click", () => {
             const item = JSON.parse(link.dataset.appointment);
             sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({ ...item, date: item.data }));
@@ -91,7 +92,7 @@ class RoomsPage extends HTMLElement {
 
         return `
             <article class="room-card ${paused ? "room-card-paused" : ""}">
-                <img src="${escapeHtml(room.image || "/src/assets/images/img-exe-ambiente-sala.svg")}" alt="Ambiente da ${escapeHtml(room.name)}">
+                <img src="${escapeHtml(room.image || asset('img-exe-ambiente-sala.svg'))}" alt="Ambiente da ${escapeHtml(room.name)}">
                 <div class="room-card-content">
                     <div class="room-card-title">
                         <h3>${escapeHtml(room.name)}</h3>

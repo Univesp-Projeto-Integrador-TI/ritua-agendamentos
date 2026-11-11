@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 import { appointments } from "../scripts/agenda-store.js";
 import { createRoomId, DEFAULT_HOURS, getRoom, getRooms, removeRoom, saveRoom, WEEKDAYS } from "../scripts/rooms-store.js";
 
@@ -44,7 +45,7 @@ class RoomForm extends HTMLElement {
                         <footer class="room-form-actions"><p>Revise os dados antes de salvar.</p><a href="./salas.html">Cancelar</a><button type="submit">${this.editing ? "Salvar alterações" : "Salvar sala"}</button></footer>
                     </form>
                     <aside class="room-form-aside">
-                        <label class="room-photo-preview"><img class="room-photo" src="${escapeRoomText(current.image || "/src/assets/images/img-exe-ambiente-sala.svg")}" alt="Prévia da sala"><span class="room-photo-overlay">▧<small>Alterar foto da sala</small></span><input type="file" accept="image/*" hidden></label>
+                        <label class="room-photo-preview"><img class="room-photo" src="${escapeRoomText(current.image || asset('img-exe-ambiente-sala.svg'))}" alt="Prévia da sala"><span class="room-photo-overlay">▧<small>Alterar foto da sala</small></span><input type="file" accept="image/*" hidden></label>
                         <section class="room-preview-card"><p class="room-form-eyebrow">PRÉ-VISUALIZAÇÃO</p><h2 class="preview-room-name">${escapeRoomText(current.name || "Nome da sala")}</h2><dl><dt>Capacidade</dt><dd class="preview-capacity">${current.capacity ? `${current.capacity} ${Number(current.capacity) === 1 ? "pessoa" : "pessoas"}` : "—"}</dd><dt>Funcionamento</dt><dd class="preview-hours"></dd><dt>Agendamento padrão</dt><dd>${Number(current.duration) || 60} min + ${Number(current.interval) || 0} min de intervalo</dd></dl></section>
                         ${this.editing ? `<section class="room-preview-card room-upcoming-card"><h2>Próximos agendamentos <span>${appointmentsForRoom.length}</span></h2>${appointmentsForRoom.map(item => `<p><b>${escapeRoomText(item.data)}</b> · ${escapeRoomText(item.initialHour)}–${escapeRoomText(item.finalHour)}<small>${escapeRoomText(item.client)} · ${escapeRoomText(item.status)}</small></p>`).join("") || `<small>Sem atendimentos cadastrados para esta sala.</small>`}<a href="./agendamentos.html">Ver agenda da sala ›</a></section><section class="room-danger-card"><h2>Pausar ou excluir sala</h2><p>Salas pausadas não aparecem em novos agendamentos. Agendamentos existentes são mantidos.</p><button type="button" class="pause-room">${current.active === false ? "Ativar sala" : "Pausar sala"}</button><button type="button" class="delete-room">Excluir</button></section>` : `<section class="room-preview-card room-checklist"><h2>Antes de salvar</h2><p class="check-name">○ Nome da sala definido</p><p class="check-hours">○ Ao menos um dia com horário</p><p class="check-capacity">○ Capacidade informada</p><small>Depois de salva, a sala já aparece em novos agendamentos.</small></section>`}
                     </aside>
@@ -52,7 +53,7 @@ class RoomForm extends HTMLElement {
             </main>`;
         this.form = this.querySelector(".room-form");
         this.fileInput = this.querySelector(".room-photo-preview input");
-        this.roomImage = current.image || "/src/assets/images/img-exe-ambiente-sala.svg";
+        this.roomImage = current.image || asset('img-exe-ambiente-sala.svg');
         this.form.addEventListener("input", () => this.updatePreview());
         this.form.addEventListener("change", event => {
             if (event.target.name?.startsWith("day-enabled-")) this.toggleDay(event.target);

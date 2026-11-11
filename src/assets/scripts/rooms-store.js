@@ -1,3 +1,4 @@
+import { asset } from "./paths.js";
 const STORAGE_KEY = "ritua-rooms";
 const WEEKDAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 const DEFAULT_HOURS = WEEKDAYS.map((day, index) => ({
@@ -12,7 +13,7 @@ const DEFAULT_ROOMS = [
     { name: "Sala Orquídea", capacity: 1, duration: 60, description: "Espaço leve para terapias integrativas e aromaterapia.", amenities: ["Maca", "Ar-condicionado", "Aromaterapia"], hours: DEFAULT_HOURS, interval: 15, active: true },
     { name: "Sala Rosas", capacity: 2, duration: 60, description: "Ambiente amplo, com iluminação suave para terapias em dupla.", amenities: ["Maca", "Som ambiente", "Pia"], hours: DEFAULT_HOURS, interval: 15, active: true },
     { name: "Sala Tulipa", capacity: 2, duration: 60, description: "Atendimento individual e espaço para acolhimento emocional.", amenities: ["Ar-condicionado", "Som ambiente", "Acessível"], hours: DEFAULT_HOURS, interval: 15, active: true }
-].map((room, index) => ({ id: `room-${index + 1}`, image: "/src/assets/images/img-exe-ambiente-sala.svg", ...room }));
+].map((room, index) => ({ id: `room-${index + 1}`, image: asset('img-exe-ambiente-sala.svg'), ...room }));
 
 export function getRooms() {
     try {

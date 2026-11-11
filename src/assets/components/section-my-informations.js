@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 import { getCurrentAccount, saveAccountSettings } from "../scripts/session.js";
 
 const escapeValue = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -10,7 +11,7 @@ class createSectionMyInformation extends HTMLElement {
 
                 <section class="card-personal-informations">
                     <header class="header-personal-informations">
-                        <img class="img-user-profile" src="/src/assets/images/icon-profile-user.svg">
+                        <img class="img-user-profile" src="${asset('icon-profile-user.svg')}">
                         <div class="title-card-personal-informations">
                             <h4>Informações pessoais</h4>
                             <p>Mantenha seus dados de contato atualizados.</p>
@@ -57,7 +58,7 @@ class createSectionMyInformation extends HTMLElement {
 
                 <section class="card-my-security">
                     <header class="header-my-security">
-                        <img class="img-keyhole" src="/src/assets/images/icon-lock-keyhole.svg">
+                        <img class="img-keyhole" src="${asset('icon-lock-keyhole.svg')}">
                         <div class="title-my-security">
                             <h4>Minha seguraça</h4>
                             <p>Para alterar sua senha, preencha os campos abaixo.</p>

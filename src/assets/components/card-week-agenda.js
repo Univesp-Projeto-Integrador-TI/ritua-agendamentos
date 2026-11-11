@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 import {
     agendaState, updateAgenda, getFilteredAppointments, getWeekDays, addDays, isSameDay, pad,
     weekdayShort, weekdayLong, monthShort, monthLong, capitalize, rooms, statuses
@@ -37,7 +38,7 @@ class createWeekAgenda extends HTMLElement {
                         <label for="filter-search">Buscar atendimento</label>
                         <div class="filter-search">
                             <input type="search" id="filter-search" placeholder="Nome do cliente ou serviço" aria-label="Buscar atendimento por cliente ou serviço">
-                            <img src="/src/assets/images/icon-searchglass.svg" alt="" class="filter-search-icon">
+                            <img src="${asset('icon-searchglass.svg')}" alt="" class="filter-search-icon">
                         </div>
                     </div>
 

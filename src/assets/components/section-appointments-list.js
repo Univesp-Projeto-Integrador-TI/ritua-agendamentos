@@ -1,3 +1,4 @@
+import { asset, page } from "../scripts/paths.js";
 import {
     agendaState, getFilteredAppointments, isSameDay, pad, monthLong, formatDuration
 } from "../scripts/agenda-store.js";
@@ -38,7 +39,7 @@ class createAppointmentsList extends HTMLElement {
             list.innerHTML = `
                 <div class="section-empty-appointments">
                     <div class="icon-calendar">
-                        <img src="/src/assets/images/icon-calendar.svg" alt="">
+                        <img src="${asset('icon-calendar.svg')}" alt="">
                     </div>
 
                     <div class="text-empty-appointments">
@@ -63,7 +64,7 @@ class createAppointmentsList extends HTMLElement {
                     <p class="name-client-card">${appointment.client}</p>
                     <span>${appointment.service} · ${appointment.duration} min</span>
                     <span>${appointment.room}</span>
-                    <a href="/src/assets/pages/detalhes-agendamento.html" class="link-detail-appointment">Ver detalhes →</a>
+                    <a href="${page('detalhes-agendamento.html')}" class="link-detail-appointment">Ver detalhes →</a>
                 </div>
 
                 <p class="status-appointments-card">${appointment.status}</p>

@@ -1,3 +1,4 @@
+import { asset, page } from "../scripts/paths.js";
 import { getRelatedStatuses, statusTransitions, updateAppointmentStatus } from "../scripts/agenda-store.js";
 
 class AppointmentDetails extends HTMLElement {
@@ -5,7 +6,7 @@ class AppointmentDetails extends HTMLElement {
         const appointment = this.getAppointment();
         this.innerHTML = `
             <main class="appointment-details-page">
-                <a class="appointment-details-back" href="/src/assets/pages/agendamentos.html">‹ Meus agendamentos</a>
+                <a class="appointment-details-back" href="${page('agendamentos.html')}">‹ Meus agendamentos</a>
 
                 <header class="appointment-details-heading">
                     <div>
@@ -43,7 +44,7 @@ class AppointmentDetails extends HTMLElement {
                                 <span class="appointment-client-avatar">${appointment.client.charAt(0)}</span>
                                 <div>
                                     <strong>${appointment.client}</strong>
-                                    <a href="/src/assets/pages/clients-page.html">Ver dados do cliente →</a>
+                                    <a href="${page('clients-page.html')}">Ver dados do cliente →</a>
                                 </div>
                             </div>
                             <div class="appointment-contact-details">
@@ -72,7 +73,7 @@ class AppointmentDetails extends HTMLElement {
                     </div>
 
                     <aside class="appointment-room-card">
-                        <img src="/src/assets/images/img-exe-ambiente-sala.svg" alt="Ambiente de atendimento">
+                        <img src="${asset('img-exe-ambiente-sala.svg')}" alt="Ambiente de atendimento">
                         <div class="appointment-room-content">
                             <h2>Sala do atendimento</h2>
                             <div class="appointment-room-title"><strong>${appointment.room}</strong><span class="appointment-room-status">${getRelatedStatuses(appointment.status).room}</span></div>
@@ -89,7 +90,7 @@ class AppointmentDetails extends HTMLElement {
                     </aside>
                 </div>
 
-                <div class="appointment-details-privacy"><img src="/src/assets/images/icon-lock-keyhole.svg" alt=""><span>Apenas seus agendamentos são exibidos aqui.</span></div>
+                <div class="appointment-details-privacy"><img src="${asset('icon-lock-keyhole.svg')}" alt=""><span>Apenas seus agendamentos são exibidos aqui.</span></div>
             </main>
         `;
 

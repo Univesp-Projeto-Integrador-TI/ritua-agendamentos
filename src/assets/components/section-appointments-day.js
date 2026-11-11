@@ -1,3 +1,4 @@
+import { page } from "../scripts/paths.js";
 import { appointments, toDateKey, timeToMinutes, formatDuration, isSameDay } from "../scripts/agenda-store.js";
 
 class createAppointmentsDay extends HTMLElement {
@@ -111,7 +112,7 @@ class createAppointmentsDay extends HTMLElement {
 
                     <div class="info-appointments-card">
                         <p class="status-appointments-card">${agendamento.status}</p>
-                        <a href="/src/assets/pages/detalhes-agendamento.html" class="link-detail-appointment">Ver detalhes</a>
+                        <a href="${page('detalhes-agendamento.html')}" class="link-detail-appointment">Ver detalhes</a>
                     </div>
                 </div>
             `;

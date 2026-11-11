@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 import { appointments, timeToMinutes, formatDuration, isBlockingStatus } from "../scripts/agenda-store.js";
 import { getRooms, getRoomHours } from "../scripts/rooms-store.js";
 
@@ -140,7 +141,7 @@ class NewAppointment extends HTMLElement {
 
                     <aside class="booking-summary-column">
                         <section class="booking-summary-card">
-                            <img src="/src/assets/images/img-exe-ambiente-sala.svg" alt="Ambiente de atendimento">
+                            <img src="${asset('img-exe-ambiente-sala.svg')}" alt="Ambiente de atendimento">
                             <div class="booking-summary-content">
                                 <p class="booking-summary-eyebrow">Revise antes de criar</p>
                                 <h2 class="summary-client">Selecione um cliente</h2>
@@ -301,7 +302,7 @@ class NewAppointment extends HTMLElement {
         if (recommendedRoom) this.roomInput.value = recommendedRoom.name;
         this.setCheck("room", Boolean(recommendedRoom));
         this.querySelector(".recommended-room").innerHTML = recommendedRoom
-                            ? `<img class="room-door" src="/src/assets/images/icon-door.svg" alt=""><div><strong>${recommendedRoom.name}</strong><small>Atendimento de ${this.selectedDuration} minutos</small></div>`
+                            ? `<img class="room-door" src="${asset('icon-door.svg')}" alt=""><div><strong>${recommendedRoom.name}</strong><small>Atendimento de ${this.selectedDuration} minutos</small></div>`
             : `<div class="no-recommended-room">Sem sala disponível para este horário.</div>`;
 
         this.querySelector(".room-availability-list").innerHTML = rooms.map(room => {
@@ -312,7 +313,7 @@ class NewAppointment extends HTMLElement {
 
             return `
                 <article class="room-availability-card ${active ? "room-active" : ""}" data-room="${room.name}">
-                    <div class="room-availability-heading"><img class="room-door" src="/src/assets/images/icon-door.svg" alt=""><strong>${room.name}</strong></div>
+                    <div class="room-availability-heading"><img class="room-door" src="${asset('icon-door.svg')}" alt=""><strong>${room.name}</strong></div>
                     <small>Horários disponíveis:</small>
                     <div class="room-time-chips">
                         ${availableHours.length
