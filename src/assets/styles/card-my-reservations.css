@@ -137,3 +137,12 @@
     }
 
 }
+
+@media (max-width: 540px) {
+    .section-card-my-resevations {
+        padding: 16px;
+
+        .group-items-my-resevations .item-my-resevations img { max-width: 72px; min-height: 90px; }
+        .item-my-resevations .title-item-my-resevation { flex-wrap: wrap; gap: 6px; }
+    }
+}

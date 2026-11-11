@@ -166,3 +166,28 @@
         }
     }
 }
+
+@media (max-width: 760px) {
+    .container-appointments-day {
+        .group-cards-appointments-day .card-appointments-day {
+            grid-template-columns: auto 3px 1fr;
+            column-gap: 12px;
+            row-gap: 12px;
+
+            .line-card-appointments { height: 100%; min-height: 0; }
+
+            .info-appointments-card {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .section-empty-appointments { padding: 48px 16px; }
+    }
+}
+
+@media (max-width: 540px) {
+    .container-appointments-day { padding: 14px; }
+}
