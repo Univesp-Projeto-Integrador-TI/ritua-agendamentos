@@ -1,4 +1,4 @@
-import { getSessionUser } from "/src/assets/scripts/session.js";
+import { getSessionUser } from "../src/assets/scripts/session.js";
 const name = getSessionUser().firstName;
 const qtdAtendimentos = 5;
 
