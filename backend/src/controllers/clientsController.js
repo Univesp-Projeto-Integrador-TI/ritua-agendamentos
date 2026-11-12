@@ -1,3 +1,4 @@
+import { enviarEmailAgendamento } from '../service/emailService.js';
 let clientsMockedData = [
     { id: 1, name: "Ana Souza", gender: "female", number: "11988887777" },
     { id: 2, name: "Carlos Lima", gender: "male", number: "11977776666" }
@@ -7,7 +8,7 @@ export const listsClients = (req, res) => {
     return res.status(200).json(clientes);
 };
 
-export const createsClients = (req, res) => {
+export const createsClients = async (req, res) => {
     const { name, gender, number } = req.body;
 
     if (!name || !gender || !number) {
@@ -15,13 +16,14 @@ export const createsClients = (req, res) => {
     }
 
     const newClient = {
-        id: clientes.length + 1,
+        id: clientsMockedData.length + 1,
         name,
         gender,
         number
     };
 
     clientsMockedData.push(newClient);
+    await enviarEmailAgendamento("a definir", name, "Data a definir", "Atendimento Rituá");
 
     return res.status(201).json({
         mensagem: "Cliente cadastrado.",
