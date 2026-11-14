@@ -1,11 +1,17 @@
+import { asset } from "../scripts/paths.js";
+import { getCurrentAccount, saveAccountSettings } from "../scripts/session.js";
+
+const escapeValue = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+
 class createSectionMyInformation extends HTMLElement {
     connectedCallback(){
+        const account = getCurrentAccount() || { name: "", email: "", phone: "", services: [] };
         this.innerHTML = `
             <section class="section-my-informations">
 
                 <section class="card-personal-informations">
                     <header class="header-personal-informations">
-                        <img class="img-user-profile" src="/src/assets/images/icon-profile-user.svg">
+                        <img class="img-user-profile" src="${asset('icon-profile-user.svg')}">
                         <div class="title-card-personal-informations">
                             <h4>Informações pessoais</h4>
                             <p>Mantenha seus dados de contato atualizados.</p>
@@ -15,16 +21,16 @@ class createSectionMyInformation extends HTMLElement {
                     <form class="forms-personal-informations" action="" method="">
                         <div class="container-name-user container-forms">
                             <label for="name-user">Nome completo</label>
-                            <input class="input-name-user input" type="text" placeholder="Insira o nome completo" name="name-user">
+                            <input class="input-name-user input" type="text" placeholder="Insira o nome completo" name="name-user" value="${escapeValue(account.name)}" required>
                         </div>
                         <div class="container-contact-user">
                             <div class="container-contact-email container-forms">
                                 <label for="email">E-mail</label>
-                                <input type="email" class="input-email-user input" placeholder="exemplo@email.com.br" name="email">
+                                <input type="email" class="input-email-user input" placeholder="exemplo@email.com.br" name="email" value="${escapeValue(account.email)}" required>
                             </div>
                             <div class="container-contact-phone container-forms">
                                 <label for="celular">Celular</label>
-                                <input type="tel" class="input-celular-user input" placeholder="(00) 00000-0000" name="celular">
+                                <input type="tel" class="input-celular-user input" placeholder="(00) 00000-0000" name="celular" value="${escapeValue(account.phone)}" required>
                             </div>
                         </div>
                     </form>
@@ -52,7 +58,7 @@ class createSectionMyInformation extends HTMLElement {
 
                 <section class="card-my-security">
                     <header class="header-my-security">
-                        <img class="img-keyhole" src="/src/assets/images/icon-lock-keyhole.svg">
+                        <img class="img-keyhole" src="${asset('icon-lock-keyhole.svg')}">
                         <div class="title-my-security">
                             <h4>Minha seguraça</h4>
                             <p>Para alterar sua senha, preencha os campos abaixo.</p>
@@ -95,7 +101,7 @@ class createSectionMyInformation extends HTMLElement {
         const contentServices = this.querySelector(".content-services-offered");
         const messageServices = this.querySelector(".message-services-offered");
 
-        const services = [];
+        const services = [...(account.services || [])].slice(0, 3);
         const maxServices = 3;
 
         const renderServices = () => {
@@ -177,6 +183,47 @@ class createSectionMyInformation extends HTMLElement {
                 event.preventDefault();
                 insertService();
             }
+        });
+
+        const personalForm = this.querySelector(".forms-personal-informations");
+        const securityForm = this.querySelector(".forms-my-security");
+        const status = this.querySelector(".info-group-btn-save");
+
+        this.querySelector(".btn-save").addEventListener("click", async () => {
+            if (!personalForm.reportValidity()) return;
+            const phone = personalForm.elements.celular.value.replace(/\D/g, "");
+            if (phone.length < 10 || phone.length > 11) {
+                status.textContent = "Informe um celular válido com DDD.";
+                return;
+            }
+            const result = await saveAccountSettings({
+                name: personalForm.elements["name-user"].value.trim(),
+                email: personalForm.elements.email.value.trim(),
+                phone,
+                services
+            }, {
+                current: securityForm.elements["input-current-password"].value,
+                next: securityForm.elements["input-new-password"].value,
+                confirm: securityForm.elements["input-confirm-password"].value
+            });
+            status.textContent = result.error || "Alterações salvas com sucesso.";
+            if (result.success) {
+                securityForm.reset();
+                const name = personalForm.elements["name-user"].value.trim();
+                document.querySelector(".card-name-user")?.replaceChildren(document.createTextNode(name));
+                document.querySelector(".header-ritua-user-info-name")?.replaceChildren(document.createTextNode(name));
+            }
+        });
+
+        this.querySelector(".btn-cancel").addEventListener("click", () => {
+            const saved = getCurrentAccount() || { name: "", email: "", phone: "", services: [] };
+            personalForm.elements["name-user"].value = saved.name || "";
+            personalForm.elements.email.value = saved.email || "";
+            personalForm.elements.celular.value = saved.phone || "";
+            services.splice(0, services.length, ...(saved.services || []).slice(0, 3));
+            securityForm.reset();
+            renderServices();
+            status.textContent = "Alterações descartadas.";
         });
 
         renderServices();

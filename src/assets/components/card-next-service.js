@@ -1,12 +1,16 @@
+import { page } from "../scripts/paths.js";
+import { appointments } from "../scripts/agenda-store.js";
+
 class createCardNextService extends HTMLElement {
     connectedCallback(){
         const nome = this.getAttribute("nome");
-        const data = this.getAttribute("data");
         const hour = this.getAttribute("horario");
         const service = this.getAttribute("servico");
         const room = this.getAttribute("room");
+        const nextAppointment = appointments.find(item => item.client === nome && item.service === service && item.room === room && item.initialHour === hour);
+        const data = nextAppointment?.data ? nextAppointment.data.split("-").reverse().join("/") : this.getAttribute("data");
         const duration = this.getAttribute("duracao");
-        const status = this.getAttribute("status");
+        const status = nextAppointment?.status || this.getAttribute("status");
 
         this.innerHTML = `
             <section class="container-card-next-service">
@@ -42,7 +46,7 @@ class createCardNextService extends HTMLElement {
                 </div>
 
                 <div class="link-card-next-service">
-                    <a href="/src/assets/pages/detalhes-agendamento.html" class="open-appointment-details">
+                    <a href="${page('detalhes-agendamento.html')}" class="open-appointment-details">
                         Ver agendamento
                         <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7.88225 7.88225V0.800049H0.800049M7.88225 0.800049L0.800049 7.88225" stroke="#FFFFF1" stroke-width="1.6" stroke-linecap="round"/>
@@ -59,6 +63,7 @@ class createCardNextService extends HTMLElement {
             const endTotal = hours * 60 + minutes + durationMinutes;
 
             sessionStorage.setItem("ritua-appointment-detail", JSON.stringify({
+                id: nextAppointment?.id || "",
                 client: nome,
                 date: `${year}-${month}-${day}`,
                 initialHour: hour || "10:00",

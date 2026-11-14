@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 class mainAppointments extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -10,7 +11,7 @@ class mainAppointments extends HTMLElement {
                 </section>
 
                 <div class="info-main-appointments">
-                    <img src="/src/assets/images/icon-lock-keyhole.svg" alt="">
+                    <img src="${asset('icon-lock-keyhole.svg')}" alt="">
                     <p>Apenas os seus agendamentos são exibidos aqui.</p>
                 </div>
             </main>

@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 const clientes = [
     {
         id: 1,
@@ -387,7 +388,7 @@ class MainInicialClientes extends HTMLElement {
                     <td>
                         <div class="info-cliente">
                             <div class="foto-cliente">
-                                <img src="/src/assets/images/icon-user.svg" alt="">
+                                <img src="${asset('icon-user.svg')}" alt="">
                             </div>
 
                             <span class="nome-cliente">${cliente.nome}</span>

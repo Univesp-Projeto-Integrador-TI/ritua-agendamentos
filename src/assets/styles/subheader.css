@@ -37,3 +37,11 @@
         }
     }
 }
+
+@media (max-width: 900px) {
+    .container-subheader { margin: 20px 20px; }
+}
+
+@media (max-width: 540px) {
+    .container-subheader { margin: 16px 14px; }
+}

@@ -40,3 +40,8 @@
     color: var(--color-swamp);
     font-size: var(--font-body-size);
 }
+
+@media (max-width: 540px) {
+    .card-person-summary { padding: 14px; gap: 8px; }
+    .card-person-summary-body p { font-size: var(--font-body-size); }
+}

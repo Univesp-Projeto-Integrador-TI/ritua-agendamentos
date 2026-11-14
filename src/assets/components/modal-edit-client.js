@@ -1,3 +1,4 @@
+import { asset } from "../scripts/paths.js";
 class ModalEditClient extends HTMLElement {
     abrirComCliente(cliente) {
 
@@ -25,7 +26,7 @@ class ModalEditClient extends HTMLElement {
                 
                     <header class="header-modal-client">
                         <div class="icon-modal-client">
-                            <img src="/src/assets/images/icon-user.svg" alt="Ícone de cliente">
+                            <img src="${asset('icon-user.svg')}" alt="Ícone de cliente">
                         </div>
 
                         <div class="information-modal-client">

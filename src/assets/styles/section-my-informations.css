@@ -331,3 +331,39 @@
         }
     }
 }
+
+@media (max-width: 700px) {
+    .section-my-informations {
+        .card-personal-informations .forms-personal-informations .container-contact-user,
+        .card-my-security .forms-my-security .container-news-password {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .card-personal-informations .container-services-offered .content-services-offered {
+            flex-wrap: wrap;
+        }
+    }
+}
+
+@media (max-width: 540px) {
+    .section-my-informations {
+        gap: 16px;
+
+        .card-personal-informations, .card-my-security { padding: 18px; }
+
+        .card-personal-informations .header-personal-informations { flex-wrap: wrap; padding-bottom: 16px; }
+
+        .card-personal-informations .container-services-offered .input-services-offered {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        .section-btn-save-my-config {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+
+            .container-btn { flex-direction: column-reverse; }
+            .container-btn button { justify-content: center; }
+        }
+    }
+}

@@ -173,3 +173,26 @@
         }
     }
 }
+
+@media (max-width: 760px) {
+    .card-week-agenda {
+        .week-agenda-days {
+            display: flex;
+            overflow-x: auto;
+            gap: 6px;
+            padding-bottom: 4px;
+
+            .week-day { flex: 0 0 64px; padding: 10px; }
+        }
+
+        .week-agenda-filters { grid-template-columns: minmax(0, 1fr); }
+    }
+}
+
+@media (max-width: 540px) {
+    .card-week-agenda {
+        padding: 14px;
+
+        .week-agenda-header { flex-wrap: wrap; gap: 8px; }
+    }
+}
