@@ -81,8 +81,8 @@ export const statusTransitions = {
 
 export function getRelatedStatuses(status) {
     if (["Agendado", "Confirmado"].includes(status)) return { client: "Confirmado", room: "Reservada", professional: "Ocupado" };
-    if (status === "Em andamento") return { client: "Em atendimento", room: "Ocupada", professional: "Em atendimento" };
-    if (["Desmarcado", "Cancelado"].includes(status)) return { client: "Desmarcado", room: "Desocupada", professional: "Sem agendamento" };
+    if (status === "Em andamento") return { client: "Em atendimento", room: "Ocupada", professional: "Ocupado" };
+    if (["Desmarcado", "Cancelado"].includes(status)) return { client: "Desmarcado", room: "Desocupada", professional: "Disponível" };
     return { client: "Atendido", room: "Desocupada", professional: "Disponível" };
 }
 
