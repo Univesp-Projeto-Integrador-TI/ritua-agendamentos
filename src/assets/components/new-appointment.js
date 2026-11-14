@@ -3,8 +3,8 @@ import { appointments, timeToMinutes, formatDuration, isBlockingStatus } from ".
 import { getRooms, getRoomHours } from "../scripts/rooms-store.js";
 
 const clients = [
-    { name: "Beatriz Lima", phone: "(11) 97654-3210" },
-    { name: "Ana Souza", phone: "(11) 98765-4321" },
+    { name: "Darlan", phone: "(11) 97104-1233" },
+    { name: "Ana Souza", phone: "(11) 95168-8808" },
     { name: "Maria Oliveira", phone: "(11) 97654-3210" },
     { name: "Rafael Santos", phone: "(11) 96543-2109" },
     { name: "Julia Santos", phone: "(11) 95432-1098" },

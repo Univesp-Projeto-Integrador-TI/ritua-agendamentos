@@ -4,7 +4,7 @@ const clientes = [
         id: 1,
         nome: "Ana Souza",
         email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
+        telefone: "(11) 95168-8808",
         proximoAtendimento: {
             data: "05/11/2026",
             horario: "10:00",
