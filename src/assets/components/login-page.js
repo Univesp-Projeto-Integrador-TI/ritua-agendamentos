@@ -21,6 +21,7 @@ const maskPhone = value => {
 class LoginPage extends HTMLElement {
     connectedCallback() {
         this.mode = "login";
+        this.services = [];
         this.render();
     }
 
@@ -46,15 +47,40 @@ class LoginPage extends HTMLElement {
                     </div>
                 </section>
             </main>`;
-        this.querySelectorAll("[data-mode]").forEach(button => button.addEventListener("click", () => { this.mode = button.dataset.mode; this.render(); }));
+        this.querySelectorAll("[data-mode]").forEach(button => button.addEventListener("click", () => { this.mode = button.dataset.mode; this.services = []; this.render(); }));
         this.querySelectorAll("[data-toggle-password]").forEach(button => button.addEventListener("click", () => {
             const input = button.parentElement.querySelector("input");
             const show = input.type === "password";
             input.type = show ? "text" : "password";
             button.textContent = show ? "Ocultar" : "Mostrar";
         }));
+        if (!isLogin) this.setupServices();
         this.querySelector("[name=phone]")?.addEventListener("input", event => { event.target.value = maskPhone(event.target.value); });
         this.querySelector("form").addEventListener("submit", event => { event.preventDefault(); isLogin ? this.login(event.target) : this.signup(event.target); });
+    }
+
+    setupServices() {
+        const input = this.querySelector("[name=service]");
+        const list = this.querySelector(".login-services-list");
+        const draw = () => {
+            list.innerHTML = this.services.map((item, index) => `<span class="login-service-tag">${escapeText(item)}<button type="button" data-remove="${index}" aria-label="Remover ${escapeText(item)}">×</button></span>`).join("");
+            list.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => { this.services.splice(Number(button.dataset.remove), 1); draw(); }));
+            input.disabled = this.services.length >= 3;
+            this.querySelector("[data-add-service]").disabled = input.disabled;
+        };
+        const add = () => {
+            const value = input.value.trim();
+            if (!value) return this.showMessage("Digite o nome de um serviço.");
+            if (this.services.some(item => item.toLowerCase() === value.toLowerCase())) return this.showMessage("Esse serviço já foi adicionado.");
+            this.showMessage("");
+            this.services.push(value);
+            input.value = "";
+            draw();
+            input.focus();
+        };
+        this.querySelector("[data-add-service]").addEventListener("click", add);
+        input.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); add(); } });
+        draw();
     }
 
     passwordField(name, label, autocomplete) {
@@ -75,6 +101,11 @@ class LoginPage extends HTMLElement {
                 <label class="login-field"><span>E-mail *</span><input name="email" type="email" autocomplete="email" placeholder="voce@email.com"></label>
             </div>
             <label class="login-field"><span>Usuário *</span><input name="user" autocomplete="username" placeholder="CPF ou nome de usuário"></label>
+            <div class="login-field">
+                <span>Serviços que você oferece * (mín. 1, máx. 3)</span>
+                <div class="login-service-input"><input name="service" placeholder="Digite um serviço"><button type="button" data-add-service>Adicionar</button></div>
+                <div class="login-services-list"></div>
+            </div>
             <div class="login-row">
                 ${this.passwordField("password", "Senha *", "new-password")}
                 ${this.passwordField("confirm", "Digitar senha novamente *", "new-password")}
@@ -103,16 +134,18 @@ class LoginPage extends HTMLElement {
     async signup(form) {
         const data = { name: form.name.value.trim(), phone: digits(form.phone.value), email: form.email.value.trim(), login: normalizeLogin(form.user.value) };
         if (!data.name || !data.phone || !data.email || !data.login || !form.password.value || !form.confirm.value) return this.showMessage("Preencha todos os campos obrigatórios.");
-        if (data.phone.length < 10) return this.showMessage("Informe um celular válido, com DDD.");
+        if (data.phone.length < 10 || data.phone.length > 11) return this.showMessage("Informe um celular válido, com DDD.");
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return this.showMessage("Informe um e-mail válido.");
-        if (form.password.value.length < 6) return this.showMessage("A senha deve ter pelo menos 6 caracteres.");
+        if (form.password.value.length < 8 || !/[A-Za-z]/.test(form.password.value) || !/\d/.test(form.password.value)) return this.showMessage("A senha precisa ter 8 caracteres, com letras e números.");
         if (form.password.value !== form.confirm.value) return this.showMessage("As senhas não são iguais.");
+        if (!this.services.length) return this.showMessage("Adicione pelo menos 1 serviço.");
         const users = getUsers();
         if (users.some(item => item.login === data.login)) return this.showMessage("Este usuário já possui cadastro.");
         const salt = crypto.randomUUID();
-        users.push({ ...data, salt, hash: await hashPassword(form.password.value, salt) });
+        users.push({ ...data, services: [...this.services], salt, hash: await hashPassword(form.password.value, salt) });
         localStorage.setItem(USERS_KEY, JSON.stringify(users));
         this.mode = "login";
+        this.services = [];
         this.render();
         this.querySelector("[name=user]").value = data.login;
         this.showMessage(`Acesso criado, ${escapeText(data.name.split(" ")[0])}! Agora é só entrar.`, "success");

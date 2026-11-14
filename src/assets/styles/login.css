@@ -30,3 +30,11 @@ body { margin: 0; background: var(--color-white-3); }
     .login-visual { height: 180px; }
     .login-row { grid-template-columns: 1fr; }
 }
+
+.login-service-input { display: flex; gap: 8px; }
+.login-service-input input { flex: 1; min-width: 0; }
+.login-service-input button { padding: 0 14px; border: 1px solid currentColor; border-radius: 8px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.login-service-input button:disabled { opacity: .5; cursor: not-allowed; }
+.login-services-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.login-service-tag { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #eef3ee; font-size: .85rem; }
+.login-service-tag button { border: 0; background: none; cursor: pointer; font-size: 1rem; line-height: 1; }

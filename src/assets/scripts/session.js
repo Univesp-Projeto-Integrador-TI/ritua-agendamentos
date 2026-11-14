@@ -9,6 +9,9 @@ function readUsers() {
     try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch { return []; }
 }
 
+// Sem sessão ativa (ex.: primeira abertura do site ou aba nova), vai direto para o login.
+if (!readSession()?.login) location.replace(new URL("../pages/login.html", import.meta.url).href);
+
 export function getCurrentAccount() {
     const session = readSession();
     if (!session?.login) return null;

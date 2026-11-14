@@ -39,7 +39,7 @@ class createSectionMyInformation extends HTMLElement {
                         <header class="header-services-offered">
                             <div class="title-services-offered">
                                 <p>Serviços fornecidos</p>
-                                <p>Insira os serviços que você oferece. Adicione um a um ( máx: 3 serviços ).</p>
+                                <p>Insira os serviços que você oferece. Adicione um a um ( mín: 1, máx: 3 serviços ).</p>
                             </div>
                         </header>
 
@@ -194,6 +194,11 @@ class createSectionMyInformation extends HTMLElement {
             const phone = personalForm.elements.celular.value.replace(/\D/g, "");
             if (phone.length < 10 || phone.length > 11) {
                 status.textContent = "Informe um celular válido com DDD.";
+                return;
+            }
+            if (!services.length) {
+                messageServices.textContent = "Adicione pelo menos 1 serviço.";
+                status.textContent = "Adicione pelo menos 1 serviço para salvar.";
                 return;
             }
             const result = await saveAccountSettings({
