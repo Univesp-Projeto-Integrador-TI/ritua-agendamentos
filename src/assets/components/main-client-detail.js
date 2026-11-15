@@ -1,267 +1,20 @@
-const clientes = [
-    {
-        id: 1,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 2,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 3,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 4,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 98765-4321",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 5,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 6,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    }, 
-    {
-        id: 7,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 8,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 9,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 10,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 98765-4321",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 11,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 12,
-        nome: "Rhuan Carlos",
-        email: "rhuan.carlos@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    },
-    {
-        id: 13,
-        nome: "Guilherme Santos",
-        email: "guilherme.santos@email.com",
-        dataNascimento: "19/02/1982",
-        genero: "Feminino",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            sala: "Sala Ipê",
-            status: "Confirmado",
-            duracao: 60
-        }
-    }
-];
-
-const appointments = [
-    {
-        initialHour: "10:00",
-        finalHour: "11:00",
-        data: "22/10/2026",
-        clientId: 7,
-        service: "Massagem relaxante",
-        duration: 60,
-        room: "Sala Bambu",
-        reservation: "09:45-11:15",
-        status: "Confirmado"
-    },
-    {
-        initialHour: "11:30",
-        finalHour: "12:30",
-        data: "20/10/2026",
-        clientId: 8,
-        service: "Drenagem linfática",
-        duration: 60,
-        room: "Sala Orquídea",
-        reservation: "11:15-12:45",
-        status: "Agendado"
-    },
-    {
-        initialHour: "14:00",
-        finalHour: "15:00",
-        data: "19/10/2026",
-        clientId: 9,
-        service: "Massagem terapêutica",
-        duration: 60,
-        room: "Sala Bambu",
-        reservation: "13:45-15:15",
-        status: "Confirmado"
-    },
-    {
-        initialHour: "09:00",
-        finalHour: "10:00",
-        data: "19/10/2026",
-        clientId: 11,
-        service: "Massagem terapêutica",
-        duration: 60,
-        room: "Sala Ipê",
-        reservation: "08:30-11:00",
-        status: "Agendado"
-    },
-    {
-        initialHour: "09:00",
-        finalHour: "10:00",
-        data: "18/10/2026",
-        clientId: 11,
-        service: "Massagem terapêutica",
-        duration: 45,
-        room: "Sala Ipê",
-        reservation: "10:00-11:00",
-        status: "Confirmado"
-    },
-    {
-        initialHour: "09:00",
-        finalHour: "10:00",
-        data: "18/10/2026",
-        clientId: 12,
-        service: "Massagem relaxante",
-        duration: 50,
-        room: "Sala Ipê",
-        reservation: "15:00-16:00",
-        status: "Confirmado"
-    }
-];
-
+import { getClient, getClientHistory, getNextAppointment } from "../scripts/clients-store.js";
 
 class MainClientDetail extends HTMLElement {
     connectedCallback() {
+        this.render();
+        window.addEventListener("db-changed", () => this.render());
+    }
+
+    render() {
         const parametrosURL = new URLSearchParams(window.location.search);
         const idCliente = Number(parametrosURL.get("id"));
 
         const subheader = document.querySelector("subheader-ritua");
         subheader.setAttribute("client-id", idCliente);
 
-        const clienteSelecionado = clientes.find(
-            cliente => cliente.id === idCliente
-        );
+        const clienteSelecionado = getClient(idCliente);
+        const proximo = clienteSelecionado ? getNextAppointment(idCliente) : null;
 
         if (clienteSelecionado) {
             document.querySelector(".information-page").textContent =
@@ -279,13 +32,11 @@ class MainClientDetail extends HTMLElement {
         const modalEditar = document.querySelector("modal-edit-client");
         
 
-        botaoEditar.addEventListener("click", () => {
+        botaoEditar.onclick = () => {
             modalEditar.abrirComCliente(clienteSelecionado);
-        });
+        };
 
-        const historicoCliente = appointments.filter(
-            agendamento => agendamento.clientId === idCliente
-        );
+        const historicoCliente = getClientHistory(idCliente);
 
         const formataData = (data) => {
             if (!data) return "Data não informada";
@@ -354,24 +105,25 @@ class MainClientDetail extends HTMLElement {
 
                                 <div class="info-registration-fingers">
                                     <span class="info-registration-fingers">Email</span>
-                                    <p class="info-registration-fingers">${clienteSelecionado.email}</p>
+                                    <p class="info-registration-fingers">${clienteSelecionado.email || "Não informado"}</p>
                                 </div>
 
                                 <div class="info-registration-fingers">
                                     <span class="info-registration-fingers">Telefone</span>
-                                    <p class="info-registration-fingers">${clienteSelecionado.telefone}</p>
+                                    <p class="info-registration-fingers">${clienteSelecionado.telefone || "Não informado"}</p>
                                 </div>
                             </div>
                         </section>
                     </section>
                     <card-next-service
+                        appointment-id="${proximo?.id || ''}"
                         nome="${clienteSelecionado.nome}"
-                        data="${clienteSelecionado.proximoAtendimento?.data || ''}"
-                        horario="${clienteSelecionado.proximoAtendimento?.horario || ''}"
-                        servico="${clienteSelecionado.proximoAtendimento?.servico || ''}"
-                        room="${clienteSelecionado.proximoAtendimento?.sala || ''}"
-                        status="${clienteSelecionado.proximoAtendimento?.status || ''}"
-                        duracao="${clienteSelecionado.proximoAtendimento?.duracao || ''} min">
+                        data="${proximo?.data || ''}"
+                        horario="${proximo?.horario || ''}"
+                        servico="${proximo?.servico || ''}"
+                        room="${proximo?.sala || ''}"
+                        status="${proximo?.status || ''}"
+                        duracao="${proximo?.duracao || ''} min">
                     </card-next-service>
                 </section>
 
@@ -380,7 +132,7 @@ class MainClientDetail extends HTMLElement {
                         <h4 class="title-registration-observations">Observações</h4>
                     </header>
 
-                    <p class="info-registration-observations">${clienteSelecionado.observacoes}</p>
+                    <p class="info-registration-observations">${clienteSelecionado.observacoes || "Sem observações."}</p>
                 </section>
 
                 <section class="section-history-appointments">
