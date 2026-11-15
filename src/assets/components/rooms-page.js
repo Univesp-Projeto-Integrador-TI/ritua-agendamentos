@@ -33,8 +33,12 @@ class RoomsPage extends HTMLElement {
         this.querySelector(".rooms-filter").addEventListener("change", () => this.render());
         this.addEventListener("click", event => {
             const deleteButton = event.target.closest("[data-delete-room]");
-            if (deleteButton && window.confirm("Excluir esta sala? Os agendamentos existentes serão mantidos.")) {
-                removeRoom(deleteButton.dataset.deleteRoom);
+            if (deleteButton && window.confirm("Excluir esta sala? Salas com agendamentos não podem ser excluídas.")) {
+                try {
+                    removeRoom(deleteButton.dataset.deleteRoom);
+                } catch (error) {
+                    window.alert(error.message);
+                }
                 this.render();
             }
         });

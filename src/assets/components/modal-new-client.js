@@ -1,4 +1,5 @@
 import { asset } from "../scripts/paths.js";
+import { createClient } from "../scripts/clients-store.js";
 class ModalNewClient extends HTMLElement {
 
     abrir() {
@@ -7,6 +8,15 @@ class ModalNewClient extends HTMLElement {
 
     fechar() {
         this.classList.remove("modal-open");
+        this.querySelector("form")?.reset();
+        this.mostrarErro("");
+    }
+
+    mostrarErro(texto) {
+        const el = this.querySelector(".client-form-error");
+        if (!el) return;
+        el.textContent = texto;
+        el.style.display = texto ? "block" : "none";
     }
 
     connectedCallback() {
@@ -74,6 +84,7 @@ class ModalNewClient extends HTMLElement {
                             <small> Use este espaço para informações operacionais, sem dados clínicos.</small>
                         </div>
 
+                        <p class="client-form-error" role="alert" style="color:#a33;margin:0 0 8px;display:none"></p>
                         <footer class="footer-modal-client">
                             <button type="button" class="btn-cancel-modal-client"> Cancelar</button>
 
@@ -93,6 +104,17 @@ class ModalNewClient extends HTMLElement {
         });
 
         botaoCancelar.addEventListener("click", () => {
+            this.fechar();
+        });
+
+        this.querySelector("form").addEventListener("submit", event => {
+            event.preventDefault();
+            const dados = Object.fromEntries(new FormData(event.target));
+            const { error } = createClient(dados);
+            if (error) {
+                this.mostrarErro(error);
+                return;
+            }
             this.fechar();
         });
 

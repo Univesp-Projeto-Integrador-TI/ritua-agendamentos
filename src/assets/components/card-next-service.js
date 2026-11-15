@@ -1,5 +1,5 @@
 import { page } from "../scripts/paths.js";
-import { appointments } from "../scripts/agenda-store.js";
+import { appointments, allAppointments } from "../scripts/agenda-store.js";
 
 class createCardNextService extends HTMLElement {
     connectedCallback(){
@@ -7,7 +7,23 @@ class createCardNextService extends HTMLElement {
         const hour = this.getAttribute("horario");
         const service = this.getAttribute("servico");
         const room = this.getAttribute("room");
-        const nextAppointment = appointments.find(item => item.client === nome && item.service === service && item.room === room && item.initialHour === hour);
+        const appointmentId = Number(this.getAttribute("appointment-id"));
+        const nextAppointment = (appointmentId && allAppointments.find(item => item.id === appointmentId))
+            || appointments.find(item => item.client === nome && item.service === service && item.room === room && item.initialHour === hour);
+        if (!service) {
+            this.innerHTML = `
+                <section class="container-card-next-service">
+                    <header class="header-card-next-service">
+                        <div class="info-header-card-next-service"><span>PROXÍMO AGENDAMENTO</span></div>
+                        <div class="detail-header-card-next-service">
+                            <h2 class="txt-name-client">${nome || "Sem agendamentos"}</h2>
+                            <span class="info-service">Nenhum agendamento futuro.</span>
+                        </div>
+                    </header>
+                </section>
+            `;
+            return;
+        }
         const data = nextAppointment?.data ? nextAppointment.data.split("-").reverse().join("/") : this.getAttribute("data");
         const duration = this.getAttribute("duracao");
         const status = nextAppointment?.status || this.getAttribute("status");
@@ -72,7 +88,7 @@ class createCardNextService extends HTMLElement {
                 duration: durationMinutes,
                 room,
                 status,
-                professional: "Marina Oliveira"
+                professional: nextAppointment?.professional || ""
             }));
         });
     };

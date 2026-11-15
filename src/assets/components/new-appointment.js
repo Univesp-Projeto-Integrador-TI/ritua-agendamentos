@@ -1,25 +1,12 @@
 import { asset } from "../scripts/paths.js";
-import { appointments, timeToMinutes, formatDuration, isBlockingStatus } from "../scripts/agenda-store.js";
+import { allAppointments, timeToMinutes, formatDuration, isBlockingStatus, createAppointment } from "../scripts/agenda-store.js";
+import { getClients } from "../scripts/clients-store.js";
+import { getSessionUser } from "../scripts/session.js";
 import { getRooms, getRoomHours } from "../scripts/rooms-store.js";
 
-const clients = [
-    { name: "Darlan", phone: "(11) 97104-1233" },
-    { name: "Ana Souza", phone: "(11) 95168-8808" },
-    { name: "Maria Oliveira", phone: "(11) 97654-3210" },
-    { name: "Rafael Santos", phone: "(11) 96543-2109" },
-    { name: "Julia Santos", phone: "(11) 95432-1098" },
-    { name: "Carlos Mendes", phone: "(11) 94321-0987" },
-    { name: "Paula Ribeiro", phone: "(11) 93210-9876" }
-];
-
-const services = [
-    { name: "Massagem relaxante", duration: 60 },
-    { name: "Reiki", duration: 60 },
-    { name: "Massoterapia", duration: 90 },
-    { name: "Drenagem linfática", duration: 60 },
-    { name: "Massagem terapêutica", duration: 60 },
-    { name: "Aromaterapia", duration: 60 }
-];
+// Duração padrão de cada serviço (o banco guarda só o nome do serviço no agendamento).
+const SERVICE_DURATIONS = { "Massoterapia": 90 };
+const durationOf = name => SERVICE_DURATIONS[name] || 60;
 
 function dateKey(value) {
     return value;
@@ -43,6 +30,11 @@ function durationBetween(start, end) {
     return timeToMinutes(end) - timeToMinutes(start);
 }
 
+function todayKey() {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function nextBusinessDate() {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
@@ -53,6 +45,9 @@ function nextBusinessDate() {
 
 class NewAppointment extends HTMLElement {
     connectedCallback() {
+        this.professional = getSessionUser();
+        this.clients = getClients().filter(client => client.status === "Ativo");
+        this.services = this.professional.services.map(name => ({ name, duration: durationOf(name) }));
         this.innerHTML = `
             <main class="new-appointment-page">
                 <a class="new-appointment-back" href="./agendamentos.html">‹ Meus agendamentos</a>
@@ -106,7 +101,7 @@ class NewAppointment extends HTMLElement {
                                 <label for="booking-client">Cliente *</label>
                                 <select id="booking-client" name="client" required>
                                     <option value="">Selecione um cliente</option>
-                                    ${clients.map(client => `<option value="${client.name}">${client.name}</option>`).join("")}
+                                    ${this.clients.map(client => `<option value="${client.id}">${client.nome}</option>`).join("")}
                                 </select>
                                 <small class="client-contact-hint">Selecione para consultar a disponibilidade do cliente.</small>
                                 <button type="button" class="new-client-link">+ Novo cliente</button>
@@ -116,13 +111,13 @@ class NewAppointment extends HTMLElement {
                                     <label for="booking-service">Serviço *</label>
                                     <select id="booking-service" name="service" required>
                                         <option value="">Selecione um serviço</option>
-                                        ${services.map(service => `<option value="${service.name}" data-duration="${service.duration}">${service.name}</option>`).join("")}
+                                        ${this.services.map(service => `<option value="${service.name}" data-duration="${service.duration}">${service.name}</option>`).join("")}
                                     </select>
                                 </div>
                                 <div class="booking-field">
                                     <label for="booking-professional">Profissional</label>
                                     <div class="locked-professional">
-                                        <input type="text" id="booking-professional" value="Marina Oliveira" readonly>
+                                        <input type="text" id="booking-professional" value="${this.professional.name}" readonly>
                                         <span aria-hidden="true">♙</span>
                                     </div>
                                 </div>
@@ -151,7 +146,7 @@ class NewAppointment extends HTMLElement {
                                     <dt>Data e horário</dt>
                                     <dd class="summary-date-time">—</dd>
                                     <dt>Sala e profissional</dt>
-                                    <dd class="summary-room-professional">— · Marina Oliveira</dd>
+                                    <dd class="summary-room-professional">— · ${this.professional.name}</dd>
                                 </dl>
                             </div>
                         </section>
@@ -185,8 +180,7 @@ class NewAppointment extends HTMLElement {
         this.clientInput = this.querySelector("#booking-client");
         this.serviceInput = this.querySelector("#booking-service");
         this.dateInput.value = nextBusinessDate();
-        this.clientInput.value = "Beatriz Lima";
-        this.serviceInput.value = "Reiki";
+        this.dateInput.min = todayKey();
 
         this.dateInput.addEventListener("change", () => this.renderAvailability());
         this.clientInput.addEventListener("change", () => this.renderAvailability());
@@ -231,11 +225,11 @@ class NewAppointment extends HTMLElement {
     }
 
     get selectedService() {
-        return services.find(service => service.name === this.serviceInput.value) || null;
+        return this.services.find(service => service.name === this.serviceInput.value) || null;
     }
 
     get selectedClient() {
-        return clients.find(client => client.name === this.clientInput.value) || null;
+        return this.clients.find(client => String(client.id) === this.clientInput.value) || null;
     }
 
     get selectedDuration() {
@@ -256,18 +250,23 @@ class NewAppointment extends HTMLElement {
 
     hasConflict(kind, start, end, roomName = this.roomInput.value) {
         const key = dateKey(this.dateInput.value);
-        const clientName = this.clientInput.value;
-        return appointments.some(appointment => {
-            if ((appointment.data || appointment.date) !== key || !isBlockingStatus(appointment.status)) return false;
-            if (kind === "client" && appointment.client !== clientName) return false;
+        const clientId = Number(this.clientInput.value);
+        return allAppointments.some(appointment => {
+            if (appointment.data !== key || !isBlockingStatus(appointment.status)) return false;
+            if (kind === "staff" && appointment.employeeId !== this.professional.id) return false;
+            if (kind === "client" && appointment.clientId !== clientId) return false;
             if (kind === "room" && appointment.room !== roomName) return false;
             return timeToMinutes(start) < timeToMinutes(appointment.finalHour) &&
                 timeToMinutes(end) > timeToMinutes(appointment.initialHour);
         });
     }
 
+    isPast(start) {
+        return new Date(`${this.dateInput.value}T${start}:00`) < new Date();
+    }
+
     isRoomAvailable(room, start, end) {
-        if (!start || !end || durationBetween(start, end) <= 0) return false;
+        if (!start || !end || durationBetween(start, end) <= 0 || this.isPast(start)) return false;
         const startMinutes = timeToMinutes(start);
         const endMinutes = timeToMinutes(end);
         if (startMinutes < room.opening || endMinutes + room.intervalMinutes > room.closing) return false;
@@ -350,12 +349,12 @@ class NewAppointment extends HTMLElement {
         const client = this.selectedClient;
         const service = this.selectedService;
         const room = this.roomInput.value;
-        this.querySelector(".summary-client").textContent = client?.name || "Selecione um cliente";
+        this.querySelector(".summary-client").textContent = client?.nome || "Selecione um cliente";
         this.querySelector(".summary-service").textContent = service ? `${service.name} · ${this.selectedDuration} minutos` : "—";
         this.querySelector(".summary-date-time").textContent = this.dateInput.value
             ? `${formatDate(this.dateInput.value)} · ${this.startInput.value}–${this.endTime}`
             : "—";
-        this.querySelector(".summary-room-professional").textContent = `${room || "Selecione uma sala"} · Marina Oliveira`;
+        this.querySelector(".summary-room-professional").textContent = `${room || "Selecione uma sala"} · ${this.professional.name}`;
     }
 
     updateWhatsAppLink() {
@@ -374,8 +373,8 @@ class NewAppointment extends HTMLElement {
             link.setAttribute("aria-disabled", "true");
             return;
         }
-        const phone = client.phone.replace(/\D/g, "");
-        const message = `Olá, ${client.name}! Seu atendimento de ${service.name} está agendado para ${formatDate(this.dateInput.value)}, das ${this.startInput.value} às ${this.endTime}, em ${room}.`;
+        const phone = client.telefoneDigits;
+        const message = `Olá, ${client.nome}! Seu atendimento de ${service.name} está agendado para ${formatDate(this.dateInput.value)}, das ${this.startInput.value} às ${this.endTime}, em ${room}.`;
         link.href = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
         link.removeAttribute("aria-disabled");
     }
@@ -399,22 +398,21 @@ class NewAppointment extends HTMLElement {
             return;
         }
 
-        const newAppointment = {
-            id: crypto.randomUUID(),
-            client: client.name,
+        const result = createAppointment({
+            clientId: client.id,
+            roomId: roomData.id,
             service: service.name,
-            room,
             date: this.dateInput.value,
-            initialHour: this.startInput.value,
-            finalHour: this.endTime,
-            duration: durationBetween(this.startInput.value, this.endTime),
-            professional: "Marina Oliveira",
-            status: "Agendado"
-        };
+            start: this.startInput.value,
+            end: this.endTime
+        });
+        if (result.error) {
+            this.querySelector(".booking-message").textContent = result.error;
+            this.querySelector(".booking-message").classList.remove("booking-success");
+            this.renderAvailability();
+            return;
+        }
 
-        const saved = JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
-        saved.push(newAppointment);
-        localStorage.setItem("ritua-appointments", JSON.stringify(saved));
         this.querySelector(".booking-message").textContent = "Agendamento criado. Você já pode enviar a confirmação pelo WhatsApp.";
         this.querySelector(".booking-message").classList.add("booking-success");
         this.querySelector(".booking-create").textContent = "Agendamento criado";

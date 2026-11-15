@@ -1,149 +1,17 @@
 import { asset } from "../scripts/paths.js";
-const clientes = [
-    {
-        id: 1,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 95168-8808",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 2,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 3,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 4,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 5,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 6,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    }, 
-    {
-        id: 7,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 8,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 9,
-        nome: "João Silva",
-        email: "joao.silva@email.com",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 10,
-        nome: "Ana Souza",
-        email: "ana.souza@email.com",
-        telefone: "(11) 98765-4321",
-        proximoAtendimento: {
-            data: "05/11/2026",
-            horario: "10:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 11,
-        nome: "Maria Oliveira",
-        email: "maria.oliveira@email.com",
-        telefone: "(11) 97654-3210",
-        proximoAtendimento: null
-    },
-    {
-        id: 12,
-        nome: "Rhuan Carlos",
-        email: "rhuan.carlos@email.com",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    },
-    {
-        id: 13,
-        nome: "Guilherme Santos",
-        email: "guilherme.santos@email.com",
-        telefone: "(11) 96543-2109",
-        proximoAtendimento: {
-            data: "06/11/2026",
-            horario: "11:00",
-            servico: "Massagem relaxante",
-            duracao: 60
-        }
-    }
-];
+import { getClients, getNextAppointment } from "../scripts/clients-store.js";
+
+const carregarClientes = () => getClients().map(cliente => ({ ...cliente, proximoAtendimento: getNextAppointment(cliente.id) }));
 
 class MainInicialClientes extends HTMLElement {
     itensPorPagina = 6;
     paginaAtual = 1;
-    clientesFiltrados = clientes;
+    clientes = [];
+    clientesFiltrados = [];
 
     connectedCallback() {
+        this.clientes = carregarClientes();
+        this.clientesFiltrados = this.clientes;
         this.innerHTML = `
             <main class="main-inicial-clientes">
             
@@ -206,6 +74,12 @@ class MainInicialClientes extends HTMLElement {
                 modal.abrir();
             });
         }
+
+        // Quando um cliente é criado ou alterado na base, a lista é recarregada.
+        window.addEventListener("db-changed", () => {
+            this.clientes = carregarClientes();
+            this.filtrarClientes(inputBusca.value);
+        });
 
         this.renderizarClientes();
     }
@@ -287,7 +161,7 @@ class MainInicialClientes extends HTMLElement {
     filtrarClientes(termo) {
         const termoBusca = termo.trim().toLowerCase();
 
-        this.clientesFiltrados = clientes.filter(cliente => {
+        this.clientesFiltrados = this.clientes.filter(cliente => {
             return (
                 cliente.nome.toLowerCase().includes(termoBusca) ||
                 cliente.email.toLowerCase().includes(termoBusca) ||
@@ -397,7 +271,7 @@ class MainInicialClientes extends HTMLElement {
 
                     <td>
                         <div class="info-contato">
-                            <span class="email-cliente">${cliente.email}</span>
+                            <span class="email-cliente">${cliente.email || "Sem e-mail"}</span>
                             <span class="telefone-cliente">${cliente.telefone}</span>
                         </div>
                     </td>

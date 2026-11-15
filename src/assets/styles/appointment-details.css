@@ -223,6 +223,109 @@
         margin-bottom: 14px;
     }
 
+    .appointment-progress {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        margin: 4px 0 18px;
+        padding: 0;
+        list-style: none;
+        counter-reset: none;
+    }
+
+    .appointment-progress-step {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        text-align: center;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 13px;
+            left: -50%;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-gray-1);
+        }
+
+        &:first-child::before {
+            display: none;
+        }
+
+        &.done::before,
+        &.current::before {
+            background-color: var(--color-green-detail-2);
+        }
+
+        &.closed::before {
+            background-color: var(--color-gray-1);
+        }
+    }
+
+    .appointment-progress-dot {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        color: var(--color-swamp);
+        background-color: var(--color-white-3);
+        border: 2px solid var(--color-gray-1);
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: var(--font-weight-medium);
+    }
+
+    .appointment-progress-step.done .appointment-progress-dot {
+        color: var(--color-white-3);
+        background-color: var(--color-green-detail-2);
+        border-color: var(--color-green-detail-2);
+    }
+
+    .appointment-progress-step.current .appointment-progress-dot {
+        color: var(--color-green-detail-2);
+        background-color: var(--color-white-3);
+        border-color: var(--color-green-detail-2);
+        box-shadow: 0 0 0 3px var(--color-green-background);
+    }
+
+    .appointment-progress-label {
+        max-width: 92px;
+        color: var(--color-swamp);
+        font-size: 11px;
+        line-height: 1.35;
+    }
+
+    .appointment-progress-step.done .appointment-progress-label,
+    .appointment-progress-step.current .appointment-progress-label {
+        color: var(--color-primary);
+        font-weight: var(--font-weight-medium);
+    }
+
+    .appointment-progress-note {
+        margin-bottom: 14px;
+        color: var(--color-swamp);
+        font-size: var(--font-detail-size);
+        line-height: 1.6;
+
+        strong {
+            color: var(--color-primary);
+            font-weight: var(--font-weight-medium);
+        }
+    }
+
+    .appointment-status-hint {
+        color: var(--color-swamp);
+        font-size: 11px;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
     .appointment-status-control {
         display: flex;
         flex-direction: column;
@@ -394,6 +497,21 @@
 }
 
 @media (max-width: 480px) {
+    .appointment-progress-label {
+        max-width: 64px;
+        font-size: 10px;
+    }
+
+    .appointment-progress-dot {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+    }
+
+    .appointment-progress-step::before {
+        top: 11px;
+    }
+
     .appointment-details-page {
         margin-right: 14px;
         margin-left: 14px;

@@ -1,6 +1,6 @@
 import { asset } from "../scripts/paths.js";
 import { appointments } from "../scripts/agenda-store.js";
-import { createRoomId, DEFAULT_HOURS, getRoom, getRooms, removeRoom, saveRoom, WEEKDAYS } from "../scripts/rooms-store.js";
+import { DEFAULT_HOURS, getRoom, getRooms, removeRoom, saveRoom, WEEKDAYS } from "../scripts/rooms-store.js";
 
 const escapeRoomText = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const AMENITIES = ["Maca", "Ar-condicionado", "Som ambiente", "Pia", "Aromaterapia", "Acessível"];
@@ -45,14 +45,13 @@ class RoomForm extends HTMLElement {
                         <footer class="room-form-actions"><p>Revise os dados antes de salvar.</p><a href="./salas.html">Cancelar</a><button type="submit">${this.editing ? "Salvar alterações" : "Salvar sala"}</button></footer>
                     </form>
                     <aside class="room-form-aside">
-                        <label class="room-photo-preview"><img class="room-photo" src="${escapeRoomText(current.image || asset('img-exe-ambiente-sala.svg'))}" alt="Prévia da sala"><span class="room-photo-overlay">▧<small>Alterar foto da sala</small></span><input type="file" accept="image/*" hidden></label>
+                        <div class="room-photo-preview"><img class="room-photo" src="${escapeRoomText(current.image || asset('img-exe-ambiente-sala.svg'))}" alt="Imagem padrão da sala"></div>
                         <section class="room-preview-card"><p class="room-form-eyebrow">PRÉ-VISUALIZAÇÃO</p><h2 class="preview-room-name">${escapeRoomText(current.name || "Nome da sala")}</h2><dl><dt>Capacidade</dt><dd class="preview-capacity">${current.capacity ? `${current.capacity} ${Number(current.capacity) === 1 ? "pessoa" : "pessoas"}` : "—"}</dd><dt>Funcionamento</dt><dd class="preview-hours"></dd><dt>Agendamento padrão</dt><dd>${Number(current.duration) || 60} min + ${Number(current.interval) || 0} min de intervalo</dd></dl></section>
                         ${this.editing ? `<section class="room-preview-card room-upcoming-card"><h2>Próximos agendamentos <span>${appointmentsForRoom.length}</span></h2>${appointmentsForRoom.map(item => `<p><b>${escapeRoomText(item.data)}</b> · ${escapeRoomText(item.initialHour)}–${escapeRoomText(item.finalHour)}<small>${escapeRoomText(item.client)} · ${escapeRoomText(item.status)}</small></p>`).join("") || `<small>Sem atendimentos cadastrados para esta sala.</small>`}<a href="./agendamentos.html">Ver agenda da sala ›</a></section><section class="room-danger-card"><h2>Pausar ou excluir sala</h2><p>Salas pausadas não aparecem em novos agendamentos. Agendamentos existentes são mantidos.</p><button type="button" class="pause-room">${current.active === false ? "Ativar sala" : "Pausar sala"}</button><button type="button" class="delete-room">Excluir</button></section>` : `<section class="room-preview-card room-checklist"><h2>Antes de salvar</h2><p class="check-name">○ Nome da sala definido</p><p class="check-hours">○ Ao menos um dia com horário</p><p class="check-capacity">○ Capacidade informada</p><small>Depois de salva, a sala já aparece em novos agendamentos.</small></section>`}
                     </aside>
                 </div>
             </main>`;
         this.form = this.querySelector(".room-form");
-        this.fileInput = this.querySelector(".room-photo-preview input");
         this.roomImage = current.image || asset('img-exe-ambiente-sala.svg');
         this.form.addEventListener("input", () => this.updatePreview());
         this.form.addEventListener("change", event => {
@@ -60,7 +59,6 @@ class RoomForm extends HTMLElement {
             this.updatePreview();
         });
         this.querySelector(".copy-monday").addEventListener("click", () => this.copyMonday());
-        this.fileInput.addEventListener("change", () => this.readRoomPhoto());
         this.form.addEventListener("submit", event => this.submitForm(event));
         if (this.editing) {
             this.querySelector(".pause-room").addEventListener("click", () => this.toggleRoomActive());
@@ -89,27 +87,6 @@ class RoomForm extends HTMLElement {
             this.toggleDay(checkbox);
         });
         this.updatePreview();
-    }
-
-    async readRoomPhoto() {
-        const file = this.fileInput.files[0];
-        if (!file) return;
-        const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-        });
-        const image = new Image();
-        image.src = dataUrl;
-        await image.decode();
-        const scale = Math.min(1, 1000 / Math.max(image.naturalWidth, image.naturalHeight));
-        const canvas = document.createElement("canvas");
-        canvas.width = Math.round(image.naturalWidth * scale);
-        canvas.height = Math.round(image.naturalHeight * scale);
-        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-        this.roomImage = canvas.toDataURL("image/jpeg", 0.78);
-        this.querySelector(".room-photo").src = this.roomImage;
     }
 
     readSchedule() {
@@ -145,7 +122,7 @@ class RoomForm extends HTMLElement {
     makeRoom() {
         const data = new FormData(this.form);
         return {
-            id: this.room?.id || createRoomId(),
+            id: this.room?.id,
             name: String(data.get("name") || "").trim(),
             capacity: Number(data.get("capacity")),
             duration: Number(data.get("duration")),
@@ -171,7 +148,12 @@ class RoomForm extends HTMLElement {
             this.showMessage("Defina pelo menos um dia com um horário válido.");
             return;
         }
-        saveRoom(room);
+        try {
+            saveRoom(room);
+        } catch (error) {
+            this.showMessage(error.message);
+            return;
+        }
         location.href = "./salas.html";
     }
 
@@ -179,14 +161,26 @@ class RoomForm extends HTMLElement {
         const active = this.form.elements.active;
         active.checked = !active.checked;
         this.room = { ...this.room, active: active.checked };
-        saveRoom(this.room);
+        try {
+            saveRoom(this.room);
+        } catch (error) {
+            active.checked = !active.checked;
+            this.room = { ...this.room, active: active.checked };
+            this.showMessage(error.message);
+            return;
+        }
         this.querySelector(".pause-room").textContent = active.checked ? "Pausar sala" : "Ativar sala";
         this.showMessage(active.checked ? "Sala ativada." : "Sala pausada. Ela não aparece em novos agendamentos.");
     }
 
     deleteRoom() {
-        if (!window.confirm("Excluir esta sala? Os agendamentos existentes serão mantidos.")) return;
-        removeRoom(this.room.id);
+        if (!window.confirm("Excluir esta sala? Salas com agendamentos não podem ser excluídas.")) return;
+        try {
+            removeRoom(this.room.id);
+        } catch (error) {
+            this.showMessage(error.message);
+            return;
+        }
         location.href = "./salas.html";
     }
 

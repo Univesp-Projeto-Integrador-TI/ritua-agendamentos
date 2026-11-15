@@ -1,23 +1,26 @@
 import { asset } from "../scripts/paths.js";
+import { updateClient } from "../scripts/clients-store.js";
 class ModalEditClient extends HTMLElement {
     abrirComCliente(cliente) {
 
-        const partesData = cliente.dataNascimento.split("/");
-
-        const dataFormatada = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
-
-        this.querySelector("#genero-cliente").value =cliente.genero.toLowerCase();
-        this.querySelector("#nascimento-cliente").value = dataFormatada;
+        this.clienteId = cliente.id;
+        this.mostrarErro("");
+        this.querySelector("#genero-cliente").value = cliente.generoValor || "";
+        this.querySelector("#nascimento-cliente").value = cliente.nascimentoISO || "";
         this.querySelector("#nome-cliente").value = cliente.nome;
-        this.querySelector("#email-cliente").value = cliente.email;
+        this.querySelector("#email-cliente").value = cliente.email || "";
         this.querySelector("#telefone-cliente").value = cliente.telefone;
+        this.querySelector("#observacoes-cliente").value = cliente.observacoes || "";
 
-        this.querySelector("#observacoes-cliente").value =
-            cliente.observacoes || "";
-
-        
         this.classList.add("modal-open");
     };
+
+    mostrarErro(texto) {
+        const el = this.querySelector(".client-form-error");
+        if (!el) return;
+        el.textContent = texto;
+        el.style.display = texto ? "block" : "none";
+    }
 
     connectedCallback() {
         this.innerHTML = `
@@ -84,6 +87,7 @@ class ModalEditClient extends HTMLElement {
                             <small> Use este espaço para informações operacionais, sem dados clínicos.</small>
                         </div>
 
+                        <p class="client-form-error" role="alert" style="color:#a33;margin:0 0 8px;display:none"></p>
                         <footer class="footer-modal-client">
                             <button type="button" class="btn-cancel-modal-client"> Cancelar</button>
 
@@ -103,6 +107,17 @@ class ModalEditClient extends HTMLElement {
         });
 
         botaoCancelar.addEventListener("click", () => {
+            this.classList.remove("modal-open");
+        });
+
+        this.querySelector("form").addEventListener("submit", event => {
+            event.preventDefault();
+            const dados = Object.fromEntries(new FormData(event.target));
+            const { error } = updateClient(this.clienteId, dados);
+            if (error) {
+                this.mostrarErro(error);
+                return;
+            }
             this.classList.remove("modal-open");
         });
 

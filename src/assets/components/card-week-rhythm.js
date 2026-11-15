@@ -1,15 +1,6 @@
-const appointments = [
-    { date: "12/10/2026" },
-    { date: "12/10/2026" },
-    { date: "13/10/2026" },
-    { date: "15/10/2026" },
-    { date: "15/10/2026" },
-    { date: "15/10/2026" },
-    { date: "16/10/2026" },
-    { date: "09/09/2026" },
-    { date: "10/09/2026" },
-    { date: "11/09/2026" }
-];
+import { appointments as agenda, isBlockingStatus } from "../scripts/agenda-store.js";
+
+const appointments = () => agenda.filter(item => isBlockingStatus(item.status)).map(item => ({ date: item.data.split("-").reverse().join("/") }));
 
 class createCardWeekRhythm extends HTMLElement {
     connectedCallback(){
@@ -26,7 +17,7 @@ class createCardWeekRhythm extends HTMLElement {
                     </div>
                 </section>
 
-                <p class="analysis-chart-week-rhyth">Segunda e quarta concentram sua agenda.</p>
+                <p class="analysis-chart-week-rhyth"></p>
             </section>
         `
         //Inserindo a data no card.
@@ -61,7 +52,7 @@ class createCardWeekRhythm extends HTMLElement {
         ];
 
         const createChart = () => {
-            appointments.forEach(agendamento => {
+            appointments().forEach(agendamento => {
                 const splitDate = agendamento.date.split("/");
 
                 const createDate = new Date(
@@ -94,7 +85,7 @@ class createCardWeekRhythm extends HTMLElement {
             arrayDate.forEach(dia => {
                 const height = dia.count === 0
                     ? 4
-                    : (dia.count / maxAppointments) * 55;
+                    : (dia.count / (maxAppointments || 1)) * 55;
 
                 //Barra do dia atual
                 const currentWeekDay = currentDate.toLocaleDateString("pt-BR", {
@@ -112,13 +103,16 @@ class createCardWeekRhythm extends HTMLElement {
                         <span class="chart-label">${dia.day}</span>
                     </div>
                 `;
-                console.log(dia.day, dia.count);
             });
 
             
         };
 
         createChart();
+        const busiest = arrayDate.filter(dia => dia.count > 0).sort((a, b) => b.count - a.count);
+        this.querySelector(".analysis-chart-week-rhyth").textContent = busiest.length
+            ? `${busiest[0].day.charAt(0).toUpperCase() + busiest[0].day.slice(1)} é o dia mais cheio da sua semana.`
+            : "Sem agendamentos nesta semana.";
 
         //Insere o subtitule com informações no card.
         const totalAppointments = () => {
