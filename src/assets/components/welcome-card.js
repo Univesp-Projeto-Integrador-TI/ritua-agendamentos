@@ -1,7 +1,9 @@
 import { page } from "../scripts/paths.js";
 import { getSessionUser } from "../scripts/session.js";
+import { appointments, isBlockingStatus, toDateKey } from "../scripts/agenda-store.js";
 const name = getSessionUser().firstName;
-const qtdAtendimentos = 5;
+const hoje = toDateKey(new Date());
+const qtdAtendimentos = appointments.filter(item => item.data === hoje && isBlockingStatus(item.status)).length;
 
 class createWelcomeCard extends HTMLElement {
     connectedCallback() {
@@ -40,7 +42,7 @@ class createWelcomeCard extends HTMLElement {
             `Boa noite, ${name}!`;
 
         document.getElementById("descricao").textContent =
-            qtdAtendimentos >= 1 ? `Seu dia começa aqui! Você tem ${qtdAtendimentos} atendimentos agendados para hoje.` :
+            qtdAtendimentos >= 1 ? `Seu dia começa aqui! Você tem ${qtdAtendimentos} ${qtdAtendimentos === 1 ? "atendimento agendado" : "atendimentos agendados"} para hoje.` :
             `Seu dia começa aqui! Você não tem atendimentos agendados para hoje.`;
     }
 }
