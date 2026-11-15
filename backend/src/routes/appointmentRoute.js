@@ -4,7 +4,7 @@ import {
   getAppointmentById, 
   createAppointment, 
   updateAppointment, 
-  updateAppointmentStatus, 
+  updateAppointmentStatus,
   deleteAppointment 
 } from '../controllers/appointmentController.js';
 

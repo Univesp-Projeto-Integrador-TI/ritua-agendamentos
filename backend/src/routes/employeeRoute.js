@@ -1,9 +1,18 @@
-import express from 'express';
-import { registerEmployeeWithLogin } from '../controllers/employeeController.js';
+import { Router } from 'express';
+import { 
+  listEmployees, 
+  getEmployeeById, 
+  createEmployee, 
+  updateEmployee, 
+  deleteEmployee 
+} from '../controllers/employeeController.js';
 
-const router = express.Router();
+const router = Router();
 
-// POST route for registering an employee with login
-router.post('/register', registerEmployeeWithLogin);
+router.get('/', listEmployees);
+router.get('/:id', getEmployeeById);
+router.post('/', createEmployee);        
+router.patch('/:id', updateEmployee);
+router.delete('/:id', deleteEmployee);
 
 export default router;
