@@ -1,3 +1,4 @@
+import { enviarEmailAgendamento } from '../service/emailService.js';
 import pool from '../config/db.js';
 
 export async function listAppointments(req, res) {
@@ -76,13 +77,26 @@ export async function createAppointment(req, res) {
       return res.status(400).json({ success: false, message: 'Conflito de horário: esta sala já está ocupada neste período.' });
     }
 
+    // 1. Salva o agendamento no banco de dados
     const result = await pool.query(
       `INSERT INTO appointments (id_customer, id_room, appointment_date, start_time, duration_minutes, service, status)
        VALUES ($1, $2, $3, $4, $5, $6, 'Agendado') RETURNING *`,
       [id_customer, id_room, appointment_date, start_time, duration_minutes, service]
     );
 
-    return res.status(201).json({ success: true, message: 'Agendamento criado com sucesso!', data: result.rows[0] });
+    const novoAgendamento = result.rows[0];
+
+    // 2. Busca os dados do cliente para disparar o e-mail
+    const clienteResult = await pool.query('SELECT name, email FROM customers WHERE id_customer = $1', [id_customer]);
+    
+    if (clienteResult.rows.length > 0) {
+      const cliente = clienteResult.rows[0];
+      const dataFormatada = `${appointment_date} às ${start_time}`;
+      
+      await enviarEmailAgendamento(cliente.email, cliente.name, dataFormatada, service || 'Atendimento');
+    }
+
+    return res.status(201).json({ success: true, message: 'Agendamento criado com sucesso!', data: novoAgendamento });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
   }

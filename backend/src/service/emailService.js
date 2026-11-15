@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -5,15 +6,15 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, 
     auth: {
-        user: 'seu-email@gmail.com',         // Substitua pelo seu e-mail
-        pass: 'sua-senha-de-app-do-google'   // Senha de aplicativo gerada no Google
+        user:process.env.EMAIL_USER,        
+        pass:process.env.EMAIL_PASS
     }
 });
 
 const enviarEmailAgendamento = async (clienteEmail, clienteNome, dataAgendamento, servico) => {
     try {
         await transporter.sendMail({
-            from: '"Rituá Terapias" <seu-email@gmail.com>',
+            from:`"Rituá Terapias" <${process.env.EMAIL_USER}>`,
             to: clienteEmail,
             subject: 'Confirmação do seu Agendamento - Rituá Terapias',
             html: `
