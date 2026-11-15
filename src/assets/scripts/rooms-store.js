@@ -1,53 +1,75 @@
 import { asset } from "./paths.js";
-const STORAGE_KEY = "ritua-rooms";
+import { select, findById, insert, update, remove, replaceRoomHours } from "./db.js";
+
+// Camada entre as tabelas "rooms" + "room_operating_hours" e os componentes de sala.
+// A imagem não vai para o banco: todas as salas usam a imagem padrão do projeto.
+
 const WEEKDAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+const DAY_KEYS = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
 const DEFAULT_HOURS = WEEKDAYS.map((day, index) => ({
     day,
     enabled: index < 5,
     start: "08:00",
     end: "18:00"
 }));
-const DEFAULT_ROOMS = [
-    { name: "Sala Bambu", capacity: 1, duration: 60, description: "Ambiente acolhedor para massagens e terapias corporais.", amenities: ["Maca", "Ar-condicionado", "Som ambiente"], hours: DEFAULT_HOURS, interval: 15, active: true },
-    { name: "Sala Lótus", capacity: 1, duration: 60, description: "Sala silenciosa com maca baixa, almofadas e cortinas de linho. Luz natural pela manhã.", amenities: ["Maca", "Som ambiente", "Pia", "Aromaterapia"], hours: DEFAULT_HOURS.map((item, index) => ({ ...item, start: index < 5 ? "07:00" : "08:00", end: index < 5 ? "19:00" : "12:00", enabled: index < 6 })), interval: 15, active: true },
-    { name: "Sala Orquídea", capacity: 1, duration: 60, description: "Espaço leve para terapias integrativas e aromaterapia.", amenities: ["Maca", "Ar-condicionado", "Aromaterapia"], hours: DEFAULT_HOURS, interval: 15, active: true },
-    { name: "Sala Rosas", capacity: 2, duration: 60, description: "Ambiente amplo, com iluminação suave para terapias em dupla.", amenities: ["Maca", "Som ambiente", "Pia"], hours: DEFAULT_HOURS, interval: 15, active: true },
-    { name: "Sala Tulipa", capacity: 2, duration: 60, description: "Atendimento individual e espaço para acolhimento emocional.", amenities: ["Ar-condicionado", "Som ambiente", "Acessível"], hours: DEFAULT_HOURS, interval: 15, active: true }
-].map((room, index) => ({ id: `room-${index + 1}`, image: asset('img-exe-ambiente-sala.svg'), ...room }));
 
-export function getRooms() {
-    try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-        return Array.isArray(saved) ? saved : DEFAULT_ROOMS.map(room => ({ ...room }));
-    } catch {
-        return DEFAULT_ROOMS.map(room => ({ ...room }));
-    }
+const short = time => String(time).slice(0, 5);
+
+function toView(row, hourRows) {
+    const hours = WEEKDAYS.map((day, index) => {
+        const found = hourRows.find(item => item.id_room === row.id_room && item.day_of_week === DAY_KEYS[index]);
+        return found
+            ? { day, enabled: true, start: short(found.opening_time), end: short(found.closing_time) }
+            : { day, enabled: false, start: "08:00", end: "18:00" };
+    });
+    return {
+        id: row.id_room,
+        name: row.name,
+        capacity: row.capacity,
+        duration: row.default_duration_minutes,
+        description: row.description || "",
+        amenities: row.amenities ? row.amenities.split(",").map(item => item.trim()).filter(Boolean) : [],
+        hours,
+        interval: row.interval_minutes,
+        active: row.room_status === "Ativa",
+        image: asset("img-exe-ambiente-sala.svg")
+    };
 }
 
-export function saveRooms(rooms) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rooms));
-    window.dispatchEvent(new CustomEvent("rooms-changed"));
+export function getRooms() {
+    const hourRows = select("room_operating_hours");
+    return select("rooms").map(row => toView(row, hourRows));
 }
 
 export function getRoom(id) {
-    return getRooms().find(room => room.id === id) || null;
+    const row = findById("rooms", id);
+    return row ? toView(row, select("room_operating_hours", item => item.id_room === row.id_room)) : null;
 }
 
+// Cria (sem id) ou atualiza (com id) a sala e os horários de funcionamento. Lança DbError se o banco recusar.
 export function saveRoom(room) {
-    const rooms = getRooms();
-    const index = rooms.findIndex(item => item.id === room.id);
-    if (index < 0) rooms.push(room);
-    else rooms[index] = room;
-    saveRooms(rooms);
-    return room;
+    const columns = {
+        name: room.name,
+        description: room.description || null,
+        capacity: Number(room.capacity),
+        default_duration_minutes: Number(room.duration),
+        interval_minutes: Number(room.interval),
+        amenities: (room.amenities || []).join(","),
+        room_status: room.active === false ? "Pausada" : "Ativa"
+    };
+    const row = room.id ? update("rooms", room.id, columns) : insert("rooms", columns);
+    const hours = (room.hours || [])
+        .map((item, index) => ({ item, index }))
+        .filter(({ item }) => item.enabled)
+        .map(({ item, index }) => ({ day_of_week: DAY_KEYS[index], opening_time: `${item.start}:00`, closing_time: `${item.end}:00` }));
+    replaceRoomHours(row.id_room, hours);
+    return getRoom(row.id_room);
 }
 
+// Lança DbError se a sala tiver agendamentos (ON DELETE RESTRICT).
 export function removeRoom(id) {
-    saveRooms(getRooms().filter(room => room.id !== id));
-}
-
-export function createRoomId() {
-    return globalThis.crypto?.randomUUID?.() || `room-${Date.now()}`;
+    remove("rooms", id);
+    window.dispatchEvent(new CustomEvent("rooms-changed"));
 }
 
 export function getRoomHours(room, dayIndex) {
