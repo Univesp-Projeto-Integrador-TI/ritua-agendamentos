@@ -1,9 +1,14 @@
 import { asset, page } from "../scripts/paths.js";
-import { getRelatedStatuses, statusTransitions, updateAppointmentStatus } from "../scripts/agenda-store.js";
+import { getRelatedStatuses, statuses, updateAppointmentStatus, getAppointmentById } from "../scripts/agenda-store.js";
+import { getClient } from "../scripts/clients-store.js";
+
+const PROGRESS_STEPS = ["Agendado", "Confirmado", "Em andamento", "Concluído"];
 
 class AppointmentDetails extends HTMLElement {
     connectedCallback() {
         const appointment = this.getAppointment();
+        const progressIndex = PROGRESS_STEPS.indexOf(appointment.status);
+        const progressClosed = progressIndex === -1;
         this.innerHTML = `
             <main class="appointment-details-page">
                 <a class="appointment-details-back" href="${page('agendamentos.html')}">‹ Meus agendamentos</a>
@@ -48,8 +53,8 @@ class AppointmentDetails extends HTMLElement {
                                 </div>
                             </div>
                             <div class="appointment-contact-details">
-                                <div><span>Telefone</span><p>${appointment.phone}</p></div>
-                                <div><span>E-mail</span><p>${appointment.email}</p></div>
+                                <div><span>Telefone</span><p>${appointment.phone || "Não informado"}</p></div>
+                                <div><span>E-mail</span><p>${appointment.email || "Não informado"}</p></div>
                             </div>
                             <p class="appointment-contact-note">Prefere receber confirmações por WhatsApp. Avisar com antecedência em caso de alteração de horário.</p>
                         </section>
@@ -57,11 +62,22 @@ class AppointmentDetails extends HTMLElement {
                         <section class="appointment-manage-card">
                             <h2>Etapa do atendimento</h2>
                             <p>Atualize o andamento aqui. Agendamentos desmarcados ou cancelados liberam o horário, a sala e a agenda do profissional.</p>
+                            <ol class="appointment-progress" aria-label="Progresso do atendimento">
+                                ${PROGRESS_STEPS.map((step, index) => {
+                                    const state = index < progressIndex ? "done" : index === progressIndex ? "current" : "pending";
+                                    return `<li class="appointment-progress-step ${state}${progressClosed ? " closed" : ""}"${index === progressIndex ? ' aria-current="step"' : ""}>
+                                        <span class="appointment-progress-dot">${index < progressIndex ? "✓" : index + 1}</span>
+                                        <span class="appointment-progress-label">${step}</span>
+                                    </li>`;
+                                }).join("")}
+                            </ol>
+                            ${progressClosed ? `<p class="appointment-progress-note">Atendimento encerrado como <strong>${appointment.status}</strong>. As etapas anteriores continuam registradas no histórico.</p>` : ""}
                             <label class="appointment-status-control">Alterar status
-                                <select class="appointment-status-select" ${statusTransitions[appointment.status]?.length ? "" : "disabled"}>
-                                    <option value="">${statusTransitions[appointment.status]?.length ? "Selecione a próxima etapa" : "Etapa final"}</option>
-                                    ${(statusTransitions[appointment.status] || []).map(status => `<option value="${status}">${status === "Desmarcado" ? "Desmarcado (a pedido do cliente)" : status === "Cancelado" ? "Cancelado (pela equipe)" : status}</option>`).join("")}
+                                <select class="appointment-status-select">
+                                    <option value="">Selecione o status</option>
+                                    ${statuses.filter(status => status !== appointment.status).map(status => `<option value="${status}">${status === "Desmarcado" ? "Desmarcado (a pedido do cliente)" : status === "Cancelado" ? "Cancelado (pela equipe)" : status}</option>`).join("")}
                                 </select>
+                                <small class="appointment-status-hint">Qualquer etapa pode ser escolhida, inclusive voltar. Desmarcado e Cancelado liberam o horário.</small>
                             </label>
                             <div class="appointment-related-statuses">
                                 <p>Cliente <strong>${getRelatedStatuses(appointment.status).client}</strong></p>
@@ -107,11 +123,16 @@ class AppointmentDetails extends HTMLElement {
             sessionStorage.setItem("ritua-appointment-detail", JSON.stringify(updatedAppointment));
             this.connectedCallback();
         });
+
     }
 
     getAppointment() {
         const stored = sessionStorage.getItem("ritua-appointment-detail");
-        const appointment = stored ? JSON.parse(stored) : {};
+        const saved = stored ? JSON.parse(stored) : {};
+        // Sempre usa os dados atuais da base (status, sala, contato do cliente) quando o agendamento existe.
+        const current = getAppointmentById(saved.id);
+        const contact = current ? getClient(current.clientId) : null;
+        const appointment = current ? { ...saved, ...current, date: current.data, phone: contact?.telefone || "", email: contact?.email || "" } : saved;
         const dateValue = appointment.date || "2026-11-08";
         const [year, month, day] = dateValue.split("-").map(Number);
         const date = new Date(year, month - 1, day);
@@ -127,9 +148,9 @@ class AppointmentDetails extends HTMLElement {
             finalHour: appointment.finalHour || "11:00",
             status: appointment.status || "Confirmado",
             duration: appointment.duration || 60,
-            professional: appointment.professional || "Marina Oliveira",
-            phone: appointment.phone || "(11) 98765-4321",
-            email: appointment.email || "ana.souza@exemplo.com",
+            professional: appointment.professional || "",
+            phone: appointment.phone ?? "(11) 98765-4321",
+            email: appointment.email ?? "ana.souza@exemplo.com",
             day: String(day).padStart(2, "0"),
             month: new Intl.DateTimeFormat("pt-BR", { month: "short" }).format(date).replace(".", "").toUpperCase(),
             weekday: `${new Intl.DateTimeFormat("pt-BR", { weekday: "long" }).format(date)} · ${year}`,

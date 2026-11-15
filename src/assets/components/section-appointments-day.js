@@ -137,7 +137,7 @@ class createAppointmentsDay extends HTMLElement {
                     duration: item.duration,
                     room: item.room,
                     status: item.status,
-                    professional: "Marina Oliveira"
+                    professional: item.professional
                 }));
             });
         });

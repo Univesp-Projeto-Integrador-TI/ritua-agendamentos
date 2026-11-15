@@ -1,8 +1,10 @@
 import { getRooms } from "./rooms-store.js";
+import { select, insert, update, toTimestamp, DbError } from "./db.js";
+import { getSessionUser } from "./session.js";
 
 // Estado compartilhado da tela "Meus agendamentos".
 // Os componentes leem este estado ao renderizar e escutam o evento "agenda-changed" no document.
-// Quando o backend estiver pronto, basta trocar os arrays abaixo por dados vindos da API.
+// Os dados vêm da base fake (tabelas appointments, clients, rooms e employees) em db.js.
 
 const MONTHS_SHORT = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const MONTHS_LONG = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
@@ -63,21 +65,15 @@ export function formatDuration(totalMinutes) {
     return `${hours}h${pad(minutes)}`;
 }
 
-/* ---------- Dados (mock) ---------- */
-// "dayOffset" é a distância em dias a partir da segunda-feira da semana atual,
-// assim a tela sempre mostra dados na semana corrente.
+/* ---------- Dados (base fake) ---------- */
 
-const mondayOfCurrentWeek = startOfWeek(new Date());
-const dateByOffset = offset => toDateKey(addDays(mondayOfCurrentWeek, offset));
-
-export const rooms = [...new Set(["Sala Bambu", "Sala Lótus", "Sala Orquídea", "Sala Ipê", ...getRooms().map(room => room.name)])];
+export const rooms = [];
 export const statuses = ["Agendado", "Confirmado", "Em andamento", "Concluído", "Desmarcado", "Cancelado"];
 
-export const statusTransitions = {
-    "Agendado": ["Confirmado", "Desmarcado", "Cancelado"],
-    "Confirmado": ["Em andamento", "Desmarcado", "Cancelado"],
-    "Em andamento": ["Concluído"]
-};
+// Qualquer status pode ser escolhido a qualquer momento (inclusive voltar etapas).
+export const statusTransitions = Object.fromEntries(
+    statuses.map(status => [status, statuses.filter(item => item !== status)])
+);
 
 export function getRelatedStatuses(status) {
     if (["Agendado", "Confirmado"].includes(status)) return { client: "Confirmado", room: "Reservada", professional: "Ocupado" };
@@ -87,63 +83,101 @@ export function getRelatedStatuses(status) {
 }
 
 export function isBlockingStatus(status) {
-    return !["Desmarcado", "Cancelado", "Concluído"].includes(status);
+    // Concluído continua bloqueando o horário, como na constraint do banco (só Desmarcado e Cancelado liberam).
+    return !["Desmarcado", "Cancelado"].includes(status);
 }
 
-const mockAppointments = [
-    { dayOffset: 0, initialHour: "10:00", finalHour: "11:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
-    { dayOffset: 0, initialHour: "13:00", finalHour: "14:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", status: "Agendado" },
-    { dayOffset: 0, initialHour: "16:00", finalHour: "17:30", client: "Rafael Santos", service: "Massoterapia", duration: 90, room: "Sala Bambu", status: "Confirmado" },
 
-    { dayOffset: 1, initialHour: "09:00", finalHour: "10:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Confirmado" },
-    { dayOffset: 1, initialHour: "14:00", finalHour: "15:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Agendado" },
+// Todos os agendamentos da base (usado para checar conflitos de sala e de cliente).
+export const allAppointments = [];
+// Agendamentos do profissional logado (o que as telas exibem).
+export const appointments = [];
 
-    { dayOffset: 2, initialHour: "09:30", finalHour: "10:30", client: "Carlos Mendes", service: "Reiki", duration: 60, room: "Sala Ipê", status: "Agendado" },
-    { dayOffset: 2, initialHour: "11:00", finalHour: "12:00", client: "Ana Souza", service: "Massagem relaxante", duration: 60, room: "Sala Bambu", status: "Confirmado" },
-    { dayOffset: 2, initialHour: "15:00", finalHour: "16:00", client: "Paula Ribeiro", service: "Aromaterapia", duration: 60, room: "Sala Ipê", status: "Confirmado" },
+const minutesOf = time => Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
 
-    { dayOffset: 3, initialHour: "10:00", finalHour: "11:00", client: "Beatriz Lima", service: "Reiki", duration: 60, room: "Sala Lótus", status: "Confirmado" },
-    { dayOffset: 3, initialHour: "17:00", finalHour: "18:00", client: "Rafael Santos", service: "Massoterapia", duration: 60, room: "Sala Bambu", status: "Agendado" },
+function toView(row, clients, employees, roomRows) {
+    const start = row.date_hour_start;
+    const finish = row.date_hour_finish;
+    const initialHour = start.slice(11, 16);
+    const finalHour = finish.slice(11, 16);
+    const date = start.slice(0, 10);
+    return {
+        id: row.id_schedule,
+        client: clients.get(row.id_customer)?.name || "Cliente removido",
+        clientId: row.id_customer,
+        service: row.service,
+        room: roomRows.get(row.id_room)?.name || "Sala removida",
+        roomId: row.id_room,
+        professional: employees.get(row.id_employee)?.name || "—",
+        employeeId: row.id_employee,
+        data: date,
+        date,
+        initialHour,
+        finalHour,
+        duration: minutesOf(finalHour) - minutesOf(initialHour),
+        status: row.appointment_status,
+        notes: row.notes || ""
+    };
+}
 
-    { dayOffset: 4, initialHour: "10:00", finalHour: "11:00", client: "Maria Oliveira", service: "Drenagem linfática", duration: 60, room: "Sala Orquídea", status: "Agendado" },
-    { dayOffset: 4, initialHour: "13:00", finalHour: "14:00", client: "Julia Santos", service: "Massagem terapêutica", duration: 60, room: "Sala Ipê", status: "Confirmado" }
-].map(appointment => {
-    const data = dateByOffset(appointment.dayOffset);
-    return { ...appointment, id: `mock-${data}-${appointment.initialHour}-${appointment.client}`, data };
-});
+export function refreshAppointments() {
+    const clients = new Map(select("clients").map(row => [row.client_id, row]));
+    const employees = new Map(select("employees").map(row => [row.id_employee, row]));
+    const roomRows = new Map(select("rooms").map(row => [row.id_room, row]));
+    const currentId = getSessionUser().id;
+    const views = select("appointments").map(row => toView(row, clients, employees, roomRows));
 
-const savedAppointments = typeof localStorage === "undefined"
-    ? []
-    : JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
-const statusOverrides = typeof localStorage === "undefined"
-    ? {}
-    : JSON.parse(localStorage.getItem("ritua-appointment-statuses") || "{}");
-const savedId = appointment => appointment.id || `saved-${appointment.date || appointment.data}-${appointment.initialHour}-${appointment.client}`;
+    allAppointments.length = 0;
+    allAppointments.push(...views);
+    appointments.length = 0;
+    appointments.push(...views.filter(item => item.employeeId === currentId));
+    rooms.length = 0;
+    rooms.push(...getRooms().map(room => room.name));
+}
 
-export const appointments = [
-    ...mockAppointments.map(appointment => ({ ...appointment, status: statusOverrides[appointment.id] || appointment.status })),
-    ...savedAppointments.map(appointment => {
-        const id = savedId(appointment);
-        return { ...appointment, id, data: appointment.date || appointment.data, status: statusOverrides[id] || appointment.status };
-    })
-];
+refreshAppointments();
+window.addEventListener("db-changed", refreshAppointments);
+
+export function getAppointmentById(id) {
+    return allAppointments.find(item => String(item.id) === String(id)) || null;
+}
 
 export function updateAppointmentStatus(id, status) {
     if (!id || !statuses.includes(status)) return false;
-    const saved = typeof localStorage === "undefined" ? [] : JSON.parse(localStorage.getItem("ritua-appointments") || "[]");
-    const savedIndex = saved.findIndex(appointment => savedId(appointment) === id);
-    if (savedIndex >= 0) {
-        saved[savedIndex] = { ...saved[savedIndex], id, status };
-        localStorage.setItem("ritua-appointments", JSON.stringify(saved));
-    } else if (mockAppointments.some(appointment => appointment.id === id)) {
-        const overrides = JSON.parse(localStorage.getItem("ritua-appointment-statuses") || "{}");
-        overrides[id] = status;
-        localStorage.setItem("ritua-appointment-statuses", JSON.stringify(overrides));
-    } else {
-        return false;
+    // Qualquer status é aceito, desde que seja diferente do atual.
+    const current = getAppointmentById(id);
+    if (!current || current.status === status) return false;
+    try {
+        update("appointments", id, { appointment_status: status });
+    } catch (error) {
+        if (error instanceof DbError) return false;
+        throw error;
     }
     document.dispatchEvent(new CustomEvent("agenda-changed"));
     return true;
+}
+
+// Cria o agendamento para o profissional logado. Devolve { appointment } ou { error } com a mensagem do banco.
+export function createAppointment({ clientId, roomId, service, date, start, end, notes = null }) {
+    const professional = getSessionUser();
+    try {
+        const row = insert("appointments", {
+            service,
+            description: null,
+            date_hour_start: toTimestamp(date, start),
+            date_hour_finish: toTimestamp(date, end),
+            appointment_status: "Agendado",
+            notes,
+            id_customer: Number(clientId),
+            id_employee: professional.id,
+            id_room: Number(roomId)
+        });
+        document.dispatchEvent(new CustomEvent("agenda-changed"));
+        return { appointment: getAppointmentById(row.id_schedule) };
+    } catch (error) {
+        if (error instanceof DbError) return { error: error.message };
+        throw error;
+    }
 }
 
 /* ---------- Estado e filtros ---------- */

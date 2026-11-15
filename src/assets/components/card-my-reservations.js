@@ -1,27 +1,19 @@
 import { asset, page } from "../scripts/paths.js";
-const reservations = [
-    {
-        nameSala: "Bambu",
-        dataReserva: "05/10/2026",
-        reservation: "09:45-11:15",
-        statusReserva: "Confirmada",
-        nameClient: ""
-    },
-    {
-        nameSala: "Ipê",
-        dataReserva: "06/10/2026",
-        reservation: "12:15-13:00",
-        statusReserva: "Reservada",
-        nameClient: "Ana Souza"
-    },
-    {
-        nameSala: "Jabuticaba",
-        dataReserva: "11/10/2026",
-        reservation: "14:35-15:30",
-        statusReserva: "Confirmada",
-        nameClient: ""
-    }
-]
+import { appointments, isBlockingStatus } from "../scripts/agenda-store.js";
+const reservations = () => {
+    const now = new Date();
+    return appointments
+        .filter(item => isBlockingStatus(item.status) && item.status !== "Concluído" && new Date(`${item.data}T${item.finalHour}:00`) >= now)
+        .sort((a, b) => `${a.data}${a.initialHour}`.localeCompare(`${b.data}${b.initialHour}`))
+        .slice(0, 3)
+        .map(item => ({
+            nameSala: item.room.replace(/^Sala\s+/, ""),
+            dataReserva: item.data.split("-").reverse().join("/"),
+            reservation: `${item.initialHour}-${item.finalHour}`,
+            statusReserva: item.status,
+            nameClient: item.client
+        }));
+};
 
 class createCardMyResevations extends HTMLElement {
     connectedCallback(){
@@ -47,20 +39,17 @@ class createCardMyResevations extends HTMLElement {
             </section>
         `;
 
-        reservations.forEach( reservas => {
+        const list = reservations();
+        if (!list.length) this.querySelector(".group-items-my-resevations").innerHTML = `<p class="detail-room-item">Nenhuma reserva futura.</p>`;
+        list.forEach( reservas => {
             const groupReservations = this.querySelector(".group-items-my-resevations")
 
             // Validação do status da sala
             let statusReservation;
             let infoStatusReservation;
             
-            if(reservas.statusReserva === "Confirmada"){
-                statusReservation = "";
-                infoStatusReservation = `Sem agendamento vinculado`;
-            } else {
-                statusReservation = "reserved";
-                infoStatusReservation = `Vinculado a ${reservas.nameClient}`;
-            }
+            statusReservation = reservas.statusReserva === "Confirmado" ? "" : "reserved";
+            infoStatusReservation = `Vinculado a ${reservas.nameClient}`;
             
             //Formatando data da reserva
             const [dia, mes, ano] = reservas.dataReserva.split("/");
