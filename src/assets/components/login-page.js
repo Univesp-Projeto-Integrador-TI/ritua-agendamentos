@@ -1,15 +1,6 @@
-const USERS_KEY = "ritua-users";
-const SESSION_KEY = "ritua-session";
+import { authenticate, createAccount, digits, normalizeLogin } from "../scripts/auth.js";
 
 const escapeText = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
-const digits = value => String(value || "").replace(/\D/g, "");
-const normalizeLogin = value => { const text = String(value || "").trim(); return digits(text).length === 11 && /^[\d.\-\s]+$/.test(text) ? digits(text) : text.toLowerCase(); };
-const getUsers = () => { try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; } catch { return []; } };
-const hashPassword = async (password, salt) => {
-    const data = new TextEncoder().encode(`${salt}:${password}`);
-    const buffer = await crypto.subtle.digest("SHA-256", data);
-    return [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, "0")).join("");
-};
 const maskPhone = value => {
     const d = digits(value).slice(0, 11);
     if (d.length <= 2) return d;
@@ -121,13 +112,10 @@ class LoginPage extends HTMLElement {
     }
 
     async login(form) {
-        const user = normalizeLogin(form.user.value);
+        const user = form.user.value;
         const password = form.password.value;
-        if (!user || !password) return this.showMessage("Informe usuário e senha.");
-        const found = getUsers().find(item => item.login === user);
-        const hash = found && await hashPassword(password, found.salt);
-        if (!found || hash !== found.hash) return this.showMessage("Usuário ou senha incorretos.");
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify({ login: found.login, name: found.name }));
+        if (!normalizeLogin(user) || !password) return this.showMessage("Informe usuário e senha.");
+        if (!await authenticate(user, password)) return this.showMessage("Usuário ou senha incorretos.");
         location.href = "../../../index.html";
     }
 
@@ -139,11 +127,8 @@ class LoginPage extends HTMLElement {
         if (form.password.value.length < 8 || !/[A-Za-z]/.test(form.password.value) || !/\d/.test(form.password.value)) return this.showMessage("A senha precisa ter 8 caracteres, com letras e números.");
         if (form.password.value !== form.confirm.value) return this.showMessage("As senhas não são iguais.");
         if (!this.services.length) return this.showMessage("Adicione pelo menos 1 serviço.");
-        const users = getUsers();
-        if (users.some(item => item.login === data.login)) return this.showMessage("Este usuário já possui cadastro.");
-        const salt = crypto.randomUUID();
-        users.push({ ...data, services: [...this.services], salt, hash: await hashPassword(form.password.value, salt) });
-        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        const result = await createAccount({ ...data, services: [...this.services], password: form.password.value });
+        if (result.error) return this.showMessage(result.error);
         this.mode = "login";
         this.services = [];
         this.render();

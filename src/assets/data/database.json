@@ -1,0 +1,645 @@
+{
+  "_meta": {
+    "descricao": "Base fake para testes. Mesmas tabelas e colunas do banco PostgreSQL do projeto. As datas dos agendamentos são deslocadas em semanas inteiras para que a semana de referência vire a semana atual.",
+    "reference_monday": "2026-11-09",
+    "usuario_demo": {
+      "nickname": "marina",
+      "senha": "Ritua1234"
+    }
+  },
+  "employees": [
+    {
+      "id_employee": 1,
+      "cpf": null,
+      "email": "marina.oliveira@ritua.com.br",
+      "phone": "11999990000",
+      "name": "Marina Oliveira",
+      "specialty1": "Massagem relaxante",
+      "specialty2": "Reiki",
+      "specialty3": "Massoterapia",
+      "employee_status": "Ativo"
+    }
+  ],
+  "clients": [
+    {
+      "client_id": 1,
+      "name": "Ana Souza",
+      "number": "11951688808",
+      "email": "ana.souza@email.com",
+      "birth_date": "1982-02-19",
+      "gender": "feminino",
+      "notes": "Prefere atendimentos pela manhã.",
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 2,
+      "name": "Maria Oliveira",
+      "number": "11976543210",
+      "email": "maria.oliveira@email.com",
+      "birth_date": "1975-07-03",
+      "gender": "feminino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 3,
+      "name": "João Silva",
+      "number": "11965432109",
+      "email": "joao.silva@email.com",
+      "birth_date": "1990-11-25",
+      "gender": "masculino",
+      "notes": "Contato preferencial por WhatsApp.",
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 4,
+      "name": "Beatriz Lima",
+      "number": "11954321098",
+      "email": "beatriz.lima@email.com",
+      "birth_date": "1988-05-14",
+      "gender": "feminino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 5,
+      "name": "Rafael Santos",
+      "number": "11965432100",
+      "email": "rafael.santos@email.com",
+      "birth_date": "1985-09-30",
+      "gender": "masculino",
+      "notes": "Chega sempre 10 minutos antes.",
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 6,
+      "name": "Julia Santos",
+      "number": "11954321099",
+      "email": "julia.santos@email.com",
+      "birth_date": "1995-01-08",
+      "gender": "feminino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 7,
+      "name": "Carlos Mendes",
+      "number": "11943210987",
+      "email": "carlos.mendes@email.com",
+      "birth_date": "1979-03-22",
+      "gender": "masculino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 8,
+      "name": "Paula Ribeiro",
+      "number": "11932109876",
+      "email": "paula.ribeiro@email.com",
+      "birth_date": "1992-12-02",
+      "gender": "feminino",
+      "notes": "Sem restrições de horário.",
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 9,
+      "name": "Darlan",
+      "number": "11971041233",
+      "email": "darlan@email.com",
+      "birth_date": "1987-06-17",
+      "gender": "masculino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 10,
+      "name": "Rhuan Carlos",
+      "number": "11965432111",
+      "email": "rhuan.carlos@email.com",
+      "birth_date": "1993-08-09",
+      "gender": "masculino",
+      "notes": null,
+      "client_status": "Ativo"
+    },
+    {
+      "client_id": 11,
+      "name": "Guilherme Santos",
+      "number": "11965432122",
+      "email": "guilherme.santos@email.com",
+      "birth_date": "1991-04-27",
+      "gender": "masculino",
+      "notes": null,
+      "client_status": "Ativo"
+    }
+  ],
+  "rooms": [
+    {
+      "id_room": 1,
+      "name": "Sala Bambu",
+      "description": "Ambiente acolhedor para massagens e terapias corporais.",
+      "capacity": 1,
+      "default_duration_minutes": 60,
+      "interval_minutes": 15,
+      "amenities": "Maca,Ar-condicionado,Som ambiente",
+      "room_status": "Ativa"
+    },
+    {
+      "id_room": 2,
+      "name": "Sala Lótus",
+      "description": "Sala silenciosa com maca baixa, almofadas e cortinas de linho. Luz natural pela manhã.",
+      "capacity": 1,
+      "default_duration_minutes": 60,
+      "interval_minutes": 15,
+      "amenities": "Maca,Som ambiente,Pia,Aromaterapia",
+      "room_status": "Ativa"
+    },
+    {
+      "id_room": 3,
+      "name": "Sala Orquídea",
+      "description": "Espaço leve para terapias integrativas e aromaterapia.",
+      "capacity": 1,
+      "default_duration_minutes": 60,
+      "interval_minutes": 15,
+      "amenities": "Maca,Ar-condicionado,Aromaterapia",
+      "room_status": "Ativa"
+    },
+    {
+      "id_room": 4,
+      "name": "Sala Rosas",
+      "description": "Ambiente amplo, com iluminação suave para terapias em dupla.",
+      "capacity": 2,
+      "default_duration_minutes": 60,
+      "interval_minutes": 15,
+      "amenities": "Maca,Som ambiente,Pia",
+      "room_status": "Ativa"
+    },
+    {
+      "id_room": 5,
+      "name": "Sala Tulipa",
+      "description": "Atendimento individual e espaço para acolhimento emocional.",
+      "capacity": 2,
+      "default_duration_minutes": 60,
+      "interval_minutes": 15,
+      "amenities": "Ar-condicionado,Som ambiente,Acessível",
+      "room_status": "Ativa"
+    }
+  ],
+  "room_operating_hours": [
+    {
+      "id_room_hour": 1,
+      "id_room": 1,
+      "day_of_week": "segunda",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 2,
+      "id_room": 1,
+      "day_of_week": "terca",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 3,
+      "id_room": 1,
+      "day_of_week": "quarta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 4,
+      "id_room": 1,
+      "day_of_week": "quinta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 5,
+      "id_room": 1,
+      "day_of_week": "sexta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 6,
+      "id_room": 2,
+      "day_of_week": "segunda",
+      "opening_time": "07:00:00",
+      "closing_time": "19:00:00"
+    },
+    {
+      "id_room_hour": 7,
+      "id_room": 2,
+      "day_of_week": "terca",
+      "opening_time": "07:00:00",
+      "closing_time": "19:00:00"
+    },
+    {
+      "id_room_hour": 8,
+      "id_room": 2,
+      "day_of_week": "quarta",
+      "opening_time": "07:00:00",
+      "closing_time": "19:00:00"
+    },
+    {
+      "id_room_hour": 9,
+      "id_room": 2,
+      "day_of_week": "quinta",
+      "opening_time": "07:00:00",
+      "closing_time": "19:00:00"
+    },
+    {
+      "id_room_hour": 10,
+      "id_room": 2,
+      "day_of_week": "sexta",
+      "opening_time": "07:00:00",
+      "closing_time": "19:00:00"
+    },
+    {
+      "id_room_hour": 11,
+      "id_room": 2,
+      "day_of_week": "sabado",
+      "opening_time": "08:00:00",
+      "closing_time": "12:00:00"
+    },
+    {
+      "id_room_hour": 12,
+      "id_room": 3,
+      "day_of_week": "segunda",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 13,
+      "id_room": 3,
+      "day_of_week": "terca",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 14,
+      "id_room": 3,
+      "day_of_week": "quarta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 15,
+      "id_room": 3,
+      "day_of_week": "quinta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 16,
+      "id_room": 3,
+      "day_of_week": "sexta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 17,
+      "id_room": 4,
+      "day_of_week": "segunda",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 18,
+      "id_room": 4,
+      "day_of_week": "terca",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 19,
+      "id_room": 4,
+      "day_of_week": "quarta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 20,
+      "id_room": 4,
+      "day_of_week": "quinta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 21,
+      "id_room": 4,
+      "day_of_week": "sexta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 22,
+      "id_room": 5,
+      "day_of_week": "segunda",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 23,
+      "id_room": 5,
+      "day_of_week": "terca",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 24,
+      "id_room": 5,
+      "day_of_week": "quarta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 25,
+      "id_room": 5,
+      "day_of_week": "quinta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    },
+    {
+      "id_room_hour": 26,
+      "id_room": 5,
+      "day_of_week": "sexta",
+      "opening_time": "08:00:00",
+      "closing_time": "18:00:00"
+    }
+  ],
+  "appointments": [
+    {
+      "id_schedule": 1,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-02T10:00:00",
+      "date_hour_finish": "2026-11-02T11:00:00",
+      "appointment_status": "Concluído",
+      "notes": null,
+      "id_customer": 1,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 2,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-03T09:00:00",
+      "date_hour_finish": "2026-11-03T10:00:00",
+      "appointment_status": "Concluído",
+      "notes": null,
+      "id_customer": 2,
+      "id_employee": 1,
+      "id_room": 3
+    },
+    {
+      "id_schedule": 3,
+      "service": "Massoterapia",
+      "description": null,
+      "date_hour_start": "2026-11-04T14:00:00",
+      "date_hour_finish": "2026-11-04T15:30:00",
+      "appointment_status": "Concluído",
+      "notes": null,
+      "id_customer": 5,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 4,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-05T11:00:00",
+      "date_hour_finish": "2026-11-05T12:00:00",
+      "appointment_status": "Desmarcado",
+      "notes": null,
+      "id_customer": 4,
+      "id_employee": 1,
+      "id_room": 2
+    },
+    {
+      "id_schedule": 5,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-06T13:00:00",
+      "date_hour_finish": "2026-11-06T14:00:00",
+      "appointment_status": "Cancelado",
+      "notes": null,
+      "id_customer": 6,
+      "id_employee": 1,
+      "id_room": 4
+    },
+    {
+      "id_schedule": 6,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-09T10:00:00",
+      "date_hour_finish": "2026-11-09T11:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 1,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 7,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-09T13:00:00",
+      "date_hour_finish": "2026-11-09T14:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 4,
+      "id_employee": 1,
+      "id_room": 2
+    },
+    {
+      "id_schedule": 8,
+      "service": "Massoterapia",
+      "description": null,
+      "date_hour_start": "2026-11-09T16:00:00",
+      "date_hour_finish": "2026-11-09T17:30:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 5,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 9,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-10T09:00:00",
+      "date_hour_finish": "2026-11-10T10:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 2,
+      "id_employee": 1,
+      "id_room": 3
+    },
+    {
+      "id_schedule": 10,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-10T14:00:00",
+      "date_hour_finish": "2026-11-10T15:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 6,
+      "id_employee": 1,
+      "id_room": 4
+    },
+    {
+      "id_schedule": 11,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-11T09:30:00",
+      "date_hour_finish": "2026-11-11T10:30:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 7,
+      "id_employee": 1,
+      "id_room": 5
+    },
+    {
+      "id_schedule": 12,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-11T11:00:00",
+      "date_hour_finish": "2026-11-11T12:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 1,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 13,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-11T15:00:00",
+      "date_hour_finish": "2026-11-11T16:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 8,
+      "id_employee": 1,
+      "id_room": 4
+    },
+    {
+      "id_schedule": 14,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-12T10:00:00",
+      "date_hour_finish": "2026-11-12T11:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 4,
+      "id_employee": 1,
+      "id_room": 2
+    },
+    {
+      "id_schedule": 15,
+      "service": "Massoterapia",
+      "description": null,
+      "date_hour_start": "2026-11-12T17:00:00",
+      "date_hour_finish": "2026-11-12T18:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 5,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 16,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-13T10:00:00",
+      "date_hour_finish": "2026-11-13T11:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 2,
+      "id_employee": 1,
+      "id_room": 3
+    },
+    {
+      "id_schedule": 17,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-13T13:00:00",
+      "date_hour_finish": "2026-11-13T14:00:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 6,
+      "id_employee": 1,
+      "id_room": 4
+    },
+    {
+      "id_schedule": 18,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-16T09:00:00",
+      "date_hour_finish": "2026-11-16T10:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 9,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 19,
+      "service": "Massoterapia",
+      "description": null,
+      "date_hour_start": "2026-11-17T15:00:00",
+      "date_hour_finish": "2026-11-17T16:30:00",
+      "appointment_status": "Confirmado",
+      "notes": null,
+      "id_customer": 11,
+      "id_employee": 1,
+      "id_room": 3
+    },
+    {
+      "id_schedule": 20,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-18T10:00:00",
+      "date_hour_finish": "2026-11-18T11:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 1,
+      "id_employee": 1,
+      "id_room": 1
+    },
+    {
+      "id_schedule": 21,
+      "service": "Reiki",
+      "description": null,
+      "date_hour_start": "2026-11-19T11:00:00",
+      "date_hour_finish": "2026-11-19T12:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 10,
+      "id_employee": 1,
+      "id_room": 2
+    },
+    {
+      "id_schedule": 22,
+      "service": "Massagem relaxante",
+      "description": null,
+      "date_hour_start": "2026-11-20T14:00:00",
+      "date_hour_finish": "2026-11-20T15:00:00",
+      "appointment_status": "Agendado",
+      "notes": null,
+      "id_customer": 3,
+      "id_employee": 1,
+      "id_room": 5
+    }
+  ],
+  "login": [
+    {
+      "id_login": 1,
+      "nickname": "marina",
+      "password": "ritua-demo-salt:57c07c1338760c29c4c7ace85acab8e3320fa0456d71016360ae9592e8d47c5b",
+      "id_employee": 1
+    }
+  ]
+}
