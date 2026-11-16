@@ -1,5 +1,6 @@
 import { asset } from "../scripts/paths.js";
 import { getSessionUser } from "../scripts/session.js";
+import { setToken } from "../scripts/api.js";
 class createSectionMyProfile extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -23,6 +24,8 @@ class createSectionMyProfile extends HTMLElement {
         `;
         this.querySelector(".profile-logout-button").addEventListener("click", () => {
             sessionStorage.removeItem("ritua-session");
+            // Sem limpar o token, a sessão seria refeita sozinha ao abrir a próxima página.
+            setToken("");
             location.href = "./login.html";
         });
     }
