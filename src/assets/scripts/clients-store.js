@@ -55,23 +55,23 @@ function check(form) {
     return "";
 }
 
-const run = action => {
-    try { return { client: action() }; } catch (error) {
+const run = async action => {
+    try { return { client: await action() }; } catch (error) {
         if (error instanceof DbError) return { error: error.message };
         throw error;
     }
 };
 
-export function createClient(form) {
+export async function createClient(form) {
     const error = check(form);
     if (error) return { error };
-    return run(() => toView(insert("clients", { ...toRow(form), client_status: "Ativo" })));
+    return run(async () => toView(await insert("clients", { ...toRow(form), client_status: "Ativo" })));
 }
 
-export function updateClient(id, form) {
+export async function updateClient(id, form) {
     const error = check(form);
     if (error) return { error };
-    return run(() => toView(update("clients", id, toRow(form))));
+    return run(async () => toView(await update("clients", id, toRow(form))));
 }
 
 /* ---------- Agendamentos do cliente (do profissional logado) ---------- */

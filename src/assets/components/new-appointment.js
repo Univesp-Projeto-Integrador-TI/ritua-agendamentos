@@ -379,7 +379,7 @@ class NewAppointment extends HTMLElement {
         link.removeAttribute("aria-disabled");
     }
 
-    createAppointment(event) {
+    async createAppointment(event) {
         event.preventDefault();
         if (!this.form.reportValidity()) return;
         const client = this.selectedClient;
@@ -398,7 +398,7 @@ class NewAppointment extends HTMLElement {
             return;
         }
 
-        const result = createAppointment({
+        const result = await createAppointment({
             clientId: client.id,
             roomId: roomData.id,
             service: service.name,

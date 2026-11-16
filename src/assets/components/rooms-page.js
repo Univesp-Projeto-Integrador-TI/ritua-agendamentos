@@ -31,11 +31,11 @@ class RoomsPage extends HTMLElement {
             </main>`;
         this.querySelector(".rooms-search").addEventListener("input", () => this.render());
         this.querySelector(".rooms-filter").addEventListener("change", () => this.render());
-        this.addEventListener("click", event => {
+        this.addEventListener("click", async event => {
             const deleteButton = event.target.closest("[data-delete-room]");
             if (deleteButton && window.confirm("Excluir esta sala? Salas com agendamentos não podem ser excluídas.")) {
                 try {
-                    removeRoom(deleteButton.dataset.deleteRoom);
+                    await removeRoom(deleteButton.dataset.deleteRoom);
                 } catch (error) {
                     window.alert(error.message);
                 }

@@ -135,7 +135,7 @@ class RoomForm extends HTMLElement {
         };
     }
 
-    submitForm(event) {
+    async submitForm(event) {
         event.preventDefault();
         if (!this.form.reportValidity()) return;
         const room = this.makeRoom();
@@ -149,7 +149,7 @@ class RoomForm extends HTMLElement {
             return;
         }
         try {
-            saveRoom(room);
+            await saveRoom(room);
         } catch (error) {
             this.showMessage(error.message);
             return;
@@ -157,12 +157,12 @@ class RoomForm extends HTMLElement {
         location.href = "./salas.html";
     }
 
-    toggleRoomActive() {
+    async toggleRoomActive() {
         const active = this.form.elements.active;
         active.checked = !active.checked;
         this.room = { ...this.room, active: active.checked };
         try {
-            saveRoom(this.room);
+            await saveRoom(this.room);
         } catch (error) {
             active.checked = !active.checked;
             this.room = { ...this.room, active: active.checked };
@@ -173,10 +173,10 @@ class RoomForm extends HTMLElement {
         this.showMessage(active.checked ? "Sala ativada." : "Sala pausada. Ela não aparece em novos agendamentos.");
     }
 
-    deleteRoom() {
+    async deleteRoom() {
         if (!window.confirm("Excluir esta sala? Salas com agendamentos não podem ser excluídas.")) return;
         try {
-            removeRoom(this.room.id);
+            await removeRoom(this.room.id);
         } catch (error) {
             this.showMessage(error.message);
             return;

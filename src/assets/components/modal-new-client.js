@@ -107,10 +107,10 @@ class ModalNewClient extends HTMLElement {
             this.fechar();
         });
 
-        this.querySelector("form").addEventListener("submit", event => {
+        this.querySelector("form").addEventListener("submit", async event => {
             event.preventDefault();
             const dados = Object.fromEntries(new FormData(event.target));
-            const { error } = createClient(dados);
+            const { error } = await createClient(dados);
             if (error) {
                 this.mostrarErro(error);
                 return;

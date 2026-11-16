@@ -142,13 +142,13 @@ export function getAppointmentById(id) {
     return allAppointments.find(item => String(item.id) === String(id)) || null;
 }
 
-export function updateAppointmentStatus(id, status) {
+export async function updateAppointmentStatus(id, status) {
     if (!id || !statuses.includes(status)) return false;
     // Qualquer status é aceito, desde que seja diferente do atual.
     const current = getAppointmentById(id);
     if (!current || current.status === status) return false;
     try {
-        update("appointments", id, { appointment_status: status });
+        await update("appointments", id, { appointment_status: status });
     } catch (error) {
         if (error instanceof DbError) return false;
         throw error;
@@ -158,13 +158,17 @@ export function updateAppointmentStatus(id, status) {
 }
 
 // Cria o agendamento para o profissional logado. Devolve { appointment } ou { error } com a mensagem do banco.
-export function createAppointment({ clientId, roomId, service, date, start, end, notes = null }) {
+export async function createAppointment({ clientId, roomId, service, date, start, end, notes = null }) {
     const professional = getSessionUser();
+    const startAt = toTimestamp(date, start);
+    if (new Date(startAt) < new Date()) {
+        return { error: "Não é possível criar um agendamento com início no passado." };
+    }
     try {
-        const row = insert("appointments", {
+        const row = await insert("appointments", {
             service,
             description: null,
-            date_hour_start: toTimestamp(date, start),
+            date_hour_start: startAt,
             date_hour_finish: toTimestamp(date, end),
             appointment_status: "Agendado",
             notes,

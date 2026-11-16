@@ -110,10 +110,10 @@ class ModalEditClient extends HTMLElement {
             this.classList.remove("modal-open");
         });
 
-        this.querySelector("form").addEventListener("submit", event => {
+        this.querySelector("form").addEventListener("submit", async event => {
             event.preventDefault();
             const dados = Object.fromEntries(new FormData(event.target));
-            const { error } = updateClient(this.clienteId, dados);
+            const { error } = await updateClient(this.clienteId, dados);
             if (error) {
                 this.mostrarErro(error);
                 return;

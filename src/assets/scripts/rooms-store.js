@@ -47,7 +47,7 @@ export function getRoom(id) {
 }
 
 // Cria (sem id) ou atualiza (com id) a sala e os horários de funcionamento. Lança DbError se o banco recusar.
-export function saveRoom(room) {
+export async function saveRoom(room) {
     const columns = {
         name: room.name,
         description: room.description || null,
@@ -57,18 +57,18 @@ export function saveRoom(room) {
         amenities: (room.amenities || []).join(","),
         room_status: room.active === false ? "Pausada" : "Ativa"
     };
-    const row = room.id ? update("rooms", room.id, columns) : insert("rooms", columns);
+    const row = room.id ? await update("rooms", room.id, columns) : await insert("rooms", columns);
     const hours = (room.hours || [])
         .map((item, index) => ({ item, index }))
         .filter(({ item }) => item.enabled)
         .map(({ item, index }) => ({ day_of_week: DAY_KEYS[index], opening_time: `${item.start}:00`, closing_time: `${item.end}:00` }));
-    replaceRoomHours(row.id_room, hours);
+    await replaceRoomHours(row.id_room, hours);
     return getRoom(row.id_room);
 }
 
 // Lança DbError se a sala tiver agendamentos (ON DELETE RESTRICT).
-export function removeRoom(id) {
-    remove("rooms", id);
+export async function removeRoom(id) {
+    await remove("rooms", id);
     window.dispatchEvent(new CustomEvent("rooms-changed"));
 }
 

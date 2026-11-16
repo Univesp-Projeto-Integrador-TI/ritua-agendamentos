@@ -110,11 +110,11 @@ class AppointmentDetails extends HTMLElement {
             </main>
         `;
 
-        this.querySelector(".appointment-status-select").addEventListener("change", event => {
+        this.querySelector(".appointment-status-select").addEventListener("change", async event => {
             const nextStatus = event.target.value;
             if (!nextStatus) return;
             const message = this.querySelector(".appointment-cancel-message");
-            if (!appointment.id || !updateAppointmentStatus(appointment.id, nextStatus)) {
+            if (!appointment.id || !await updateAppointmentStatus(appointment.id, nextStatus)) {
                 message.textContent = "Não foi possível salvar a alteração deste agendamento.";
                 event.target.value = "";
                 return;
