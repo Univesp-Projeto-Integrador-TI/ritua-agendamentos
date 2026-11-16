@@ -1,218 +1,295 @@
-// Banco de dados FAKE para testes de usabilidade.
+// Camada de dados do front.
+// Com a API no ar (backend/server.js), lê e grava no PostgreSQL. Sem a API, cai na base local de testes.
+// As leituras (select/findById) são síncronas porque trabalham sobre a cópia em memória carregada no início.
+// As gravações são assíncronas nos dois modos, então quem chama precisa usar await.
 
-const STORAGE_KEY = "ritua-fake-db";
-const VERSION = 1;
+import { DbError } from "./db-error.js";
+import { apiFetch, detectApi, ApiError, getToken } from "./api.js";
 
-export const STATUS = {
-    employee: ["Ativo", "Inativo"],
-    client: ["Ativo", "Inativo"],
-    room: ["Ativa", "Pausada"],
-    appointment: ["Agendado", "Confirmado", "Em andamento", "Concluído", "Desmarcado", "Cancelado"]
+export { DbError };
+
+export const mode = await detectApi() ? "api" : "local";
+const local = mode === "local" ? await import("./local-db.js") : null;
+
+if (mode === "local") {
+    console.warn("[Rituá] API indisponível: usando a base local de testes.");
+}
+
+/* ---------- Datas (mesmo formato usado nas colunas do banco) ---------- */
+
+const pad = value => String(value).padStart(2, "0");
+export const toDateKey = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+export const toTimestamp = (date, time) => `${date}T${time.length === 5 ? `${time}:00` : time}`;
+
+/* ---------- Cópia em memória das tabelas ---------- */
+
+const tables = {
+    employees: [],
+    clients: [],
+    rooms: [],
+    room_operating_hours: [],
+    appointments: [],
+    login: []
 };
 
-// Status que liberam o horário (Concluído continua bloqueando, como na constraint EXCLUDE do banco).
-const NON_BLOCKING = ["Cancelado", "Desmarcado"];
+const notify = () => window.dispatchEvent(new CustomEvent("db-changed"));
 
-const SCHEMA = {
-    employees: { pk: "id_employee", required: ["email", "phone", "name", "specialty1", "employee_status"], unique: [["cpf"], ["email"]], check: { employee_status: STATUS.employee }, label: "profissional" },
-    clients: { pk: "client_id", required: ["name", "number", "birth_date", "gender", "client_status"], unique: [], check: { client_status: STATUS.client }, label: "cliente" },
-    rooms: { pk: "id_room", required: ["name", "capacity", "default_duration_minutes", "interval_minutes", "room_status"], unique: [["name"]], check: { room_status: STATUS.room }, label: "sala" },
-    room_operating_hours: { pk: "id_room_hour", required: ["id_room", "day_of_week", "opening_time", "closing_time"], unique: [["id_room", "day_of_week"]], check: {}, label: "horário" },
-    appointments: { pk: "id_schedule", required: ["service", "date_hour_start", "date_hour_finish", "appointment_status", "id_customer", "id_employee", "id_room"], unique: [], check: { appointment_status: STATUS.appointment }, label: "agendamento" },
-    login: { pk: "id_login", required: ["nickname", "password", "id_employee"], unique: [["nickname"], ["id_employee"]], check: {}, label: "login" }
-};
+// A API usa nomes de coluna próprios (employee_id, room_id...). Aceita os dois formatos para não
+// quebrar se o backend for alinhado ao SQL validado (id_employee, id_room...).
+const pick = (row, ...keys) => keys.map(key => row?.[key]).find(value => value !== undefined && value !== null);
 
-const FOREIGN_KEYS = {
-    room_operating_hours: [["id_room", "rooms"]],
-    appointments: [["id_customer", "clients"], ["id_employee", "employees"], ["id_room", "rooms"]],
-    login: [["id_employee", "employees"]]
-};
+const mapEmployee = row => ({
+    id_employee: Number(pick(row, "id_employee", "employee_id")),
+    cpf: row.cpf || null,
+    email: row.email,
+    phone: row.phone,
+    name: row.name,
+    specialty1: row.specialty1,
+    specialty2: row.specialty2 || null,
+    specialty3: row.specialty3 || null,
+    employee_status: row.employee_status
+});
 
-// Quem impede (RESTRICT) ou acompanha (CASCADE) a exclusão de um registro.
-const RESTRICT = { clients: [["appointments", "id_customer"]], employees: [["appointments", "id_employee"]], rooms: [["appointments", "id_room"]] };
-const CASCADE = { rooms: [["room_operating_hours", "id_room"]], employees: [["login", "id_employee"]] };
+const mapClient = row => ({
+    client_id: Number(pick(row, "client_id", "id_client")),
+    name: row.name,
+    number: row.number,
+    email: row.email || null,
+    birth_date: row.birth_date ? String(row.birth_date).slice(0, 10) : null,
+    gender: row.gender,
+    notes: row.notes || null,
+    client_status: row.client_status
+});
 
-export class DbError extends Error {
-    constructor(code, message) {
-        super(message);
-        this.code = code;
+const mapRoom = row => ({
+    id_room: Number(pick(row, "id_room", "room_id")),
+    name: row.name,
+    description: row.description || null,
+    capacity: row.capacity,
+    default_duration_minutes: row.default_duration_minutes,
+    interval_minutes: row.interval_minutes,
+    amenities: row.amenities || null,
+    room_status: row.room_status
+});
+
+const mapHour = (row, idRoom) => ({
+    id_room_hour: Number(pick(row, "id_room_hour", "room_operating_hour_id")),
+    id_room: Number(idRoom ?? pick(row, "id_room", "room_id")),
+    day_of_week: row.day_of_week,
+    opening_time: String(row.opening_time).slice(0, 8),
+    closing_time: String(row.closing_time).slice(0, 8)
+});
+
+const mapAppointment = row => ({
+    id_schedule: Number(pick(row, "id_schedule", "id_appointment")),
+    service: row.service,
+    description: row.description || null,
+    date_hour_start: String(row.date_hour_start),
+    date_hour_finish: String(row.date_hour_finish),
+    appointment_status: row.appointment_status,
+    notes: row.notes || null,
+    id_customer: Number(pick(row, "id_customer", "client_id")),
+    id_employee: Number(pick(row, "id_employee", "employee_id")),
+    id_room: Number(pick(row, "id_room", "room_id"))
+});
+
+async function fetchAllClients() {
+    const rows = [];
+    for (let page = 1; page <= 50; page += 1) {
+        const result = await apiFetch(`/clients?page=${page}`);
+        const batch = result.data || [];
+        rows.push(...batch);
+        if (batch.length < 10) break;
+    }
+    return rows;
+}
+
+export async function refresh() {
+    if (mode === "local") return;
+    try {
+        const [employees, rooms, appointments] = await Promise.all([
+            apiFetch("/employees"),
+            apiFetch("/rooms"),
+            apiFetch("/appointments")
+        ]);
+        // A lista de clientes exige token: antes do login ela fica vazia.
+        const clients = getToken() ? await fetchAllClients() : [];
+
+        tables.employees = (employees.data || []).map(mapEmployee);
+        tables.clients = clients.map(mapClient);
+        tables.rooms = (rooms.data || []).map(mapRoom);
+        tables.room_operating_hours = (rooms.data || []).flatMap(room =>
+            (room.operating_hours || []).map(hour => mapHour(hour, pick(room, "id_room", "room_id")))
+        );
+        tables.appointments = (appointments.data || []).map(mapAppointment);
+        notify();
+    } catch (error) {
+        if (error instanceof ApiError) throw new DbError("api", error.message);
+        throw error;
     }
 }
 
-/* ---------- Datas ---------- */
-
-const pad = value => String(value).padStart(2, "0");
-const dateKey = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-const timestamp = (date, time) => `${date}T${time.length === 5 ? `${time}:00` : time}`;
-
-function mondayKey(date) {
-    const monday = new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay() + 6) % 7));
-    return dateKey(monday);
+if (mode === "api") {
+    try { await refresh(); } catch (error) { console.warn("[Rituá] Falha ao carregar os dados da API:", error.message); }
 }
 
-function daysBetween(fromKey, toKey) {
-    const parse = key => { const [y, m, d] = key.split("-").map(Number); return Date.UTC(y, m - 1, d); };
-    return Math.round((parse(toKey) - parse(fromKey)) / 86400000);
-}
-
-function shiftTimestamp(value, days) {
-    const [date, time] = value.split("T");
-    const [y, m, d] = date.split("-").map(Number);
-    return `${dateKey(new Date(y, m - 1, d + days))}T${time}`;
-}
-
-/* ---------- Estado ---------- */
-
-async function loadSeed() {
-    const response = await fetch(new URL("../data/database.json", import.meta.url));
-    if (!response.ok) throw new Error("Não foi possível carregar a base de testes (database.json).");
-    const seed = await response.json();
-
-    // Move a semana de referência dos agendamentos para a semana atual.
-    const shift = daysBetween(seed._meta.reference_monday, mondayKey(new Date()));
-    const tables = {};
-    const sequences = {};
-    Object.keys(SCHEMA).forEach(name => {
-        tables[name] = (seed[name] || []).map(row => ({ ...row }));
-        sequences[name] = tables[name].reduce((max, row) => Math.max(max, row[SCHEMA[name].pk]), 0);
-    });
-    tables.appointments.forEach(row => {
-        row.date_hour_start = shiftTimestamp(row.date_hour_start, shift);
-        row.date_hour_finish = shiftTimestamp(row.date_hour_finish, shift);
-    });
-    return { version: VERSION, tables, sequences };
-}
-
-if (new URLSearchParams(location.search).has("resetdb")) {
-    localStorage.removeItem(STORAGE_KEY);
-    const url = new URL(location.href);
-    url.searchParams.delete("resetdb");
-    history.replaceState(null, "", url);
-}
-
-let state = null;
-try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { state = null; }
-if (!state || state.version !== VERSION) {
-    state = await loadSeed();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-const save = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    window.dispatchEvent(new CustomEvent("db-changed"));
-};
-
-export function resetDatabase() {
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
-}
-
-/* ---------- Validações (equivalentes às constraints do SQL) ---------- */
-
-const same = (a, b) => (typeof a === "string" && typeof b === "string" ? a.toLowerCase() === b.toLowerCase() : a === b);
-
-function validate(table, row, ignoreId = null) {
-    const schema = SCHEMA[table];
-    schema.required.forEach(column => {
-        if (row[column] === undefined || row[column] === null || row[column] === "") throw new DbError("notnull", `O campo "${column}" é obrigatório.`);
-    });
-    Object.entries(schema.check).forEach(([column, values]) => {
-        if (!values.includes(row[column])) throw new DbError("check", `Valor inválido em "${column}": ${row[column]}.`);
-    });
-    schema.unique.forEach(columns => {
-        if (columns.some(column => row[column] === null || row[column] === undefined)) return;
-        const duplicated = state.tables[table].some(other => other[schema.pk] !== ignoreId && columns.every(column => same(other[column], row[column])));
-        if (duplicated) throw new DbError("unique", `Já existe ${schema.label} com ${columns.join(" + ")} igual.`);
-    });
-    (FOREIGN_KEYS[table] || []).forEach(([column, target]) => {
-        if (!state.tables[target].some(other => other[SCHEMA[target].pk] === row[column])) throw new DbError("fk", `Registro de ${target} não encontrado.`);
-    });
-    if (table === "room_operating_hours" && row.closing_time <= row.opening_time) throw new DbError("check", "O fechamento deve ser depois da abertura.");
-    if (table === "appointments") validateAppointment(row, ignoreId);
-}
-
-function validateAppointment(row, ignoreId) {
-    if (row.date_hour_finish <= row.date_hour_start) throw new DbError("check", "O horário final deve ser posterior ao inicial.");
-    if (NON_BLOCKING.includes(row.appointment_status)) return;
-    const labels = { id_customer: "O cliente já tem um agendamento nesse horário.", id_employee: "O profissional já tem um agendamento nesse horário.", id_room: "A sala já está ocupada nesse horário." };
-    Object.entries(labels).forEach(([column, message]) => {
-        const conflict = state.tables.appointments.some(other =>
-            other.id_schedule !== ignoreId && other[column] === row[column] && !NON_BLOCKING.includes(other.appointment_status) &&
-            row.date_hour_start < other.date_hour_finish && other.date_hour_start < row.date_hour_finish);
-        if (conflict) throw new DbError("overlap", message);
-    });
-}
-
-/* ---------- Operações ---------- */
+/* ---------- Leituras ---------- */
 
 export function select(table, predicate = () => true) {
-    return state.tables[table].filter(predicate).map(row => ({ ...row }));
+    if (mode === "local") return local.select(table, predicate);
+    return (tables[table] || []).filter(predicate).map(row => ({ ...row }));
 }
 
 export function findById(table, id) {
-    const row = state.tables[table].find(item => item[SCHEMA[table].pk] === Number(id));
+    if (mode === "local") return local.findById(table, id);
+    const pk = { employees: "id_employee", clients: "client_id", rooms: "id_room", room_operating_hours: "id_room_hour", appointments: "id_schedule", login: "id_login" }[table];
+    const row = (tables[table] || []).find(item => String(item[pk]) === String(id));
     return row ? { ...row } : null;
 }
 
-export function insert(table, data) {
-    const schema = SCHEMA[table];
-    const row = { ...data };
-    const columns = Object.keys(state.tables[table][0] || {});
-    columns.forEach(column => { if (!(column in row)) row[column] = null; });
-    row[schema.pk] = state.sequences[table] + 1;
-    validate(table, row);
-    if (table === "appointments" && row.date_hour_start < timestamp(dateKey(new Date()), `${pad(new Date().getHours())}:${pad(new Date().getMinutes())}`)) {
-        throw new DbError("past", "Não é possível criar um agendamento com início no passado.");
-    }
-    state.sequences[table] = row[schema.pk];
-    state.tables[table].push(row);
-    save();
-    return { ...row };
-}
+/* ---------- Gravações ---------- */
 
-export function update(table, id, changes) {
-    const schema = SCHEMA[table];
-    const index = state.tables[table].findIndex(item => item[schema.pk] === Number(id));
-    if (index < 0) throw new DbError("notfound", "Registro não encontrado.");
-    const row = { ...state.tables[table][index], ...changes, [schema.pk]: state.tables[table][index][schema.pk] };
-    validate(table, row, row[schema.pk]);
-    state.tables[table][index] = row;
-    save();
-    return { ...row };
-}
+const fail = error => {
+    if (error instanceof DbError) throw error;
+    if (error instanceof ApiError) throw new DbError("api", error.message);
+    throw error;
+};
 
-export function remove(table, id) {
-    const schema = SCHEMA[table];
-    const numericId = Number(id);
-    (RESTRICT[table] || []).forEach(([child, column]) => {
-        if (state.tables[child].some(row => row[column] === numericId)) {
-            throw new DbError("fk", `${schema.label === "sala" ? "Esta" : "Este"} ${schema.label} possui agendamentos e não pode ser excluíd${schema.label === "sala" ? "a" : "o"}. Use a inativação.`);
-        }
-    });
-    (CASCADE[table] || []).forEach(([child, column]) => {
-        state.tables[child] = state.tables[child].filter(row => row[column] !== numericId);
-    });
-    state.tables[table] = state.tables[table].filter(row => row[schema.pk] !== numericId);
-    save();
-}
-
-// Troca todos os horários de funcionamento de uma sala de uma vez (sala + room_operating_hours).
-export function replaceRoomHours(idRoom, rows) {
-    const backup = state.tables.room_operating_hours;
-    state.tables.room_operating_hours = backup.filter(row => row.id_room !== idRoom);
+export async function insert(table, data) {
+    if (mode === "local") return local.insert(table, data);
     try {
-        rows.forEach(data => {
-            const row = { ...data, id_room: idRoom, id_room_hour: state.sequences.room_operating_hours + 1 };
-            validate("room_operating_hours", row);
-            state.sequences.room_operating_hours = row.id_room_hour;
-            state.tables.room_operating_hours.push(row);
-        });
+        if (table === "clients") {
+            const result = await apiFetch("/clients", { method: "POST", body: data });
+            const row = mapClient(result.data);
+            tables.clients.push(row);
+            notify();
+            return { ...row };
+        }
+        if (table === "rooms") {
+            const result = await apiFetch("/rooms", { method: "POST", body: { ...data, operating_hours: [] } });
+            const row = mapRoom(result.data);
+            tables.rooms.push(row);
+            notify();
+            return { ...row };
+        }
+        if (table === "appointments") {
+            const body = {
+                service: data.service,
+                description: data.description,
+                date: String(data.date_hour_start).slice(0, 10),
+                date_hour_start: data.date_hour_start,
+                date_hour_finish: data.date_hour_finish,
+                appointment_status: data.appointment_status,
+                notes: data.notes,
+                client_id: data.id_customer,
+                employee_id: data.id_employee,
+                room_id: data.id_room
+            };
+            const result = await apiFetch("/appointments", { method: "POST", body });
+            const row = mapAppointment(result.data);
+            tables.appointments.push(row);
+            notify();
+            return { ...row };
+        }
+        throw new DbError("unsupported", "Operação não disponível na API.");
     } catch (error) {
-        state.tables.room_operating_hours = backup;
-        throw error;
+        fail(error);
     }
-    save();
 }
 
-export const toTimestamp = timestamp;
-export const toDateKey = dateKey;
+export async function update(table, id, changes) {
+    if (mode === "local") return local.update(table, id, changes);
+    try {
+        if (table === "clients") {
+            const result = await apiFetch(`/clients/${id}`, { method: "PATCH", body: changes });
+            const row = mapClient(result.data);
+            tables.clients = tables.clients.map(item => (item.client_id === row.client_id ? row : item));
+            notify();
+            return { ...row };
+        }
+        if (table === "rooms") {
+            const result = await apiFetch(`/rooms/${id}`, { method: "PATCH", body: changes });
+            const row = mapRoom(result.data);
+            tables.rooms = tables.rooms.map(item => (item.id_room === row.id_room ? row : item));
+            notify();
+            return { ...row };
+        }
+        if (table === "appointments") {
+            const onlyStatus = Object.keys(changes).length === 1 && "appointment_status" in changes;
+            const result = onlyStatus
+                ? await apiFetch(`/appointments/${id}/status`, { method: "PATCH", body: changes })
+                : await apiFetch(`/appointments/${id}`, { method: "PATCH", body: changes });
+            const row = mapAppointment(result.data);
+            tables.appointments = tables.appointments.map(item => (item.id_schedule === row.id_schedule ? row : item));
+            notify();
+            return { ...row };
+        }
+        if (table === "employees") {
+            const result = await apiFetch(`/employees/${id}`, { method: "PATCH", body: changes });
+            const row = mapEmployee(result.data);
+            tables.employees = tables.employees.map(item => (item.id_employee === row.id_employee ? row : item));
+            notify();
+            return { ...row };
+        }
+        if (table === "login") {
+            const result = await apiFetch(`/logins/${id}`, { method: "PATCH", body: changes });
+            return { ...result.data };
+        }
+        throw new DbError("unsupported", "Operação não disponível na API.");
+    } catch (error) {
+        fail(error);
+    }
+}
+
+export async function remove(table, id) {
+    if (mode === "local") return local.remove(table, id);
+    try {
+        if (table === "rooms") {
+            await apiFetch(`/rooms/${id}`, { method: "DELETE" });
+            tables.rooms = tables.rooms.filter(item => String(item.id_room) !== String(id));
+            tables.room_operating_hours = tables.room_operating_hours.filter(item => String(item.id_room) !== String(id));
+            notify();
+            return;
+        }
+        if (table === "employees") {
+            await apiFetch(`/employees/${id}`, { method: "DELETE" });
+            tables.employees = tables.employees.filter(item => String(item.id_employee) !== String(id));
+            notify();
+            return;
+        }
+        if (table === "appointments") {
+            await apiFetch(`/appointments/${id}`, { method: "DELETE" });
+            tables.appointments = tables.appointments.filter(item => String(item.id_schedule) !== String(id));
+            notify();
+            return;
+        }
+        throw new DbError("unsupported", "Operação não disponível na API.");
+    } catch (error) {
+        fail(error);
+    }
+}
+
+export async function replaceRoomHours(idRoom, rows) {
+    if (mode === "local") return local.replaceRoomHours(idRoom, rows);
+    try {
+        const result = await apiFetch(`/rooms/${idRoom}/hours`, { method: "PUT", body: { operating_hours: rows } });
+        tables.room_operating_hours = tables.room_operating_hours.filter(item => String(item.id_room) !== String(idRoom));
+        (result.data || []).forEach(row => tables.room_operating_hours.push(mapHour(row, idRoom)));
+        notify();
+    } catch (error) {
+        fail(error);
+    }
+}
+
+// Login do profissional (id_login + nickname), usado para trocar a senha.
+export async function findLoginByEmployee(employeeId) {
+    if (mode === "local") return select("login", item => item.id_employee === Number(employeeId))[0] || null;
+    const result = await apiFetch("/logins");
+    const row = (result.data || []).find(item => Number(pick(item, "id_employee", "employee_id")) === Number(employeeId));
+    return row ? { id_login: Number(pick(row, "id_login", "login_id")), nickname: row.nickname, id_employee: Number(employeeId) } : null;
+}
+
+export function resetDatabase() {
+    if (mode === "local") return local.resetDatabase();
+    location.reload();
+}

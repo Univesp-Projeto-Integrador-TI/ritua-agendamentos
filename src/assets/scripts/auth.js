@@ -1,7 +1,9 @@
-import { select, insert, remove, DbError } from "./db.js";
+import { select, insert, remove, DbError, mode, refresh } from "./db.js";
+import { apiFetch, setToken, ApiError } from "./api.js";
 
-// Cadastro e autenticação sobre as tabelas "employees" e "login" da base fake.
-// Atenção: o hash feito aqui no navegador é só para testes. No backend real use bcrypt/argon2 no servidor.
+// Cadastro e autenticação sobre as tabelas "employees" e "login".
+// Com a API no ar, quem confere a senha é o backend (bcrypt). Na base local, o hash é feito no navegador
+// e serve só para testes.
 
 const SESSION_KEY = "ritua-session";
 
@@ -16,7 +18,7 @@ async function sha256(text) {
     return [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, "0")).join("");
 }
 
-// Formato guardado em login.password: "salt:hash"
+// Formato guardado em login.password na base local: "salt:hash"
 export async function makePasswordHash(password) {
     const salt = crypto.randomUUID();
     return `${salt}:${await sha256(`${salt}:${password}`)}`;
@@ -32,6 +34,28 @@ export function startSession(loginRow, employee) {
 }
 
 export async function authenticate(user, password) {
+    if (mode === "api") {
+        try {
+            const result = await apiFetch("/auth/login", {
+                method: "POST",
+                body: { nickname: normalizeLogin(user), password },
+                auth: false
+            });
+            setToken(result.token);
+            await refresh();
+            const employee = select("employees", item => item.id_employee === Number(result.user.employee_id))[0];
+            if (!employee || employee.employee_status !== "Ativo") {
+                setToken("");
+                return null;
+            }
+            startSession({ nickname: result.user.nickname }, employee);
+            return employee;
+        } catch (error) {
+            if (error instanceof ApiError) return null;
+            throw error;
+        }
+    }
+
     const loginRow = select("login", item => item.nickname === normalizeLogin(user))[0];
     if (!loginRow || !await checkPassword(password, loginRow.password)) return null;
     const employee = select("employees", item => item.id_employee === loginRow.id_employee)[0];
@@ -42,19 +66,44 @@ export async function authenticate(user, password) {
 
 // Cria o profissional e o login. Devolve { error } se o banco recusar (e-mail ou usuário repetido, etc.).
 export async function createAccount({ name, phone, email, login, services, password }) {
+    const cpf = /^\d{11}$/.test(login) ? login : null;
+    const specialties = {
+        specialty1: services[0],
+        specialty2: services[1] || null,
+        specialty3: services[2] || null
+    };
+
+    if (mode === "api") {
+        try {
+            await apiFetch("/employees", {
+                method: "POST",
+                auth: false,
+                body: { cpf, email, phone, name, ...specialties, employee_status: "Ativo", nickname: login, password }
+            });
+            await refresh();
+            return { success: true };
+        } catch (error) {
+            if (!(error instanceof ApiError)) throw error;
+            const message = String(error.message || "");
+            if (/nickname|login/i.test(message)) return { error: "Este usuário já possui cadastro." };
+            if (/email/i.test(message)) return { error: "Este e-mail já está cadastrado." };
+            if (/cpf/i.test(message)) return { error: "Este CPF já está cadastrado." };
+            return { error: message || "Não foi possível concluir o cadastro." };
+        }
+    }
+
     const hash = await makePasswordHash(password);
     try {
-        const cpf = /^\d{11}$/.test(login) ? login : null;
-        const employee = insert("employees", {
+        const employee = await insert("employees", {
             cpf, email, phone, name,
-            specialty1: services[0], specialty2: services[1] || null, specialty3: services[2] || null,
+            ...specialties,
             employee_status: "Ativo"
         });
         try {
-            insert("login", { nickname: login, password: hash, id_employee: employee.id_employee });
+            await insert("login", { nickname: login, password: hash, id_employee: employee.id_employee });
         } catch (error) {
             // Equivale a um rollback: não deixa profissional sem login.
-            remove("employees", employee.id_employee);
+            await remove("employees", employee.id_employee);
             throw error;
         }
         return { success: true };
